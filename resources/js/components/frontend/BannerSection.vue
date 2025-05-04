@@ -24,7 +24,7 @@ defineProps<{
                 <!-- Text Column -->
                 <a-col :xs="24" :md="12" class="order-2 md:order-1">
                     <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold  text-primary">
-                        {{ title || 'Welcome to LaCuna Marketplace' }}
+                        {{ title || 'Welcome to LaCuna Marketplace' }} bb
                     </h1>
                     <p class="text-lg sm:text-xl text-blue-800/80">
                         {{ subtitle || 'A global marketplace connecting cultures, services, and innovation.' }}

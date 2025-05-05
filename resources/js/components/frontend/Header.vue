@@ -48,7 +48,13 @@
                         </a-button>
                         <a-button type="text" shape="circle">
                             <template #icon>
-                                <ShoppingCartOutlined />
+                                <Link :href="route('cart')" class="relative">
+                                    <ShoppingCartOutlined />
+                                    <span v-if="cartStore.totalItems > 0"
+                                          class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                                        {{ cartStore.totalItems }}
+                                    </span>
+                                </Link>
                             </template>
                         </a-button>
                         <a-dropdown v-if="isAuthenticated">
@@ -194,7 +200,7 @@
           </Link>
         </a-menu-item>
       </template>
-      
+
 
       <!-- Show if logged in -->
       <template v-else>
@@ -225,6 +231,7 @@ import { usePage } from '@inertiajs/vue3';
 import { router } from '@inertiajs/vue3';
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 import { Link } from "@inertiajs/vue3";
+import { useCartStore } from '@/stores/cart';
 import {
     MenuOutlined,
     CloseOutlined,
@@ -240,6 +247,8 @@ const mobileMenuOpen = ref(false);
 const searchQuery = ref('');
 // const currentLocale = computed(() => usePage().props.locale || 'en');
 const isAuthenticated = computed(() => props.auth?.user);
+
+const cartStore = useCartStore();
 
 const toggleMobileMenu = () => {
     mobileMenuOpen.value = !mobileMenuOpen.value;

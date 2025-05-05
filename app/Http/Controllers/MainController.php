@@ -191,5 +191,38 @@ class MainController extends Controller
                 'locale' => App::getLocale(),
             ]);
         }
-    }
+
+
+        public function addToCart(Request $request)
+        {
+            $cart = session()->get('cart', []);
+            $productId = $request->input('id');
+            $qty = $request->input('qty', 1);
+
+            $exists = false;
+            foreach ($cart as &$item) {
+                if ($item['id'] === $productId) {
+                    $item['qty'] += $qty;
+                    $exists = true;
+                    break;
+                }
+            }
+
+            if (!$exists) {
+                $cart[] = [
+                    'id' => $productId,
+                    'qty' => $qty,
+                ];
+            }
+
+            session(['cart' => $cart]);
+
+            return back()->with('success', 'Product added to cart.');
+        }
+
+
+
+
+
+}
 

@@ -200,12 +200,14 @@ class MainController extends Controller
                 $qty = $request->input('qty', 1);
 
                 $product = Product::findOrFail($productId);
+
                 $exists = false;
 
                 foreach ($cart as &$item) {
                     if ($item['id'] === $productId) {
                         $item['qty'] += $qty;
                         $item['thumnail_img'] = $product->thumnail_img;
+                        $item['name'] = $product->name;
                         $item['discount'] = $product->sale_price - $product->final_price;
                         $item['total_price'] = $item['qty'] * $product->final_price;
                         $exists = true;
@@ -216,6 +218,7 @@ class MainController extends Controller
                 if (!$exists) {
                     $cart[] = [
                         'id' => $product->id,
+                        'name' => $product->name,
                         'thumnail_img' => $product->thumnail_img,
                         'discount' => $product->sale_price - $product->final_price,
                         'qty' => $qty,
@@ -227,7 +230,6 @@ class MainController extends Controller
                 \Log::info('Cart updated:', $cart);
 
                 return back()->with('success', 'Product added to cart.');
-
             } catch (\Exception $e) {
                 \Log::error('Add to cart failed: ' . $e->getMessage());
                 return back()->with('error', 'Failed to add product to cart.');

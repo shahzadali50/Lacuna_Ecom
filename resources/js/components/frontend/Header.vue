@@ -1,3 +1,42 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { usePage } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
+import CartSidebar from '@/components/frontend/CartSidebar.vue';
+import { Link } from "@inertiajs/vue3";
+import {
+    MenuOutlined,
+    CloseOutlined,
+    HeartOutlined,
+    ShoppingCartOutlined,
+    UserOutlined,
+    HomeOutlined,
+    AppstoreOutlined,
+    DeleteOutlined
+} from '@ant-design/icons-vue';
+
+const { props } = usePage();
+const mobileMenuOpen = ref(false);
+const cartDrawerVisible = ref(false);
+const searchQuery = ref('');
+// const currentLocale = computed(() => usePage().props.locale || 'en');
+const isAuthenticated = computed(() => props.auth?.user);
+
+const toggleMobileMenu = () => {
+    mobileMenuOpen.value = !mobileMenuOpen.value;
+};
+
+const handleSearch = () => {
+    if (searchQuery.value.trim()) {
+        router.visit(route('search', { query: searchQuery.value }));
+    }
+};
+
+const handleLogout = () => {
+    router.post(route('logout'));
+};
+</script>
 <template>
     <header class="bg-white shadow fixed top-0 left-0 right-0 z-50">
         <div class="container mx-auto px-4 py-3">
@@ -46,7 +85,7 @@
                                 <HeartOutlined />
                             </template>
                         </a-button>
-                        <a-button type="text" shape="circle">
+                        <a-button type="text" shape="circle" @click="cartDrawerVisible = true">
                             <template #icon>
                                 <ShoppingCartOutlined />
                             </template>
@@ -206,48 +245,19 @@
 
     <!-- Spacer for fixed header and bottom nav -->
     <div class="h-24 md:h-20"></div>
+
+    <!-- Cart Sidebar -->
+    <CartSidebar v-model:visible="cartDrawerVisible" />
 </template>
 
-<script setup lang="ts">
-import { ref, computed } from 'vue';
-import { usePage } from '@inertiajs/vue3';
-import { router } from '@inertiajs/vue3';
-import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
-import { Link } from "@inertiajs/vue3";
-import {
-    MenuOutlined,
-    CloseOutlined,
-    HeartOutlined,
-    ShoppingCartOutlined,
-    UserOutlined,
-    HomeOutlined,
-    AppstoreOutlined
-} from '@ant-design/icons-vue';
 
-const { props } = usePage();
-const mobileMenuOpen = ref(false);
-const searchQuery = ref('');
-// const currentLocale = computed(() => usePage().props.locale || 'en');
-const isAuthenticated = computed(() => props.auth?.user);
-
-const toggleMobileMenu = () => {
-    mobileMenuOpen.value = !mobileMenuOpen.value;
-};
-
-const handleSearch = () => {
-    if (searchQuery.value.trim()) {
-        router.visit(route('search', { query: searchQuery.value }));
-    }
-};
-
-const handleLogout = () => {
-    router.post(route('logout'));
-};
-</script>
 
 <style scoped>
 .ant-drawer-body {
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .ant-menu-item {

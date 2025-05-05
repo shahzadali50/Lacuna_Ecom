@@ -44,13 +44,15 @@ const addToCart = (product: Product) => {
   }, {
     preserveScroll: true,
     onSuccess: () => {
-      message.success('Added to cart');
+      console.log('Added to cart');
     },
     onError: (errors) => {
-      message.error('Failed to add to cart');
+      console.error('Failed to add to cart', errors);
     }
   });
 };
+
+
 
 
 // Add to favorites function
@@ -94,15 +96,16 @@ const addToFavorites = (e: Event, productId: number) => {
                </div>
               </div>
                 <div class="flex gap-1 mt-2">
-                  <Button
-                    type="primary"
-                    shape="circle"
-                    size="small"
-                    class="flex items-center justify-center bg-primary !w-6 !h-6"
-                    @click="(e) => addToCart(e, product.id)"
-                  >
-                    <template #icon><shopping-cart-outlined /></template>
-                  </Button>
+                    <Button
+  type="primary"
+  shape="circle"
+  size="small"
+  class="flex items-center justify-center bg-primary !w-6 !h-6"
+  @click.stop="addToCart(product)"
+>
+  <template #icon><shopping-cart-outlined /></template>
+</Button>
+
                   <Button
                     type="primary"
                     shape="circle"

@@ -193,9 +193,49 @@ class MainController extends Controller
         }
 
         public function addToCart(Request $request)
-{
-    dd('Request received', $request->all());
-}
+        {
+            try {
+                $cart = session()->get('cart', []);
+                $productId = $request->input('id');
+                $qty = $request->input('qty', 1);
+
+                $product = Product::findOrFail($productId);
+                $exists = false;
+
+                foreach ($cart as &$item) {
+                    if ($item['id'] === $productId) {
+                        $item['qty'] += $qty;
+                        $item['thumnail_img'] = $product->thumnail_img;
+                        $item['discount'] = $product->sale_price - $product->final_price;
+                        $item['total_price'] = $item['qty'] * $product->final_price;
+                        $exists = true;
+                        break;
+                    }
+                }
+
+                if (!$exists) {
+                    $cart[] = [
+                        'id' => $product->id,
+                        'thumnail_img' => $product->thumnail_img,
+                        'discount' => $product->sale_price - $product->final_price,
+                        'qty' => $qty,
+                        'total_price' => $qty * $product->final_price,
+                    ];
+                }
+
+                session(['cart' => $cart]);
+                \Log::info('Cart updated:', $cart);
+
+                return back()->with('success', 'Product added to cart.');
+
+            } catch (\Exception $e) {
+                \Log::error('Add to cart failed: ' . $e->getMessage());
+                return back()->with('error', 'Failed to add product to cart.');
+            }
+        }
+
+
+
 
     }
 

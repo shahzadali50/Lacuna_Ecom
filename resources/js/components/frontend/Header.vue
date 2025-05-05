@@ -173,34 +173,45 @@
                 <ShoppingCartOutlined class="text-xl" />
                 <span class="text-xs mt-1">Cart</span>
             </a>
-            <a-dropdown>
-                <div class="flex flex-col items-center">
-                    <UserOutlined class="text-xl" />
-                    <span class="text-xs mt-1">Account</span>
-                </div>
-                <template #overlay>
-                    <a-menu>
-                        <a-menu-item v-if="!isAuthenticated" key="login">
-                            <a href="/login">Login</a>
-                        </a-menu-item>
-                        <a-menu-item v-if="!isAuthenticated" key="register">
-                            <a href="/register">Register</a>
-                        </a-menu-item>
-                        <template v-else>
-                            <a-menu-item key="profile">
-                                <Link :href="route('dashboard')" class="text-gray-600 hover:text-gray-900">
-                                Profile
-                                </Link>
-                            </a-menu-item>
+            <a-dropdown trigger="click">
+  <div class="flex flex-col items-center cursor-pointer">
+    <UserOutlined class="text-xl" />
+    <span class="text-xs mt-1">Account</span>
+  </div>
 
-                            <a-menu-divider />
-                            <a-menu-item key="logout">
-                                <a href="#" @click.prevent="handleLogout">Logout</a>
-                            </a-menu-item>
-                        </template>
-                    </a-menu>
-                </template>
-            </a-dropdown>
+  <template #overlay>
+    <a-menu>
+      <!-- Show if NOT logged in -->
+      <template v-if="!isAuthenticated">
+        <a-menu-item key="login">
+          <Link :href="route('login')" class="text-gray-600 hover:text-gray-900">
+            Login
+          </Link>
+        </a-menu-item>
+        <a-menu-item key="register">
+          <Link :href="route('register')" class="text-gray-600 hover:text-gray-900">
+            Register
+          </Link>
+        </a-menu-item>
+      </template>
+      
+
+      <!-- Show if logged in -->
+      <template v-else>
+        <a-menu-item key="profile">
+          <Link :href="route('dashboard')" class="text-gray-600 hover:text-gray-900">
+            Profile
+          </Link>
+        </a-menu-item>
+        <a-menu-divider />
+        <a-menu-item key="logout">
+          <a href="#" @click.prevent="handleLogout">Logout</a>
+        </a-menu-item>
+      </template>
+    </a-menu>
+  </template>
+</a-dropdown>
+
         </div>
     </div>
 

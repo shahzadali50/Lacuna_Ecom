@@ -4,6 +4,7 @@ import { usePage } from '@inertiajs/vue3';
 import { ShoppingCartOutlined, HeartOutlined } from '@ant-design/icons-vue';
 import { Row, Col, Card, Button } from 'ant-design-vue';
 import { router } from '@inertiajs/vue3';
+
 interface Product {
   id: number;
   name: string;
@@ -36,11 +37,21 @@ const goToProductDetail = (slug: string) => {
 };
 
 // Add to cart function
-const addToCart = (e: Event, productId: number) => {
-  e.stopPropagation(); // Prevent triggering the card click
-  // In a real app, this would add the product to the cart
-  console.log(`Adding product ${productId} to cart`);
+const addToCart = (product: Product) => {
+  router.post(route('cart.add'), {
+    id: product.id,
+    qty: 1,
+  }, {
+    preserveScroll: true,
+    onSuccess: () => {
+      message.success('Added to cart');
+    },
+    onError: (errors) => {
+      message.error('Failed to add to cart');
+    }
+  });
 };
+
 
 // Add to favorites function
 const addToFavorites = (e: Event, productId: number) => {

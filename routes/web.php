@@ -21,6 +21,8 @@ use App\Http\Controllers\PurchaseProductController;
 Route::get('/', [MainController::class, 'index'])->name('home');
 Route::get('/product/{slug}', [MainController::class, 'productDetail'])->name('product.detail');
 Route::get('/lang/{locale}', [MainController::class, 'switchLanguage'])->name('language.switch');
+Route::post('/cart/add', [MainController::class, 'addToCart'])->name('cart.add');
+
 Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function () {
     Route::get('cache-clear', [MainController::class, 'cacheClear'])->name('cache.clear');
     Route::get('admin/dashboard', [MainController::class, 'dashboard'])->name('dashboard');

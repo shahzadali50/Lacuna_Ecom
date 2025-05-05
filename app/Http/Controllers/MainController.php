@@ -191,5 +191,11 @@ class MainController extends Controller
                 'locale' => App::getLocale(),
             ]);
         }
+
+        public function addToCart(Request $request)
+{
+    dd('Request received', $request->all());
+}
+
     }
 

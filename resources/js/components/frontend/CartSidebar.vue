@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { usePage, router } from '@inertiajs/vue3';
 import { ShoppingCartOutlined, DeleteOutlined } from '@ant-design/icons-vue';
 
@@ -7,7 +7,7 @@ interface Props {
   visible: boolean;
 }
 
-const props = defineProps<Props>();
+// const props = defineProps<Props>();
 const emit = defineEmits(['update:visible']);
 
 const cart = computed(() => {
@@ -37,6 +37,22 @@ const goToCheckout = () => {
 const closeDrawer = () => {
   emit('update:visible', false);
 };
+
+// Responsive drawer width
+const drawerWidth = ref(500);
+
+const updateDrawerWidth = () => {
+  drawerWidth.value = window.innerWidth <= 576 ? 300 : 500;
+};
+
+onMounted(() => {
+  updateDrawerWidth();
+  window.addEventListener('resize', updateDrawerWidth);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateDrawerWidth);
+});
 </script>
 
 <template>
@@ -45,7 +61,7 @@ const closeDrawer = () => {
     placement="right"
     :visible="visible"
     @close="closeDrawer"
-    width="400"
+    :width="drawerWidth"
   >
     <div class="flex flex-col h-full">
       <div class="flex-1 overflow-y-auto">
@@ -80,12 +96,3 @@ const closeDrawer = () => {
     </div>
   </a-drawer>
 </template>
-
-<style scoped>
-.ant-drawer-body {
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-</style>

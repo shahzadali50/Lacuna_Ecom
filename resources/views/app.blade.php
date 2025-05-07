@@ -17,8 +17,8 @@
         @vite(['resources/js/app.ts'])
         @inertiaHead
     </head>
-    <body >
+    <body>
         @inertia
-        
+
     </body>
 </html>

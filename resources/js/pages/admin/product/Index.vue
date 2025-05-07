@@ -7,19 +7,14 @@ import { ref, computed } from 'vue';
 import AddProduct from '@/components/admin/product/AddProduct.vue';
 import EditProduct from '@/components/admin/product/EditProduct.vue';
 
-// 1. Type Declarations
-declare const URL: {
-    createObjectURL(file: File): string;
-};
-
-// 2. Props Definition
-const props = defineProps<{
+// Props Definition
+defineProps<{
     products: { data: Array<any>; current_page: number; per_page: number; total: number };
     brands: Array<{ id: number; name: string; category_id: number }>;
     categories: Array<{ id: number; name: string }>;
 }>();
 
-// 3. State Management
+// State Management
 const isLoading = ref(false);
 const isAddProductModalVisible = ref(false);
 const isEditModalVisible = ref(false);
@@ -41,12 +36,11 @@ const selectedProduct = ref<{
     final_price: number;
 } | null>(null);
 
-// 4. Page and Translations
+// Page and Translations
 const page = usePage();
 const translations = computed(() => {
     return (page.props.translations as any)?.dashboard_all_pages || {};
 });
-
 
 // 6. Computed Properties
 const columns = computed(() => [
@@ -67,8 +61,6 @@ const columns = computed(() => [
 const formatDate = (date: string) => {
     return date ? dayjs(date).format("DD-MM-YYYY hh:mm A") : "N/A";
 };
-
-
 
 // 8. Event Handlers
 const deleteProduct = (id: number) => {
@@ -95,7 +87,6 @@ const openEditModal = (product: any) => {
     selectedProduct.value = product;
     isEditModalVisible.value = true;
 };
-
 
 </script>
 

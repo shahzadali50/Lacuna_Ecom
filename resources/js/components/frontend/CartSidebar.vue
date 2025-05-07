@@ -3,12 +3,13 @@ import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { usePage, router } from '@inertiajs/vue3';
 import { ShoppingCartOutlined, DeleteOutlined } from '@ant-design/icons-vue';
 
-interface Props {
+defineProps<{
   visible: boolean;
-}
+}>();
 
-const props = defineProps<Props>();
-const emit = defineEmits(['update:visible']);
+const emit = defineEmits<{
+  'update:visible': [value: boolean]
+}>();
 
 const cart = computed(() => {
   const data = usePage().props.cart as any[] || [];

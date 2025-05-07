@@ -48,9 +48,9 @@ const handleLogout = () => {
             <div class="flex items-center justify-between">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="/" class="flex items-center">
+                    <Link :href="route('home')" class="flex items-center">
                         <img src="\assets\images\Logo-LaCuna-JP-azul.fw.png" alt="Logo" class="h-8 w-auto" />
-                    </a>
+                    </Link>
                 </div>
 
                 <!-- Desktop Navigation -->

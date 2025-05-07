@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Link } from "@inertiajs/vue3";
 
-interface Props {
+defineProps<{
   visible: boolean;
-}
+}>();
 
-const props = defineProps<Props>();
-const emit = defineEmits(['update:visible']);
+const emit = defineEmits<{
+  'update:visible': [value: boolean]
+}>();
 
 const closeDrawer = () => {
   emit('update:visible', false);

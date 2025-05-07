@@ -34,8 +34,9 @@ const formatPrice = (price: number) => {
 const updateQuantity = (productId: number, action: string) => {
   router.post(route('cart.add'), { id: productId, qty: 1, action }, {
     preserveScroll: true,
+    preserveState: true,
     onSuccess: () => {
-      console.log('Cart updated');
+      // Cart will be automatically updated through page props
     },
     onError: (errors) => {
       console.error('Cart update failed', errors);
@@ -46,8 +47,9 @@ const updateQuantity = (productId: number, action: string) => {
 const removeItem = (productId: number) => {
   router.post(route('cart.remove'), { id: productId }, {
     preserveScroll: true,
+    preserveState: true,
     onSuccess: () => {
-      console.log('Item removed');
+      // Cart will be automatically updated through page props
     },
     onError: (errors) => {
       console.error('Remove failed', errors);
@@ -122,7 +124,7 @@ onUnmounted(() => {
           <span class="font-medium">Total:</span>
           <span class="font-bold text-primary">{{ formatPrice(total) }}</span>
         </div>
-        <a-button type="primary" block @click="goToCheckout">
+        <a-button type="primary" block @click="goToCheckout" :disabled="!cart || cart.length === 0">
           Proceed to Checkout
         </a-button>
       </div>

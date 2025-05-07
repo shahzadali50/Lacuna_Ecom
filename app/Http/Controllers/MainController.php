@@ -251,13 +251,28 @@ class MainController extends Controller
                 $cart = session()->get('cart', []);
                 $productId = $request->input('id');
 
+                // Remove the item from cart
                 $cart = array_filter($cart, function ($item) use ($productId) {
                     return $item['id'] !== $productId;
                 });
 
+                // Re-index the array to ensure sequential keys
+                $cart = array_values($cart);
+
+                // Update the session
                 session(['cart' => $cart]);
 
-                return back()->with('success', 'Cart Item Removed Successfully.');
+                // Calculate new totals
+                $total = 0;
+                foreach ($cart as $item) {
+                    $total += $item['total_price'];
+                }
+
+                return back()->with([
+                    'success' => 'Cart Item Removed Successfully.',
+                    'cart' => $cart,
+                    'cart_total' => $total
+                ]);
             } catch (\Exception $e) {
                 Log::error('Remove from cart failed: ' . $e->getMessage());
                 return back()->with('error', 'Failed to remove item from cart.');

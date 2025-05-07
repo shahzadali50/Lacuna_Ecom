@@ -11,11 +11,15 @@ const emit = defineEmits<{
   'update:visible': [value: boolean]
 }>();
 
+const isRemoving = ref(false);
+const processingItems = ref(new Set<number>());
+
 const cart = computed(() => {
   const data = usePage().props.cart as any[] || [];
   return data.map(item => ({
     ...item,
-    quantity: item.qty, // frontend alias
+    quantity: item.qty || 0, // frontend alias with fallback
+    isRemoving: processingItems.value.has(item.id)
   }));
 });
 
@@ -45,14 +49,32 @@ const updateQuantity = (productId: number, action: string) => {
 };
 
 const removeItem = (productId: number) => {
+  // Prevent multiple clicks on the same item
+  if (processingItems.value.has(productId)) return;
+
+  processingItems.value.add(productId);
+  isRemoving.value = true;
+
   router.post(route('cart.remove'), { id: productId }, {
     preserveScroll: true,
     preserveState: true,
-    onSuccess: () => {
-      // Cart will be automatically updated through page props
+    onSuccess: (page) => {
+      if (page.props.cart) {
+        // Cart will be automatically updated through page props
+        // console.log('Cart updated successfully');
+      }
     },
     onError: (errors) => {
       console.error('Remove failed', errors);
+      // Show error message to user
+      if (errors.message) {
+        // You can use your preferred notification system here
+        console.error(errors.message);
+      }
+    },
+    onFinish: () => {
+      isRemoving.value = false;
+      processingItems.value.delete(productId);
     }
   });
 };

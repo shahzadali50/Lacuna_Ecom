@@ -248,33 +248,52 @@ class MainController extends Controller
         public function removeFromCart(Request $request)
         {
             try {
+                // Get cart from session and ensure it's an array
                 $cart = session()->get('cart', []);
-                $productId = $request->input('id');
-
-                // Remove the item from cart
-                $cart = array_filter($cart, function ($item) use ($productId) {
-                    return $item['id'] !== $productId;
-                });
-
-                // Re-index the array to ensure sequential keys
-                $cart = array_values($cart);
-
-                // Update the session
-                session(['cart' => $cart]);
-
-                // Calculate new totals
-                $total = 0;
-                foreach ($cart as $item) {
-                    $total += $item['total_price'];
+                if (!is_array($cart)) {
+                    $cart = [];
                 }
 
-                return back()->with([
-                    'success' => 'Cart Item Removed Successfully.',
-                    'cart' => $cart,
-                    'cart_total' => $total
-                ]);
+                $productId = (int)$request->input('id');
+
+
+
+                // Find the exact item to remove
+                $itemToRemove = null;
+                foreach ($cart as $key => $item) {
+                    if ((int)$item['id'] === $productId) {
+                        $itemToRemove = $key;
+                        break;
+                    }
+                }
+
+                // If item found, remove only that specific item
+                if ($itemToRemove !== null) {
+                    // Remove the specific item
+                    unset($cart[$itemToRemove]);
+
+                    // Re-index the array
+                    $cart = array_values($cart);
+
+                    // Update the session with the new cart
+                    session()->put('cart', $cart);
+                    session()->save(); // Force save the session
+
+                    // Calculate new totals
+                    $total = 0;
+                    foreach ($cart as $item) {
+                        $total += $item['total_price'];
+                    }
+
+
+                    return back()->with('success', 'Cart Item Removed Successfully.');
+                }
+
+                \Log::warning('Item not found in cart: ' . $productId);
+
+                return back()->with('error', 'Item not found in cart.');
             } catch (\Exception $e) {
-                Log::error('Remove from cart failed: ' . $e->getMessage());
+                \Log::error('Remove from cart failed: ' . $e->getMessage());
                 return back()->with('error', 'Failed to remove item from cart.');
             }
         }

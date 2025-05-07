@@ -15,7 +15,7 @@ import {
     UserOutlined,
     HomeOutlined,
     AppstoreOutlined,
-    
+
 } from '@ant-design/icons-vue';
 
 const { props } = usePage();
@@ -215,41 +215,42 @@ const handleLogout = () => {
                 <ShoppingCartOutlined class="text-xl" />
                 <span class="text-xs mt-1">Cart</span>
             </a>
-            <a-dropdown placement="topLeft">
-                <a class="flex flex-col items-center cursor-pointer">
-                    <UserOutlined class="text-xl" />
-                    <span class="text-xs mt-1">Account</span>
-                </a>
-                <template #overlay>
-                    <a-menu>
-                        <template v-if="!isAuthenticated">
-                            <a-menu-item key="login">
-                                <Link :href="route('login')" class="flex items-center">
-                                Login
-                                </Link>
-                            </a-menu-item>
-                            <a-menu-item key="register">
-                                <Link :href="route('register')" class="flex items-center">
-                                Register
-                                </Link>
-                            </a-menu-item>
-                        </template>
-                        <template v-else>
-                            <a-menu-item key="profile">
-                                <Link :href="route('dashboard')" class="flex items-center">
-                                Profile
-                                </Link>
-                            </a-menu-item>
-                            <a-menu-divider />
-                            <a-menu-item key="logout">
-                                <a href="#" @click.prevent="handleLogout" class="flex items-center">
-                                    Logout
-                                </a>
-                            </a-menu-item>
-                        </template>
-                    </a-menu>
-                </template>
-            </a-dropdown>
+            <a-dropdown placement="topLeft" trigger="click">
+    <a class="flex flex-col items-center cursor-pointer">
+        <UserOutlined class="text-xl" />
+        <span class="text-xs mt-1">Account</span>
+    </a>
+    <template #overlay>
+        <a-menu>
+            <template v-if="!isAuthenticated">
+                <a-menu-item key="login">
+                    <Link :href="route('login')" class="flex items-center">
+                        Login
+                    </Link>
+                </a-menu-item>
+                <a-menu-item key="register">
+                    <Link :href="route('register')" class="flex items-center">
+                        Register
+                    </Link>
+                </a-menu-item>
+            </template>
+            <template v-else>
+                <a-menu-item key="profile">
+                    <Link :href="route('dashboard')" class="flex items-center">
+                        Profile
+                    </Link>
+                </a-menu-item>
+                <a-menu-divider />
+                <a-menu-item key="logout">
+                    <a href="#" @click.prevent="handleLogout" class="flex items-center">
+                        Logout
+                    </a>
+                </a-menu-item>
+            </template>
+        </a-menu>
+    </template>
+</a-dropdown>
+
 
 
 

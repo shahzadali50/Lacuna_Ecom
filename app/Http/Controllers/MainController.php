@@ -198,6 +198,7 @@ class MainController extends Controller
                 $cart = session()->get('cart', []);
                 $productId = $request->input('id');
                 $qty = $request->input('qty', 1);
+                $action = $request->input('action', 'add');
 
                 $product = Product::findOrFail($productId);
 
@@ -205,22 +206,29 @@ class MainController extends Controller
 
                 foreach ($cart as &$item) {
                     if ($item['id'] === $productId) {
-                        $item['qty'] += $qty;
+                        if ($action === 'add') {
+                            $item['qty'] += $qty;
+                        } elseif ($action === 'decrease' && $item['qty'] > 1) {
+                            $item['qty'] -= $qty;
+                        }
+
                         $item['thumnail_img'] = $product->thumnail_img;
                         $item['name'] = $product->name;
-                        $item['discount'] = $product->sale_price - $product->final_price;
+                        $item['purchase_price'] = $product->purchase_price;
+                        $item['discount'] = $product->discount;
                         $item['total_price'] = $item['qty'] * $product->final_price;
                         $exists = true;
                         break;
                     }
                 }
 
-                if (!$exists) {
+                if (!$exists && $action === 'add') {
                     $cart[] = [
                         'id' => $product->id,
                         'name' => $product->name,
                         'thumnail_img' => $product->thumnail_img,
-                        'discount' => $product->sale_price - $product->final_price,
+                        'purchase_price' => $product->purchase_price,
+                        'discount' => $product->discount,
                         'qty' => $qty,
                         'total_price' => $qty * $product->final_price,
                     ];
@@ -229,10 +237,28 @@ class MainController extends Controller
                 session(['cart' => $cart]);
                 \Log::info('Cart updated:', $cart);
 
-                return back()->with('success', 'Product added to cart.');
+                return back()->with('success', 'Cart updated.');
             } catch (\Exception $e) {
-                \Log::error('Add to cart failed: ' . $e->getMessage());
-                return back()->with('error', 'Failed to add product to cart.');
+                \Log::error('Cart update failed: ' . $e->getMessage());
+                return back()->with('error', 'Failed to update cart.');
+            }
+        }
+        public function removeFromCart(Request $request)
+        {
+            try {
+                $cart = session()->get('cart', []);
+                $productId = $request->input('id');
+
+                $cart = array_filter($cart, function ($item) use ($productId) {
+                    return $item['id'] !== $productId;
+                });
+
+                session(['cart' => $cart]);
+
+                return back()->with('success', 'Cart Item Removed Successfully.');
+            } catch (\Exception $e) {
+                Log::error('Remove from cart failed: ' . $e->getMessage());
+                return back()->with('error', 'Failed to remove item from cart.');
             }
         }
 

@@ -215,6 +215,7 @@ class MainController extends Controller
                         $item['thumnail_img'] = $product->thumnail_img;
                         $item['name'] = $product->name;
                         $item['purchase_price'] = $product->purchase_price;
+                        $item['final_price'] = $product->final_price;
                         $item['discount'] = $product->discount;
                         $item['total_price'] = $item['qty'] * $product->final_price;
                         $exists = true;
@@ -228,6 +229,7 @@ class MainController extends Controller
                         'name' => $product->name,
                         'thumnail_img' => $product->thumnail_img,
                         'purchase_price' => $product->purchase_price,
+                        'final_price' => $product->final_price,
                         'discount' => $product->discount,
                         'qty' => $qty,
                         'total_price' => $qty * $product->final_price,

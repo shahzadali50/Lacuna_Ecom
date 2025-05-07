@@ -4,8 +4,8 @@ import { usePage } from '@inertiajs/vue3';
 import { router } from '@inertiajs/vue3';
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 import CartSidebar from '@/components/frontend/CartSidebar.vue';
+import MobileSidebar from '@/components/frontend/MobileSidebar.vue';
 import { Link } from "@inertiajs/vue3";
-
 
 import {
     MenuOutlined,
@@ -15,7 +15,6 @@ import {
     UserOutlined,
     HomeOutlined,
     AppstoreOutlined,
-
 } from '@ant-design/icons-vue';
 
 const { props } = usePage();
@@ -27,6 +26,10 @@ const isAuthenticated = computed(() => props.auth?.user);
 
 const toggleMobileMenu = () => {
     mobileMenuOpen.value = !mobileMenuOpen.value;
+};
+
+const toggleCart = () => {
+    cartDrawerVisible.value = !cartDrawerVisible.value;
 };
 
 const handleSearch = () => {
@@ -87,7 +90,7 @@ const handleLogout = () => {
                                 <HeartOutlined />
                             </template>
                         </a-button>
-                        <a-button type="text" shape="circle" @click="cartDrawerVisible = true">
+                        <a-button type="text" shape="circle" @click="toggleCart">
                             <template #icon>
                                 <ShoppingCartOutlined />
                             </template>
@@ -159,40 +162,7 @@ const handleLogout = () => {
     </header>
 
     <!-- Mobile Sidebar -->
-    <a-drawer :visible="mobileMenuOpen" placement="left" :closable="true" @close="toggleMobileMenu" width="280">
-        <div class="flex flex-col h-full">
-            <!-- Navigation Links -->
-            <nav class="flex-1">
-                <a-menu mode="vertical">
-                    <a-menu-item key="home">
-                        <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
-                        Home
-                        </Link>
-                    </a-menu-item>
-                    <a-menu-item key="products">
-                        <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
-                        Products
-                        </Link>
-                    </a-menu-item>
-                    <a-menu-item key="categories">
-                        <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
-                        Categories
-                        </Link>
-                    </a-menu-item>
-                    <a-menu-item key="brands">
-                        <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
-                        Brands
-                        </Link>
-                    </a-menu-item>
-                    <a-menu-item key="about">
-                        <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
-                        About
-                        </Link>
-                    </a-menu-item>
-                </a-menu>
-            </nav>
-        </div>
-    </a-drawer>
+    <MobileSidebar v-model:visible="mobileMenuOpen" />
 
     <!-- Mobile Bottom Navigation -->
     <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
@@ -211,45 +181,45 @@ const handleLogout = () => {
             <HeartOutlined class="text-xl" />
             <span class="text-xs mt-1">Favorites</span>
             </Link>
-            <a class="flex flex-col items-center" @click="cartDrawerVisible = true">
+            <a class="flex flex-col items-center" @click="toggleCart">
                 <ShoppingCartOutlined class="text-xl" />
                 <span class="text-xs mt-1">Cart</span>
             </a>
             <a-dropdown placement="topLeft" trigger="click">
-    <a class="flex flex-col items-center cursor-pointer">
-        <UserOutlined class="text-xl" />
-        <span class="text-xs mt-1">Account</span>
-    </a>
-    <template #overlay>
-        <a-menu>
-            <template v-if="!isAuthenticated">
-                <a-menu-item key="login">
-                    <Link :href="route('login')" class="flex items-center">
-                        Login
-                    </Link>
-                </a-menu-item>
-                <a-menu-item key="register">
-                    <Link :href="route('register')" class="flex items-center">
-                        Register
-                    </Link>
-                </a-menu-item>
-            </template>
-            <template v-else>
-                <a-menu-item key="profile">
-                    <Link :href="route('dashboard')" class="flex items-center">
-                        Profile
-                    </Link>
-                </a-menu-item>
-                <a-menu-divider />
-                <a-menu-item key="logout">
-                    <a href="#" @click.prevent="handleLogout" class="flex items-center">
-                        Logout
-                    </a>
-                </a-menu-item>
-            </template>
-        </a-menu>
-    </template>
-</a-dropdown>
+                <a class="flex flex-col items-center cursor-pointer">
+                    <UserOutlined class="text-xl" />
+                    <span class="text-xs mt-1">Account</span>
+                </a>
+                <template #overlay>
+                    <a-menu>
+                        <template v-if="!isAuthenticated">
+                            <a-menu-item key="login">
+                                <Link :href="route('login')" class="flex items-center">
+                                Login
+                                </Link>
+                            </a-menu-item>
+                            <a-menu-item key="register">
+                                <Link :href="route('register')" class="flex items-center">
+                                Register
+                                </Link>
+                            </a-menu-item>
+                        </template>
+                        <template v-else>
+                            <a-menu-item key="profile">
+                                <Link :href="route('dashboard')" class="flex items-center">
+                                Profile
+                                </Link>
+                            </a-menu-item>
+                            <a-menu-divider />
+                            <a-menu-item key="logout">
+                                <a href="#" @click.prevent="handleLogout" class="flex items-center">
+                                    Logout
+                                </a>
+                            </a-menu-item>
+                        </template>
+                    </a-menu>
+                </template>
+            </a-dropdown>
 
 
 
@@ -267,22 +237,5 @@ const handleLogout = () => {
 
 
 <style scoped>
-.ant-drawer-body {
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.ant-menu-item {
-    margin: 0 !important;
-}
-
-.ant-menu-item a {
-    color: #666;
-}
-
-.ant-menu-item-selected a {
-    color: #1890ff;
-}
+/* Remove the mobile sidebar styles since they're now in the MobileSidebar component */
 </style>

@@ -22,7 +22,6 @@ Route::get('/', [MainController::class, 'index'])->name('home');
 Route::get('/product/{slug}', [MainController::class, 'productDetail'])->name('product.detail');
 Route::get('/lang/{locale}', [MainController::class, 'switchLanguage'])->name('language.switch');
 Route::post('/cart/add', [MainController::class, 'addToCart'])->name('cart.add');
-Route::post('/cart/remove', [MainController::class, 'removeFromCart'])->name('cart.remove');
 
 
 Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function () {

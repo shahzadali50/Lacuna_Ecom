@@ -7,30 +7,7 @@ interface Props {
   visible: boolean;
 }
 
-const updateQuantity = (productId: number, action: string) => {
-  router.post(route('cart.add'), { id: productId, qty: 1, action }, {
-    preserveScroll: true,
-    onSuccess: () => {
-      console.log('Cart updated');
-    },
-    onError: (errors) => {
-      console.error('Cart update failed', errors);
-    }
-  });
-};
-
-const removeItem = (productId: number) => {
-  router.post(route('cart.remove'), { id: productId, action: 'remove' }, {
-    preserveScroll: true,
-    onSuccess: () => {
-      console.log('Item removed');
-    },
-    onError: (errors) => {
-      console.error('Remove failed', errors);
-    }
-  });
-};
-
+const props = defineProps<Props>();
 const emit = defineEmits(['update:visible']);
 
 const cart = computed(() => {
@@ -51,6 +28,30 @@ const formatPrice = (price: number) => {
     currency: 'PKR',
     minimumFractionDigits: 2,
   }).format(price);
+};
+
+const updateQuantity = (productId: number, action: string) => {
+  router.post(route('cart.add'), { id: productId, qty: 1, action }, {
+    preserveScroll: true,
+    onSuccess: () => {
+      console.log('Cart updated');
+    },
+    onError: (errors) => {
+      console.error('Cart update failed', errors);
+    }
+  });
+};
+
+const removeItem = (productId: number) => {
+  router.post(route('cart.remove'), { id: productId }, {
+    preserveScroll: true,
+    onSuccess: () => {
+      console.log('Item removed');
+    },
+    onError: (errors) => {
+      console.error('Remove failed', errors);
+    }
+  });
 };
 
 const goToCheckout = () => {
@@ -81,7 +82,7 @@ onUnmounted(() => {
   <a-drawer
     title="Shopping Cart"
     placement="right"
-    :visible="visible"
+    :open="visible"
     @close="closeDrawer"
     :width="drawerWidth"
   >
@@ -92,7 +93,7 @@ onUnmounted(() => {
           <p class="text-gray-500">Your cart is empty</p>
         </div>
         <div v-else class="space-y-4">
-          <div v-for="item in cart" :key="item.id" class="flex items-start gap-4 border-b">
+          <div v-for="item in cart" :key="item.id" class="flex items-start gap-4 p-4 border-b">
             <img :src="'/storage/' + item.thumnail_img" :alt="item.name" class="w-20 h-20 object-cover rounded">
             <div class="flex-1">
               <div class="flex justify-between items-start">
@@ -101,13 +102,13 @@ onUnmounted(() => {
                   <template #icon><DeleteOutlined /></template>
                 </a-button>
               </div>
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2 mt-2">
                 <a-button size="small" @click="updateQuantity(item.id, 'decrease')">-</a-button>
-                <span class="text-gray-600"> {{ item.quantity }}</span>
+                <span class="text-gray-600">{{ item.quantity }}</span>
                 <a-button size="small" @click="updateQuantity(item.id, 'add')">+</a-button>
               </div>
-              <div class="flex justify-between items-start">
-                <p class=" mt-3">{{ item.quantity }} X {{ formatPrice(item.final_price) }}</p>
+              <div class="flex justify-between items-start mt-2">
+                <p>{{ item.quantity }} X {{ formatPrice(item.final_price) }}</p>
               </div>
               <p class="text-primary font-medium mt-2">Total: {{ formatPrice(item.total_price) }}</p>
             </div>
@@ -127,3 +128,9 @@ onUnmounted(() => {
     </div>
   </a-drawer>
 </template>
+
+<style scoped>
+.ant-drawer-body {
+  padding: 0;
+}
+</style>

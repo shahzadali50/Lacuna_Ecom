@@ -126,18 +126,18 @@ const addToCart = () => {
 
                         <!-- Navigation Buttons -->
                         <button @click="prevImage"
-                            class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100">
+                            class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors duration-200">
                             <ArrowLeftOutlined />
                         </button>
                         <button @click="nextImage"
-                            class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100">
+                            class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors duration-200">
                             <ArrowRightOutlined />
                         </button>
 
                         <!-- Thumbnails -->
                         <div class="flex mt-4 space-x-2 overflow-x-auto">
                             <div v-for="(image, index) in fullGallery" :key="index" @click="currentImageIndex = index"
-                                class="w-16 h-16 rounded-md overflow-hidden cursor-pointer border-2"
+                                class="w-16 h-16 rounded-md overflow-hidden cursor-pointer border-2 transition-all duration-200 hover:opacity-80"
                                 :class="currentImageIndex === index ? 'border-primary' : 'border-transparent'">
                                 <img :src="image" :alt="`${product.name} - ${index + 1}`"
                                     class="w-full h-full object-cover" />
@@ -221,15 +221,17 @@ const addToCart = () => {
                             <Col :xs="24" :sm="12">
                             <button
                                 @click="addToCart"
-                                class="w-full bg-primary text-white py-3 px-6 rounded-md font-medium hover:bg-primary-dark transition-colors flex items-center justify-center">
+                                :disabled="product.stock === 0"
+                                class="w-full bg-primary text-white py-3 px-6 rounded-md font-medium hover:bg-primary-dark transition-all duration-200 flex items-center justify-center transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:bg-primary">
                                 <ShoppingCartOutlined class="mr-2" />
-                                Add to Cart
+                                {{ product.stock === 0 ? 'Out of Stock' : 'Add to Cart' }}
                             </button>
                             </Col>
                             <Col :xs="24" :sm="12">
                             <button
-                                class="w-full bg-gray-900 text-white py-3 px-6 rounded-md font-medium hover:bg-gray-800 transition-colors">
-                                Buy Now
+                                :disabled="product.stock === 0"
+                                class="w-full bg-gray-900 text-white py-3 px-6 rounded-md font-medium hover:bg-gray-800 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:bg-gray-900">
+                                {{ product.stock === 0 ? 'Out of Stock' : 'Buy Now' }}
                             </button>
                             </Col>
                         </Row>
@@ -238,14 +240,14 @@ const addToCart = () => {
                         <Row :gutter="[16, 16]" class="mb-6">
                             <Col :xs="24" :sm="12">
                             <button
-                                class="w-full border border-gray-300 py-3 px-6 rounded-md font-medium hover:bg-gray-50 transition-colors flex items-center justify-center">
+                                class="w-full border border-gray-300 py-3 px-6 rounded-md font-medium hover:bg-gray-50 transition-all duration-200 flex items-center justify-center transform hover:scale-[1.02]">
                                 <HeartOutlined class="mr-2" />
                                 Add to Wishlist
                             </button>
                             </Col>
                             <Col :xs="24" :sm="12">
                             <button
-                                class="w-full border border-gray-300 py-3 px-6 rounded-md font-medium hover:bg-gray-50 transition-colors flex items-center justify-center">
+                                class="w-full border border-gray-300 py-3 px-6 rounded-md font-medium hover:bg-gray-50 transition-all duration-200 flex items-center justify-center transform hover:scale-[1.02]">
                                 <ShareAltOutlined class="mr-2" />
                                 Share
                             </button>
@@ -275,13 +277,5 @@ const addToCart = () => {
 </template>
 
 <style scoped>
-.prose {
-    max-width: 65ch;
-    color: #374151;
-}
 
-.prose p {
-    margin-bottom: 1.25em;
-    line-height: 1.75;
-}
 </style>

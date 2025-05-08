@@ -202,11 +202,20 @@ class MainController extends Controller
 
                 $product = Product::findOrFail($productId);
 
+                // Check if product has sufficient stock
+                if ($product->stock < 1) {
+                    return back()->with('error', 'Product is out of stock.');
+                }
+
                 $exists = false;
 
                 foreach ($cart as &$item) {
                     if ($item['id'] === $productId) {
                         if ($action === 'add') {
+                            // Check if adding quantity exceeds stock
+                            if (($item['qty'] + $qty) > $product->stock) {
+                                return back()->with('error', 'Requested quantity exceeds available stock.');
+                            }
                             $item['qty'] += $qty;
                         } elseif ($action === 'decrease' && $item['qty'] > 1) {
                             $item['qty'] -= $qty;
@@ -224,6 +233,11 @@ class MainController extends Controller
                 }
 
                 if (!$exists && $action === 'add') {
+                    // Check if requested quantity exceeds stock
+                    if ($qty > $product->stock) {
+                        return back()->with('error', 'Requested quantity exceeds available stock.');
+                    }
+
                     $cart[] = [
                         'id' => $product->id,
                         'name' => $product->name,
@@ -237,7 +251,6 @@ class MainController extends Controller
                 }
 
                 session(['cart' => $cart]);
-                // \Log::info('Cart updated:', $cart);
 
                 return back()->with('success', 'Item added to cart successfully.');
             } catch (\Exception $e) {

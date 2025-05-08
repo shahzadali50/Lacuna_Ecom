@@ -101,7 +101,7 @@ const addToCart = () => {
                 <div class="flex flex-wrap items-center text-sm text-gray-500">
                         <Link :href="route('home')" class="hover:text-primary">Home</Link>
                         <span class="mx-2">/</span>
-                        <Link :href="route('home')" class="hover:text-primary">Products</Link>
+                        <span>Products</span>
                         <span class="mx-2">/</span>
                         <span >{{ product.category_name }}</span>
                         <span class="mx-2">/</span>

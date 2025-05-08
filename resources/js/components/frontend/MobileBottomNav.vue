@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import {
@@ -52,7 +51,7 @@ const handleLogout = () => {
                 </a>
                 <template #overlay>
                     <a-menu>
-                        <template v-if="!isAuthenticated">
+                        <template v-if="!props.isAuthenticated">
                             <a-menu-item key="login">
                                 <Link :href="route('login')" class="flex items-center">
                                     Login

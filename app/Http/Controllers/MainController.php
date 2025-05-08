@@ -239,7 +239,7 @@ class MainController extends Controller
                 session(['cart' => $cart]);
                 // \Log::info('Cart updated:', $cart);
 
-                return back()->with('success', 'Cart updated.');
+                return back()->with('success', 'Item added to cart successfully.');
             } catch (\Exception $e) {
                 \Log::error('Cart update failed: ' . $e->getMessage());
                 return back()->with('error', 'Failed to update cart.');

@@ -14,8 +14,6 @@ import {
     HeartOutlined,
     ShoppingCartOutlined,
     UserOutlined,
-    HomeOutlined,
-    AppstoreOutlined,
 } from '@ant-design/icons-vue';
 
 const { props } = usePage();

@@ -3,6 +3,7 @@ import { ref, computed } from 'vue';
 import { Head, router } from '@inertiajs/vue3';
 import UserLayout from '@/layouts/UserLayout.vue';
 import { Row, Col } from 'ant-design-vue';
+import { Link } from '@inertiajs/vue3';
 import {
     ShoppingCartOutlined,
     HeartOutlined,
@@ -93,28 +94,26 @@ const addToCart = () => {
     <UserLayout>
 
         <Head :title="product.name" />
-        <!-- Breadcrumb -->
+   <!-- Breadcrumb -->
 
-        <section>
-            <div class=" py-3">
-                <div class="container mx-auto px-4">
+   <section class="mt-[120px] md:mt-[70px]">
+    <div class="container mx-auto px-4">
                 <div class="flex flex-wrap items-center text-sm text-gray-500">
-                        <a href="/" class="hover:text-primary">Home</a>
+                        <Link :href="route('home')" class="hover:text-primary">Home</Link>
                         <span class="mx-2">/</span>
-                        <a href="/products" class="hover:text-primary">Products</a>
+                        <Link :href="route('home')" class="hover:text-primary">Products</Link>
                         <span class="mx-2">/</span>
-                        <a href="/products/category" class="hover:text-primary">{{ product.category_name }}</a>
+                        <span >{{ product.category_name }}</span>
                         <span class="mx-2">/</span>
                         <span class="text-gray-700">{{ product.name }}</span>
                     </div>
                 </div>
-            </div>
         </section>
 
 
 
         <!-- Main Content Section -->
-        <section>
+        <section class="my-2">
             <div class="container mx-auto px-4">
                 <Row :gutter="[32, 32]">
                     <!-- Product Images -->

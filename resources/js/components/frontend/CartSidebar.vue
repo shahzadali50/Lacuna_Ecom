@@ -141,12 +141,12 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <div class="border-t p-4">
+      <div v-if="cart && cart.length > 0" class="border-t p-4">
         <div class="flex justify-between mb-4">
           <span class="font-medium">Total:</span>
           <span class="font-bold text-primary">{{ formatPrice(total) }}</span>
         </div>
-        <a-button type="primary" block @click="goToCheckout" :disabled="!cart || cart.length === 0">
+        <a-button type="primary" block @click="goToCheckout">
           Proceed to Checkout
         </a-button>
       </div>

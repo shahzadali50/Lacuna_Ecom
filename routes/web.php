@@ -3,6 +3,7 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\OrderController;
@@ -19,10 +20,11 @@ use App\Http\Controllers\PurchaseProductController;
 //     ]);
 // })->name('home');
 Route::get('/', [MainController::class, 'index'])->name('home');
-Route::get('/product/{slug}', [MainController::class, 'productDetail'])->name('product.detail');
-Route::get('/lang/{locale}', [MainController::class, 'switchLanguage'])->name('language.switch');
-Route::post('/cart/add', [MainController::class, 'addToCart'])->name('cart.add');
-Route::post('/cart/remove', [MainController::class, 'removeFromCart'])->name('cart.remove');
+Route::get('product/{slug}', [MainController::class, 'productDetail'])->name('product.detail');
+Route::get('lang/{locale}', [MainController::class, 'switchLanguage'])->name('language.switch');
+Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+Route::post('cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+Route::get('cart/view', [CartController::class, 'cartView'])->name('cart.view');
 
 Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function () {
     Route::get('cache-clear', [MainController::class, 'cacheClear'])->name('cache.clear');
@@ -55,7 +57,7 @@ Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function
     Route::get('order/create', [OrderController::class, 'orderCreate'])->name('order.create');
     Route::get('order/list', [OrderController::class, 'orderList'])->name('order.list');
     Route::post('order/store', [OrderController::class, 'store'])->name('order.store');
-    Route::get('/admin/get-brands-by-category/{category}', [ProductController::class, 'getBrandsByCategory'])->name('admin.get.brands.by.category');
+    Route::get('admin/get-brands-by-category/{category}', [ProductController::class, 'getBrandsByCategory'])->name('admin.get.brands.by.category');
 });
 
 

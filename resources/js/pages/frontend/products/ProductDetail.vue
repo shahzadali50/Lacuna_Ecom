@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import UserLayout from '@/layouts/UserLayout.vue';
 import { Row, Col } from 'ant-design-vue';
 import {
@@ -29,6 +29,7 @@ interface Product {
     thumbnail_image: string | null;
     gallery_images: string[];
 }
+
 
 const props = defineProps<{
     product: Product;
@@ -70,6 +71,21 @@ const decreaseQuantity = () => {
     if (quantity.value > 1) {
         quantity.value--;
     }
+};
+
+const addToCart = () => {
+    router.post(route('cart.add'), {
+        id: props.product.id,
+        qty: quantity.value,
+    }, {
+        preserveScroll: true,
+        onSuccess: () => {
+            console.log('Added to cart');
+        },
+        onError: (errors) => {
+            console.error('Failed to add to cart', errors);
+        }
+    });
 };
 </script>
 
@@ -205,6 +221,7 @@ const decreaseQuantity = () => {
                         <Row :gutter="[16, 16]" class="mb-6">
                             <Col :xs="24" :sm="12">
                             <button
+                                @click="addToCart"
                                 class="w-full bg-primary text-white py-3 px-6 rounded-md font-medium hover:bg-primary-dark transition-colors flex items-center justify-center">
                                 <ShoppingCartOutlined class="mr-2" />
                                 Add to Cart

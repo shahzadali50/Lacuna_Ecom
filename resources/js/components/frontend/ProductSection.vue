@@ -97,14 +97,14 @@ const addToFavorites = (e: Event, productId: number) => {
               </div>
                 <div class="flex gap-1 mt-2">
                     <Button
-  type="primary"
-  shape="circle"
-  size="small"
-  class="flex items-center justify-center bg-primary !w-6 !h-6"
-  @click.stop="addToCart(product)"
->
-  <template #icon><shopping-cart-outlined /></template>
-</Button>
+                        type="primary"
+                        shape="circle"
+                        size="small"
+                        class="flex items-center justify-center bg-primary !w-6 !h-6"
+                        @click.stop="addToCart(product)"
+                        >
+                        <template #icon><shopping-cart-outlined /></template>
+                        </Button>
 
                   <Button
                     type="primary"

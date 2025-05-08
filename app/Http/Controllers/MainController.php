@@ -237,7 +237,7 @@ class MainController extends Controller
                 }
 
                 session(['cart' => $cart]);
-                \Log::info('Cart updated:', $cart);
+                // \Log::info('Cart updated:', $cart);
 
                 return back()->with('success', 'Cart updated.');
             } catch (\Exception $e) {
@@ -285,7 +285,6 @@ class MainController extends Controller
                         $total += $item['total_price'];
                     }
 
-
                     return back()->with('success', 'Cart Item Removed Successfully.');
                 }
 
@@ -297,9 +296,5 @@ class MainController extends Controller
                 return back()->with('error', 'Failed to remove item from cart.');
             }
         }
-
-
-
-
     }
 

@@ -28,7 +28,7 @@ const handleMenuClick: MenuProps['onClick'] = (info) => {
 </script>
 
 <template>
-<a-dropdown>
+<a-dropdown trigger="click">
   <template #overlay>
     <a-menu @click="handleMenuClick">
       <a-menu-item

@@ -66,7 +66,7 @@ const addToFavorites = (e: Event, productId: number) => {
 </script>
 
 <template>
-  <section>
+  <section >
     <div class="container mx-auto px-2 sm:px-4">
       <div class="text-center mb-8 sm:mb-12">
         <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">{{ translations.title || 'Product List' }}</h2>
@@ -74,7 +74,7 @@ const addToFavorites = (e: Event, productId: number) => {
       </div>
 
       <Row :gutter="[8, 8]">
-        <Col :xs="12" :sm="12" :md="8" :lg="8" :xl="6" v-for="product in products" :key="product.id">
+        <Col :xs="12" :sm="12" :md="8" :lg="8" :xl="6" v-for="product in products" :key="product.id" class="mb-6">
           <Card
             hoverable
             class="h-full product-card cursor-pointer"
@@ -92,7 +92,7 @@ const addToFavorites = (e: Event, productId: number) => {
             <div class="">
               <h3 class="text-[15px] sm:text-xl font-semibold text-gray-900 mb-1">{{ product.name }}</h3>
               <div class="flex justify-between items-center">
-               <div>
+               <div class="flex flex-wrap">
                 <span class="text-xs sm:text-sm md:text-base font-bold text-primary pr-2">{{ formatPrice(product.final_price) }}</span>
                 <span class="text-xs sm:text-sm md:text-base text-secondary line-through">{{ formatPrice(product.sale_price) }}</span>
                </div>

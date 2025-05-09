@@ -31,7 +31,7 @@ const categories = computed(() => {
                 class="category-image"
               />
             </div>
-            <h5 class="text-lg font-semibold mb-1">{{ category.name }}</h5>
+            <h5 class="text-lg font-semibold my-1">{{ category.name }}</h5>
             <p class="text-sm text-gray-500">{{ category.product_count }} {{ translations.products || 'Products' }}</p>
           </div>
         </Col>
@@ -43,8 +43,8 @@ const categories = computed(() => {
 <style scoped>
 .image-container {
   overflow: hidden;
-  width: 80px;
-  height: 80px;
+  width: 140px;
+  height: 140px;
   margin: 0 auto;
 }
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Brand;
+use App\Models\Product;
 use App\Models\CategoryTranslation;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +25,10 @@ class Category extends Model
     public function brands(): HasMany
     {
         return $this->hasMany(Brand::class);
+    }
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
     }
     public function category_translations(){
     	return $this->hasMany(CategoryTranslation::class);

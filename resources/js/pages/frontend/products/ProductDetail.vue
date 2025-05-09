@@ -101,7 +101,7 @@ const addToCart = () => {
         <Head :title="product.name" />
         <!-- Breadcrumb -->
 
-        <section class="mt-[120px] md:mt-[70px]">
+        <section>
             <div class="container mx-auto px-4">
                 <div class="flex flex-wrap items-center text-sm text-gray-500">
                     <Link :href="route('home')" class="hover:text-primary">{{ translations.home || 'Home' }}</Link>
@@ -118,7 +118,7 @@ const addToCart = () => {
 
 
         <!-- Main Content Section -->
-        <section class="my-2">
+        <section >
             <div class="container mx-auto px-4">
                 <Row :gutter="[32, 32]">
                     <!-- Product Images -->

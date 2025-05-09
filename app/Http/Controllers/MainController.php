@@ -16,9 +16,25 @@ use Illuminate\Support\Facades\Artisan;
 class MainController extends Controller
 {
 
-    public function index(){
+    public function index()
+    {
         try {
             $locale = session('locale', App::getLocale());
+            // Load categories with product count and translations
+            $categories = Category::withCount('products')
+                ->with([
+                    'category_translations' => fn($q) => $q->where('lang', $locale),
+                ])
+                ->get()
+                ->map(function ($category) use ($locale) {
+                    return [
+                        'id' => $category->id,
+                        'name' => $category->category_translations->first()?->name ?? $category->name,
+                        'image' => $category->image,
+                        'product_count' => $category->products_count,
+                    ];
+                });
+
 
             // Load products with brand, category, and their translations for current locale
             $products = Product::where('status', 1)
@@ -41,14 +57,13 @@ class MainController extends Controller
                     'category_name' => $product->category?->category_translations->first()?->name ?? $product->category?->name ?? 'N/A',
                 ];
             });
-
             // dd($products->sale_price);
             return Inertia::render('frontend/Index', [
+                'categories' => $categories,
                 'products' => $products,
                 'translations' => __('messages'),
                 'locale' => $locale,
             ]);
-
         } catch (\Throwable $e) {
             \Log::error('Failed to load products in index(): ' . $e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong while loading products.');
@@ -82,14 +97,14 @@ class MainController extends Controller
                     'discount' => $product->discount,
                     'stock' => $product->stock,
                     'thumbnail_image' => $product->thumnail_img ?? null,
-                  'gallery_images' => collect(
-                            is_array($product->gallary_img)
-                                ? $product->gallary_img
-                                : (is_string($product->gallary_img) && str_starts_with($product->gallary_img, '[')
-                                    ? json_decode($product->gallary_img, true)
-                                    : explode(',', $product->gallary_img)
-                                )
-                        )->map(fn($img) => asset("storage/" . trim($img)))->toArray(),
+                    'gallery_images' => collect(
+                        is_array($product->gallary_img)
+                            ? $product->gallary_img
+                            : (is_string($product->gallary_img) && str_starts_with($product->gallary_img, '[')
+                                ? json_decode($product->gallary_img, true)
+                                : explode(',', $product->gallary_img)
+                            )
+                    )->map(fn($img) => asset("storage/" . trim($img)))->toArray(),
                     'category_name' => $product->category?->category_translations->first()?->name ?? $product->category?->name ?? 'N/A',
                 ],
                 'translations' => __('messages'),
@@ -136,17 +151,17 @@ class MainController extends Controller
             return redirect()->back()->with('error', 'Migration failed: ' . $e->getMessage());
         }
     }
-        public function storageLink()
-        {
-            try {
-                Artisan::call('storage:link');
-                Log::info('Storage link created successfully.');
-                return redirect()->back()->with('success', 'Storage link created successfully.');
-            } catch (\Exception $e) {
-                Log::error('Storage link error: ' . $e->getMessage());
-                return redirect()->back()->with('error', 'Storage link failed: ' . $e->getMessage());
-            }
+    public function storageLink()
+    {
+        try {
+            Artisan::call('storage:link');
+            Log::info('Storage link created successfully.');
+            return redirect()->back()->with('success', 'Storage link created successfully.');
+        } catch (\Exception $e) {
+            Log::error('Storage link error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Storage link failed: ' . $e->getMessage());
         }
+    }
     public function checkRole()
     {
         if (auth()->check()) {
@@ -181,16 +196,14 @@ class MainController extends Controller
                 return $product;
             });
 
-            return Inertia::render('admin/Dashboard', [
-                'brands' => $brands,
-                'totalProduct' => $totalProduct,
-                'category' => $category,
-                'orders' => $orders,
-                'products' => $products,
-                'translations' => __('messages'),
-                'locale' => App::getLocale(),
-            ]);
-        }
-
+        return Inertia::render('admin/Dashboard', [
+            'brands' => $brands,
+            'totalProduct' => $totalProduct,
+            'category' => $category,
+            'orders' => $orders,
+            'products' => $products,
+            'translations' => __('messages'),
+            'locale' => App::getLocale(),
+        ]);
     }
-
+}

@@ -82,6 +82,7 @@ return [
         'available' => 'Disponível',
         'quantity' => 'Quantidade',
         'share' => 'Compartilhar',
+        'shop_by_category' => 'Shop By Category',
     ],
 
     'header' => [

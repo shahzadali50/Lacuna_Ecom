@@ -83,6 +83,7 @@ return [
         'available' => '在庫あり',
         'quantity' => '数量',
         'share' => '共有',
+        'shop_by_category' => 'カテゴリーで探す',
     ],
 
     'header' => [

@@ -83,6 +83,7 @@ return [
         'available' => 'Available',
         'quantity' => 'Quantity',
         'share' => 'Share',
+        'shop_by_category' => 'Shop By Category',
     ],
 
     'header' => [

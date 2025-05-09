@@ -1,6 +1,6 @@
 section {
     overflow-x: hidden;
-    /* padding: 30px 0; */
+    padding: 40px 0;
 }
 
 img {
@@ -11,6 +11,9 @@ body{
 }
 /* Responsive Fix */
 @media only screen and (max-width: 576px) {
+    section {
+        padding: 30px 0;
+    }
     .product-card .ant-card-body {
         padding: 10px !important;
     }

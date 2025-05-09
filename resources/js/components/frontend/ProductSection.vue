@@ -5,6 +5,8 @@ import { ShoppingCartOutlined, HeartOutlined } from '@ant-design/icons-vue';
 import { Row, Col, Card, Button } from 'ant-design-vue';
 import { router } from '@inertiajs/vue3';
 
+
+
 interface Product {
   id: number;
   name: string;
@@ -44,7 +46,7 @@ const addToCart = (product: Product) => {
   }, {
     preserveScroll: true,
     onSuccess: () => {
-      console.log('Added to cart');
+    //   console.log('Added to cart');
     },
     onError: (errors) => {
       console.error('Failed to add to cart', errors);
@@ -64,7 +66,7 @@ const addToFavorites = (e: Event, productId: number) => {
 </script>
 
 <template>
-  <section class="py-14">
+  <section>
     <div class="container mx-auto px-2 sm:px-4">
       <div class="text-center mb-8 sm:mb-12">
         <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">{{ translations.title || 'Product List' }}</h2>

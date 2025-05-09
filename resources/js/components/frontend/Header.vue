@@ -229,6 +229,8 @@ const handleLogout = () => {
 
     <!-- Cart Sidebar -->
     <CartSidebar v-model:visible="cartDrawerVisible" />
+    <div class="mt-[120px] md:mt-[70px]">
+    </div>
 </template>
 
 

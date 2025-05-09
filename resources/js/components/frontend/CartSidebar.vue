@@ -67,7 +67,6 @@ const removeItem = (productId: number) => {
     preserveState: true,
     onSuccess: (page) => {
       if (page.props.cart) {
-        // Cart will be automatically updated through page props
         // console.log('Cart updated successfully');
       }
     },

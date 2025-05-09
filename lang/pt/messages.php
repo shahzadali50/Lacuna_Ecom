@@ -52,6 +52,8 @@ return [
     ],
 
     'products' => [
+        'home' => 'Início',
+        'products' => 'Produtos',
         'cart' => 'Carrinho',
         'cart_empty' => 'Seu carrinho está vazio',
         'checkout' => 'Finalizar Compra',
@@ -69,6 +71,17 @@ return [
         'rating' => 'Avaliação',
         'seller' => 'Vendedor',
         'category' => 'Categoria',
+        'add_to_cart' => 'Adicionar ao Carrinho',
+        'add_to_wishlist' => 'Adicionar aos Favoritos',
+        'buy_now' => 'Comprar Agora',
+        'out_of_stock' => 'Esgotado',
+        'in_stock' => 'Em Estoque',
+        'free_shipping' => 'Frete Grátis',
+        'secure' => 'Pagamento Seguro',
+        'money_back' => 'Garantia de Devolução',
+        'available' => 'Disponível',
+        'quantity' => 'Quantidade',
+        'share' => 'Compartilhar',
     ],
 
     'header' => [

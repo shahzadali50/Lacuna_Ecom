@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { Head, router } from '@inertiajs/vue3';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import UserLayout from '@/layouts/UserLayout.vue';
 import { Row, Col } from 'ant-design-vue';
 import { Link } from '@inertiajs/vue3';
@@ -16,6 +16,11 @@ import {
     MinusOutlined,
     PlusOutlined
 } from '@ant-design/icons-vue';
+const page = usePage();
+const translations = computed(() => {
+    return (page.props.translations as any)?.products || {};
+});
+
 
 interface Product {
     id: number;
@@ -94,20 +99,20 @@ const addToCart = () => {
     <UserLayout>
 
         <Head :title="product.name" />
-   <!-- Breadcrumb -->
+        <!-- Breadcrumb -->
 
-   <section class="mt-[120px] md:mt-[70px]">
-    <div class="container mx-auto px-4">
+        <section class="mt-[120px] md:mt-[70px]">
+            <div class="container mx-auto px-4">
                 <div class="flex flex-wrap items-center text-sm text-gray-500">
-                        <Link :href="route('home')" class="hover:text-primary">Home</Link>
-                        <span class="mx-2">/</span>
-                        <span>Products</span>
-                        <span class="mx-2">/</span>
-                        <span >{{ product.category_name }}</span>
-                        <span class="mx-2">/</span>
-                        <span class="text-gray-700">{{ product.name }}</span>
-                    </div>
+                    <Link :href="route('home')" class="hover:text-primary">{{ translations.home || 'Home' }}</Link>
+                    <span class="mx-2">/</span>
+                    <span>{{ translations.products || 'Products' }}</span>
+                    <span class="mx-2">/</span>
+                    <span>{{ product.category_name }}</span>
+                    <span class="mx-2">/</span>
+                    <span class="text-gray-700">{{ product.name }}</span>
                 </div>
+            </div>
         </section>
 
 
@@ -170,9 +175,9 @@ const addToCart = () => {
                                 <CheckCircleOutlined
                                     :class="product.stock > 0 ? 'text-green-500 mr-2' : 'text-red-500 mr-2'" />
                                 <span class="text-gray-700">
-                                    {{ product.stock > 0 ? 'In Stock' : 'Out of Stock' }}
+                                    {{ product.stock > 0 ? translations.in_stock || 'In Stock' : translations.out_of_stock || 'Out of Stock' }}
                                     <span v-if="product.stock > 0" class="text-gray-500">({{ product.stock }}
-                                        Available)</span>
+                                        {{ translations.available || 'Available' }})</span>
                                 </span>
                             </div>
                         </div>
@@ -182,26 +187,26 @@ const addToCart = () => {
                             <Col :xs="24" :sm="8">
                             <div class="flex items-center p-3 bg-gray-100 rounded-lg">
                                 <CarOutlined class="text-primary text-xl mr-2" />
-                                <span class="text-sm">Free Shipping</span>
+                                <span class="text-sm">{{ translations.free_shipping || 'Free Shipping' }}</span>
                             </div>
                             </Col>
                             <Col :xs="24" :sm="8">
                             <div class="flex items-center p-3 bg-gray-100 rounded-lg">
                                 <SafetyCertificateOutlined class="text-primary text-xl mr-2" />
-                                <span class="text-sm">Secure Payment</span>
+                                <span class="text-sm">{{ translations.secure || 'Secure Payment' }}</span>
                             </div>
                             </Col>
                             <Col :xs="24" :sm="8">
                             <div class="flex items-center p-3 bg-gray-100 rounded-lg">
                                 <CheckCircleOutlined class="text-primary text-xl mr-2" />
-                                <span class="text-sm">Money Back</span>
+                                <span class="text-sm">{{ translations.money_back || 'Money Back' }}</span>
                             </div>
                             </Col>
                         </Row>
 
                         <!-- Quantity -->
                         <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ translations.quantity || 'Quantity' }}</label>
                             <div class="flex items-center">
                                 <button @click="decreaseQuantity"
                                     class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-l-md hover:bg-gray-100">
@@ -219,19 +224,16 @@ const addToCart = () => {
                         <!-- Buttons -->
                         <Row :gutter="[16, 16]" class="mb-6">
                             <Col :xs="24" :sm="12">
-                            <button
-                                @click="addToCart"
-                                :disabled="product.stock === 0"
+                            <button @click="addToCart" :disabled="product.stock === 0"
                                 class="w-full bg-primary text-white py-3 px-6 rounded-md font-medium hover:bg-primary-dark transition-all duration-200 flex items-center justify-center transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:bg-primary">
                                 <ShoppingCartOutlined class="mr-2" />
-                                {{ product.stock === 0 ? 'Out of Stock' : 'Add to Cart' }}
+                                {{ product.stock === 0 ? translations.out_of_stock || 'Out of Stock' : translations.add_to_cart || 'Add to Cart' }}
                             </button>
                             </Col>
                             <Col :xs="24" :sm="12">
-                            <button
-                                :disabled="product.stock === 0"
+                            <button :disabled="product.stock === 0"
                                 class="w-full bg-gray-900 text-white py-3 px-6 rounded-md font-medium hover:bg-gray-800 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:bg-gray-900">
-                                {{ product.stock === 0 ? 'Out of Stock' : 'Buy Now' }}
+                                {{ product.stock === 0 ? translations.out_of_stock || 'Out of Stock' : translations.buy_now || 'Buy Now' }}
                             </button>
                             </Col>
                         </Row>
@@ -242,14 +244,14 @@ const addToCart = () => {
                             <button
                                 class="w-full border border-gray-300 py-3 px-6 rounded-md font-medium hover:bg-gray-50 transition-all duration-200 flex items-center justify-center transform hover:scale-[1.02]">
                                 <HeartOutlined class="mr-2" />
-                                Add to Wishlist
+                                {{ translations.add_to_wishlist || 'Add to Wishlist' }}
                             </button>
                             </Col>
                             <Col :xs="24" :sm="12">
                             <button
                                 class="w-full border border-gray-300 py-3 px-6 rounded-md font-medium hover:bg-gray-50 transition-all duration-200 flex items-center justify-center transform hover:scale-[1.02]">
                                 <ShareAltOutlined class="mr-2" />
-                                Share
+                                {{ translations.share || 'Share' }}
                             </button>
                             </Col>
                         </Row>
@@ -262,7 +264,7 @@ const addToCart = () => {
                     <div class="border-b border-gray-200">
                         <nav class="flex -mb-px">
                             <button class="py-4 px-6 border-b-2 border-primary font-medium text-primary">
-                                Description
+                                {{ translations.description || 'Description' }}
                             </button>
                         </nav>
                     </div>
@@ -276,6 +278,4 @@ const addToCart = () => {
     </UserLayout>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

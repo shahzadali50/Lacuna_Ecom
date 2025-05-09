@@ -53,12 +53,13 @@ const handleLogout = () => {
                 <!-- Logo -->
                 <div class="flex items-center">
                     <Link :href="route('home')" class="flex items-center">
+
                         <img src="\assets\images\Logo-LaCuna-JP-azul.fw.png" alt="Logo" class="h-8 w-auto" />
                     </Link>
                 </div>
 
                 <!-- Desktop Navigation -->
-                <nav class="hidden md:flex items-center space-x-8">
+                <nav class="hidden lg:flex items-center space-x-8">
 
                     <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
                     {{ translations.home || 'Home' }}
@@ -76,7 +77,7 @@ const handleLogout = () => {
 
 
                 <!-- Right Side Actions -->
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-0">
                     <!-- Search -->
                     <div class="hidden md:block">
                         <a-input-search placeholder="Search products..." class="w-64" @search="handleSearch" />
@@ -86,9 +87,59 @@ const handleLogout = () => {
                     <div>
                         <LanguageSwitcher />
                     </div>
+                    <div class="block lg:hidden">
+                        <a-dropdown v-if="isAuthenticated" trigger="click">
+                            <a-button type="text" shape="circle">
+
+                                <template #icon>
+                                    <UserOutlined />
+                                </template>
+                            </a-button>
+                            <template #overlay>
+                                <a-menu>
+                                    <a-menu-item key="profile">
+                                        <Link :href="route('dashboard')" class="text-gray-600 hover:text-gray-900">
+                                        {{ translations.dashboard || 'Dashboard' }}
+                                        </Link>
+
+                                    </a-menu-item>
+                                    <a-menu-divider />
+                                    <a-menu-item key="logout">
+
+                                        <a href="#" @click.prevent="handleLogout">{{ translations.logout || 'Logout' }}</a>
+                                    </a-menu-item>
+                                </a-menu>
+                            </template>
+                        </a-dropdown>
+                        <div v-else class="flex space-x-2">
+                            <a-dropdown trigger="click">
+                                <a-button type="text" shape="circle">
+                                    <template #icon>
+                                        <UserOutlined />
+                                    </template>
+                                </a-button>
+                                <template #overlay>
+                                    <a-menu>
+                                        <a-menu-item key="login">
+                                            <Link :href="route('login')" class="text-gray-600 hover:text-gray-900">
+                                            {{ translations.login || 'Login' }}
+                                            </Link>
+                                        </a-menu-item>
+                                        <a-menu-item key="register">
+                                            <Link :href="route('register')" class="text-gray-600 hover:text-gray-900">
+                                            {{ translations.register || 'Register' }}
+                                            </Link>
+                                        </a-menu-item>
+                                    </a-menu>
+                                </template>
+                            </a-dropdown>
+                        </div>
+
+
+                    </div>
 
                     <!-- User Actions - Only visible on desktop -->
-                    <div class="hidden md:flex items-center space-x-2">
+                    <div class="hidden lg:flex items-center space-x-2">
                         <a-button type="text" shape="circle">
                             <template #icon>
                                 <HeartOutlined />
@@ -101,6 +152,7 @@ const handleLogout = () => {
                         </a-button>
                         <a-dropdown v-if="isAuthenticated">
                             <a-button type="text" shape="circle">
+
                                 <template #icon>
                                     <UserOutlined />
                                 </template>
@@ -147,7 +199,7 @@ const handleLogout = () => {
                     </div>
 
                     <!-- Mobile Menu Button -->
-                    <div class="md:hidden">
+                    <div class="lg:hidden">
                         <a-button type="text" shape="circle" @click="toggleMobileMenu">
                             <template #icon>
                                 <MenuOutlined v-if="!mobileMenuOpen" />

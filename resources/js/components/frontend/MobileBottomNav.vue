@@ -6,19 +6,20 @@ import {
     AppstoreOutlined,
     HeartOutlined,
     ShoppingCartOutlined,
-    UserOutlined
 } from '@ant-design/icons-vue';
 const page = usePage();
 const translations = computed(() => {
     return (page.props.translations as any)?.header || {};
 });
 
-const props = defineProps({
+
+defineProps({
     isAuthenticated: {
         type: Boolean,
-        default: false
-    }
+        default: false,
+    },
 });
+
 
 const emit = defineEmits(['toggleCart', 'logout']);
 
@@ -26,9 +27,9 @@ const toggleCart = () => {
     emit('toggleCart');
 };
 
-const handleLogout = () => {
-    emit('logout');
-};
+// const handleLogout = () => {
+//     emit('logout');
+// };
 </script>
 <template>
     <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
@@ -49,7 +50,7 @@ const handleLogout = () => {
                 <ShoppingCartOutlined class="text-xl" />
                 <span class="text-xs mt-1">{{ translations.cart || 'Cart' }}</span>
             </a>
-            <a-dropdown placement="topLeft" trigger="click">
+            <!-- <a-dropdown placement="topLeft" trigger="click">
                 <a class="flex flex-col items-center cursor-pointer">
                     <UserOutlined class="text-xl" />
                     <span class="text-xs mt-1">{{ translations.account || 'Account' }}</span>
@@ -77,13 +78,13 @@ const handleLogout = () => {
                             <a-menu-divider />
                             <a-menu-item key="logout">
                                 <a href="#" @click.prevent="handleLogout" class="flex items-center">
-                                    {{ translations.logout || 'Logout' }}   
+                                    {{ translations.logout || 'Logout' }}
                                 </a>
                             </a-menu-item>
                         </template>
                     </a-menu>
                 </template>
-            </a-dropdown>
+            </a-dropdown> -->
         </div>
     </div>
 </template>

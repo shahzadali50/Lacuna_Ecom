@@ -53,6 +53,8 @@ return [
     ],
 
     'products' => [
+        'home' => 'Home',
+        'products' => 'Products',
         'cart' => 'Cart',
         'cart_empty' => 'Your cart is empty',
         'checkout' => 'Proceed to Checkout',
@@ -69,6 +71,18 @@ return [
         'price' => 'Price',
         'rating' => 'Rating',
         'seller' => 'Seller',
+        'add_to_cart' => 'Add to Cart',
+        'add_to_wishlist' => 'Add to Wishlist',
+        'buy_now' => 'Buy Now',
+        'out_of_stock' => 'Out of Stock',
+        'in_stock' => 'In Stock',
+        'description' => 'Description',
+        'free_shipping' => 'Free Shipping',
+        'secure_payment' => 'Secure Payment',
+        'money_back' => 'Money Back',
+        'available' => 'Available',
+        'quantity' => 'Quantity',
+        'share' => 'Share',
     ],
 
     'header' => [

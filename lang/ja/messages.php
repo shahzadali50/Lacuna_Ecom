@@ -52,6 +52,8 @@ return [
     ],
 
     'products' => [
+        'home' => 'ホーム',
+        'products' => '商品',
         'cart' => 'カート',
         'cart_empty' => 'カートは空です',
         'checkout' => 'レジに進む',
@@ -69,6 +71,18 @@ return [
         'rating' => '評価',
         'seller' => '販売者',
         'category' => 'カテゴリー',
+        'add_to_cart' => 'カートに追加',
+        'add_to_wishlist' => 'お気に入りに追加',
+        'buy_now' => '今すぐ購入',
+        'out_of_stock' => '在庫切れ',
+        'in_stock' => '在庫あり',
+        'description' => '説明',
+        'free_shipping' => '送料無料',
+        'secure' => '安全な支払い',
+        'money_back' => '返品保証',
+        'available' => '在庫あり',
+        'quantity' => '数量',
+        'share' => '共有',
     ],
 
     'header' => [

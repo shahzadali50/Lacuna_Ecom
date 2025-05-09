@@ -1,5 +1,15 @@
 <script setup lang="ts">
 import { Link } from "@inertiajs/vue3";
+import { usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+
+
+
+const page = usePage();
+const translations = computed(() => {
+    return (page.props.translations as any)?.header || {};
+});
+
 
 defineProps<{
   visible: boolean;
@@ -28,27 +38,27 @@ const closeDrawer = () => {
         <a-menu mode="vertical">
           <a-menu-item key="home">
             <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
-              Home
+              {{ translations.home || 'Home' }}
             </Link>
           </a-menu-item>
           <a-menu-item key="products">
             <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
-              Products
+              {{ translations.products || 'Products' }}
             </Link>
           </a-menu-item>
           <a-menu-item key="categories">
             <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
-              Categories
+              {{ translations.categories || 'Categories' }}
             </Link>
           </a-menu-item>
           <a-menu-item key="brands">
             <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
-              Brands
+              {{ translations.brands || 'Brands' }}
             </Link>
           </a-menu-item>
           <a-menu-item key="about">
             <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
-              About
+              {{ translations.about_us || 'About Us' }}
             </Link>
           </a-menu-item>
         </a-menu>

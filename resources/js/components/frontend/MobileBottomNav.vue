@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
+import { Link,usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import {
     HomeOutlined,
     AppstoreOutlined,
@@ -7,6 +8,10 @@ import {
     ShoppingCartOutlined,
     UserOutlined
 } from '@ant-design/icons-vue';
+const page = usePage();
+const translations = computed(() => {
+    return (page.props.translations as any)?.header || {};
+});
 
 const props = defineProps({
     isAuthenticated: {
@@ -30,49 +35,49 @@ const handleLogout = () => {
         <div class="flex justify-around items-center h-16">
             <Link :href="route('home')" class="flex flex-col items-center">
                 <HomeOutlined class="text-xl" />
-                <span class="text-xs mt-1">Home</span>
+                <span class="text-xs mt-1">{{ translations.home || 'Home' }}</span>
             </Link>
             <Link :href="route('home')" class="flex flex-col items-center">
                 <AppstoreOutlined class="text-xl" />
-                <span class="text-xs mt-1">Categories</span>
+                <span class="text-xs mt-1">{{ translations.categories || 'Categories' }}</span>
             </Link>
             <Link :href="route('home')" class="flex flex-col items-center">
                 <HeartOutlined class="text-xl" />
-                <span class="text-xs mt-1">Favorites</span>
+                <span class="text-xs mt-1">{{ translations.favorites || 'Favorites' }}</span>
             </Link>
             <a class="flex flex-col items-center" @click="toggleCart">
                 <ShoppingCartOutlined class="text-xl" />
-                <span class="text-xs mt-1">Cart</span>
+                <span class="text-xs mt-1">{{ translations.cart || 'Cart' }}</span>
             </a>
             <a-dropdown placement="topLeft" trigger="click">
                 <a class="flex flex-col items-center cursor-pointer">
                     <UserOutlined class="text-xl" />
-                    <span class="text-xs mt-1">Account</span>
+                    <span class="text-xs mt-1">{{ translations.account || 'Account' }}</span>
                 </a>
                 <template #overlay>
                     <a-menu>
                         <template v-if="!props.isAuthenticated">
                             <a-menu-item key="login">
                                 <Link :href="route('login')" class="flex items-center">
-                                    Login
+                                    {{ translations.login || 'Login' }}
                                 </Link>
                             </a-menu-item>
                             <a-menu-item key="register">
                                 <Link :href="route('register')" class="flex items-center">
-                                    Register
+                                    {{ translations.register || 'Register' }}
                                 </Link>
                             </a-menu-item>
                         </template>
                         <template v-else>
                             <a-menu-item key="profile">
                                 <Link :href="route('dashboard')" class="flex items-center">
-                                    Profile
+                                    {{ translations.dashboard || 'Dashboard' }}
                                 </Link>
                             </a-menu-item>
                             <a-menu-divider />
                             <a-menu-item key="logout">
                                 <a href="#" @click.prevent="handleLogout" class="flex items-center">
-                                    Logout
+                                    {{ translations.logout || 'Logout' }}   
                                 </a>
                             </a-menu-item>
                         </template>

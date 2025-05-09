@@ -3,9 +3,16 @@ import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { usePage, router } from '@inertiajs/vue3';
 import { ShoppingCartOutlined, DeleteOutlined } from '@ant-design/icons-vue';
 
+
+const page = usePage();
+const translations = computed(() => {
+    return (page.props.translations as any)?.products || {};
+});
+
 defineProps<{
   visible: boolean;
 }>();
+
 
 const emit = defineEmits<{
   'update:visible': [value: boolean]
@@ -105,7 +112,7 @@ onUnmounted(() => {
 
 <template>
   <a-drawer
-    title="Shopping Cart"
+    :title="translations.shopping_cart || 'Shopping Cart'"
     placement="right"
     :open="visible"
     @close="closeDrawer"
@@ -115,10 +122,10 @@ onUnmounted(() => {
       <div class="flex-1 overflow-y-auto">
         <div v-if="!cart || cart.length === 0" class="text-center py-8">
           <ShoppingCartOutlined class="text-4xl text-gray-400 mb-4" />
-          <p class="text-gray-500">Your cart is empty</p>
+          <p class="text-gray-500"> {{ translations.cart_empty || 'Your cart is empty' }}</p>
         </div>
         <div v-else class="space-y-4">
-          <div v-for="item in cart" :key="item.id" class="flex items-start gap-4 p-4 border-b">
+          <div v-for="item in cart" :key="item.id" class="flex items-start gap-4 border-b">
             <img :src="'/storage/' + item.thumnail_img" :alt="item.name" class="w-20 h-20 object-cover rounded">
             <div class="flex-1">
               <div class="flex justify-between items-start">
@@ -135,7 +142,7 @@ onUnmounted(() => {
               <div class="flex justify-between items-start mt-2">
                 <p>{{ item.quantity }} X {{ formatPrice(item.final_price) }}</p>
               </div>
-              <p class="text-primary font-medium mt-2">Total: {{ formatPrice(item.total_price) }}</p>
+              <p class="text-primary font-medium mt-2"> {{ translations.total || 'Total' }}: {{ formatPrice(item.total_price) }}</p>
             </div>
           </div>
         </div>
@@ -143,11 +150,11 @@ onUnmounted(() => {
 
       <div v-if="cart && cart.length > 0" class="border-t p-4">
         <div class="flex justify-between mb-4">
-          <span class="font-medium">Total:</span>
+          <span class="font-medium"> {{ translations.total || 'Total' }}:</span>
           <span class="font-bold text-primary">{{ formatPrice(total) }}</span>
         </div>
         <a-button type="primary" block @click="goToCheckout">
-          Proceed to Checkout
+          {{ translations.checkout || 'Proceed to Checkout' }}
         </a-button>
       </div>
     </div>

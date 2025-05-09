@@ -52,6 +52,16 @@ return [
     ],
 
     'products' => [
+        'cart' => 'Carrinho',
+        'cart_empty' => 'Seu carrinho está vazio',
+        'checkout' => 'Finalizar Compra',
+        'total' => 'Total',
+        'subtotal' => 'Subtotal',
+        'shipping' => 'Frete',
+        'tax' => 'Imposto',
+        'discount' => 'Desconto',
+        'grand_total' => 'Total Geral',
+        'shopping_cart' => 'Carrinho de Compras',
         'title' => 'Produtos em Destaque',
         'subtitle' => 'Descubra nossa seleção cuidadosamente escolhida de produtos premium de vendedores confiáveis em todo o mundo.',
         'view_all' => 'Ver Detalhes',
@@ -59,6 +69,22 @@ return [
         'rating' => 'Avaliação',
         'seller' => 'Vendedor',
         'category' => 'Categoria',
+    ],
+
+    'header' => [
+        'home' => 'Início',
+        'products' => 'Produtos',
+        'categories' => 'Categorias',
+        'brands' => 'Marcas',
+        'about_us' => 'Sobre Nós',
+        'contact_us' => 'Contato',
+        'login' => 'Entrar',
+        'register' => 'Cadastrar',
+        'logout' => 'Sair',
+        'dashboard' => 'Painel de Controle',
+        'favorites' => 'Favoritos',
+        'cart' => 'Carrinho',
+        'account' => 'Conta',
     ],
 
     'footer' => [

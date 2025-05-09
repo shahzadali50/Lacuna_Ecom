@@ -17,8 +17,11 @@ class CartController extends Controller
             $productId = $request->input('id');
             $qty = $request->input('qty', 1);
             $action = $request->input('action', 'add');
+            $locale = session('locale', App::getLocale());
 
-            $product = Product::findOrFail($productId);
+            $product = Product::with(['product_translations' => function($q) use ($locale) {
+                $q->where('lang', $locale);
+            }])->findOrFail($productId);
 
             // Check if product has sufficient stock
             if ($product->stock < 1) {
@@ -40,7 +43,7 @@ class CartController extends Controller
                     }
 
                     $item['thumnail_img'] = $product->thumnail_img;
-                    $item['name'] = $product->name;
+                    $item['name'] = $product->product_translations->first()?->name ?? $product->name;
                     $item['purchase_price'] = $product->purchase_price;
                     $item['final_price'] = $product->final_price;
                     $item['discount'] = $product->discount;
@@ -58,7 +61,7 @@ class CartController extends Controller
 
                 $cart[] = [
                     'id' => $product->id,
-                    'name' => $product->name,
+                    'name' => $product->product_translations->first()?->name ?? $product->name,
                     'thumnail_img' => $product->thumnail_img,
                     'purchase_price' => $product->purchase_price,
                     'final_price' => $product->final_price,

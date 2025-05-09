@@ -16,6 +16,11 @@ import {
     UserOutlined,
 } from '@ant-design/icons-vue';
 
+const page = usePage();
+const translations = computed(() => {
+    return (page.props.translations as any)?.header || {};
+});
+
 const { props } = usePage();
 const mobileMenuOpen = ref(false);
 const cartDrawerVisible = ref(false);
@@ -56,16 +61,16 @@ const handleLogout = () => {
                 <nav class="hidden md:flex items-center space-x-8">
 
                     <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
-                    Home
+                    {{ translations.home || 'Home' }}
                     </Link>
                     <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
-                    Products
+                    {{ translations.products || 'Products' }}
                     </Link>
                     <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
-                    Categories
+                    {{ translations.categories || 'Categories' }}
                     </Link>
                     <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
-                    Brands
+                    {{ translations.brands || 'Brands' }}
                     </Link>
                 </nav>
 
@@ -104,14 +109,14 @@ const handleLogout = () => {
                                 <a-menu>
                                     <a-menu-item key="profile">
                                         <Link :href="route('dashboard')" class="text-gray-600 hover:text-gray-900">
-                                        Profile
+                                        {{ translations.dashboard || 'Dashboard' }}
                                         </Link>
 
                                     </a-menu-item>
                                     <a-menu-divider />
                                     <a-menu-item key="logout">
 
-                                        <a href="#" @click.prevent="handleLogout">Logout</a>
+                                        <a href="#" @click.prevent="handleLogout">{{ translations.logout || 'Logout' }}</a>
                                     </a-menu-item>
                                 </a-menu>
                             </template>
@@ -127,12 +132,12 @@ const handleLogout = () => {
                                     <a-menu>
                                         <a-menu-item key="login">
                                             <Link :href="route('login')" class="text-gray-600 hover:text-gray-900">
-                                            Login
+                                            {{ translations.login || 'Login' }}
                                             </Link>
                                         </a-menu-item>
                                         <a-menu-item key="register">
                                             <Link :href="route('register')" class="text-gray-600 hover:text-gray-900">
-                                            Register
+                                            {{ translations.register || 'Register' }}
                                             </Link>
                                         </a-menu-item>
                                     </a-menu>

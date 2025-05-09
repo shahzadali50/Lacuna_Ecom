@@ -45,6 +45,7 @@ return [
     'resend_verification_email' => 'Resend verification email',
     'logout' => 'Log out',
 
+
     'banner' => [
         'title' => 'LaCuna Marketplace - Elevating Global Commerce',
         'subtitle' => 'Experience premium cross-border trading with verified sellers and curated products from around the world.',
@@ -52,12 +53,38 @@ return [
     ],
 
     'products' => [
+        'cart' => 'Cart',
+        'cart_empty' => 'Your cart is empty',
+        'checkout' => 'Proceed to Checkout',
+        'total' => 'Total',
+        'subtotal' => 'Subtotal',
+        'shipping' => 'Shipping',
+        'tax' => 'Tax',
+        'discount' => 'Discount',
+        'grand_total' => 'Grand Total',
         'title' => 'Featured Products',
+        'shopping_cart' => 'Shopping Cart',
         'subtitle' => 'Discover our handpicked selection of premium products from trusted sellers worldwide.',
         'view_all' => 'View Details',
         'price' => 'Price',
         'rating' => 'Rating',
         'seller' => 'Seller',
+    ],
+
+    'header' => [
+       'home' => 'Home',
+       'products' => 'Products',
+       'categories' => 'Categories',
+       'brands' => 'Brands',
+       'about_us' => 'About Us',
+       'contact_us' => 'Contact Us',
+       'login' => 'Login',
+       'register' => 'Register',
+       'logout' => 'Logout',
+       'dashboard' => 'Dashboard',
+       'favorites' => 'Favorites',
+       'cart' => 'Cart',
+       'account' => 'Account',
     ],
 
     'footer' => [

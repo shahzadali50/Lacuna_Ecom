@@ -12,9 +12,10 @@ body{
 /* Responsive Fix */
 @media only screen and (max-width: 576px) {
     section {
-        padding: 30px 0;
+        padding: 30px 0px;
     }
     .product-card .ant-card-body {
         padding: 10px !important;
     }
+    
 }

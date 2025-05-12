@@ -101,7 +101,7 @@ const addToCart = () => {
         <Head :title="product.name" />
         <!-- Breadcrumb -->
 
-        <section>
+        <section class="pb-7">
             <div class="container mx-auto px-4">
                 <div class="flex flex-wrap items-center text-sm text-gray-500">
                     <Link :href="route('home')" class="hover:text-primary">{{ translations.home || 'Home' }}</Link>

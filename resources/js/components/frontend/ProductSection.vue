@@ -66,7 +66,7 @@ const addToFavorites = (e: Event, productId: number) => {
 </script>
 
 <template>
-  <section >
+  <section class="py-14">
     <div class="container mx-auto px-2 sm:px-4">
       <div class="text-center mb-8 sm:mb-12">
         <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">{{ translations.title || 'Product List' }}</h2>

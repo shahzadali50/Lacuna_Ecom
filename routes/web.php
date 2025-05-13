@@ -16,7 +16,7 @@ Route::get('product/{slug}', [MainController::class, 'productDetail'])->name('pr
 Route::get('lang/{locale}', [MainController::class, 'switchLanguage'])->name('language.switch');
 Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::post('cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
-Route::get('cart/view', [CartController::class, 'cartView'])->name('cart.view');
+Route::get('cart/checkout', [CartController::class, 'cartView'])->name('cart.view');
 Route::post('login-modal', [MainController::class, 'loginModal'])->name('loginModal');
 
 Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function () {

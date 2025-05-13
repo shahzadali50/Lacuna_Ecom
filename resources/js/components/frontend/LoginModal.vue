@@ -26,6 +26,8 @@ const form = useForm({
 
 const submit = () => {
     form.post(route("loginModal"), {
+        preserveScroll: true,
+        preserveState: true,
         onSuccess: () => {
             form.reset();
             emit("update:open", false); // Notify the parent to close the modal

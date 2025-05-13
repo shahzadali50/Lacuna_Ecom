@@ -12,7 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Requests\Auth\LoginRequest;
 
 class MainController extends Controller
 {
@@ -207,30 +209,11 @@ class MainController extends Controller
             'locale' => App::getLocale(),
         ]);
     }
-    public function loginModal(Request $request)
+    public function loginModal(LoginRequest $request): RedirectResponse
     {
-        try {
-            $credentials = $request->validate([
-                'email' => ['required', 'email'],
-                'password' => ['required'],
-            ]);
+        $request->authenticate();
 
-            if (Auth::attempt($credentials, $request->boolean('remember'))) {
-                $request->session()->regenerate();
-
-                return back()->with('success', 'Login successful');
-                    // return redirect()->route('cart.view')->with('success', ('login successfully'));
-            }
-
-            return back()->withErrors([
-                'email' => __('These credentials do not match our records.'),
-            ])->onlyInput('email');
-
-        } catch (\Exception $e) {
-            Log::error('Login error: ' . $e->getMessage());
-            return back()->withErrors([
-                'email' => __('An error occurred during login. Please try again.'),
-            ])->onlyInput('email');
-        }
+        $request->session()->regenerate();
+        return back()->with('success', 'login successfully');
     }
 }

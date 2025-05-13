@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { LoaderCircle } from "lucide-vue-next";
 const props = defineProps<{
     open: boolean,
-    translations: any,
     canResetPassword: boolean;
 }>();
 const emit = defineEmits<{
@@ -27,7 +26,7 @@ const form = useForm({
 
 const submit = () => {
     form.post(route("loginModal"), {
-        onSuccess: () => {
+         onSuccess: () => {
             form.reset();
             emit('update:open', false);
         },

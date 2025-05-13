@@ -2,7 +2,7 @@
 import UserLayout from '@/layouts/UserLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Row, Col } from 'ant-design-vue';
-import { message } from "ant-design-vue";
+
 
 
 

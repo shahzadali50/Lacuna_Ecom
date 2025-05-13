@@ -2,7 +2,6 @@
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { usePage, router } from '@inertiajs/vue3';
 import { ShoppingCartOutlined, DeleteOutlined } from '@ant-design/icons-vue';
-import { useForm } from "@inertiajs/vue3";
 import LoginModal from "@/components/frontend/LoginModal.vue";
 
 const page = usePage();

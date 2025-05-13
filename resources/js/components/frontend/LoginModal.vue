@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { LoaderCircle } from "lucide-vue-next";
-import { message } from "ant-design-vue";
 const props = defineProps<{
     open: boolean,
     translations: any,
@@ -27,8 +26,12 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route("login"), {
-      
+    form.post(route("loginModal"), {
+        onSuccess: () => {
+            form.reset();
+            emit('update:open', false);
+        },
+
         onFinish: () => form.reset("password"),
     });
 };

@@ -166,8 +166,7 @@ onUnmounted(() => {
             </div>
         </div>
     </a-drawer>
-    <LoginModal
-        v-model:open="isLoginModalVisible"
+    <LoginModal v-model:open="isLoginModalVisible"
     />
 </template>
 <style scoped>

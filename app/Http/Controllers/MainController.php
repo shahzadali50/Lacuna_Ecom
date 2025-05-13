@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Brand;
 use App\Models\Order;
@@ -167,10 +168,10 @@ class MainController extends Controller
         if (auth()->check()) {
             if (auth()->user()->role == "admin") {
 
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('admin.dashboard')->with('success', 'login successfully');
             } else {
 
-                return redirect()->route('profile.edit');
+                return redirect()->route('home')->with('success', 'login successfully');
             }
         } else {
 
@@ -205,5 +206,31 @@ class MainController extends Controller
             'translations' => __('messages'),
             'locale' => App::getLocale(),
         ]);
+    }
+    public function loginModal(Request $request)
+    {
+        try {
+            $credentials = $request->validate([
+                'email' => ['required', 'email'],
+                'password' => ['required'],
+            ]);
+
+            if (Auth::attempt($credentials, $request->boolean('remember'))) {
+                $request->session()->regenerate();
+
+                return back()->with('success', 'Login successful');
+                    // return redirect()->route('cart.view')->with('success', ('login successfully'));
+            }
+
+            return back()->withErrors([
+                'email' => __('These credentials do not match our records.'),
+            ])->onlyInput('email');
+
+        } catch (\Exception $e) {
+            Log::error('Login error: ' . $e->getMessage());
+            return back()->withErrors([
+                'email' => __('An error occurred during login. Please try again.'),
+            ])->onlyInput('email');
+        }
     }
 }

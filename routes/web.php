@@ -11,20 +11,13 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PurchaseProductController;
 
-// Route::get('/', function () {
-//     return Inertia::render('frontend/Index', [
-//         'title' => 'Home',
-//         'description' => 'Welcome to our website!',
-//         'translations' => __('messages'),
-//         'locale' => App::getLocale(),
-//     ]);
-// })->name('home');
 Route::get('/', [MainController::class, 'index'])->name('home');
 Route::get('product/{slug}', [MainController::class, 'productDetail'])->name('product.detail');
 Route::get('lang/{locale}', [MainController::class, 'switchLanguage'])->name('language.switch');
 Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::post('cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
 Route::get('cart/view', [CartController::class, 'cartView'])->name('cart.view');
+Route::post('login-modal', [MainController::class, 'loginModal'])->name('loginModal');
 
 Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function () {
     Route::get('cache-clear', [MainController::class, 'cacheClear'])->name('cache.clear');

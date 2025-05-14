@@ -134,7 +134,7 @@ class CartController extends Controller
     public function cartCheckout()
     {
         if (!Auth::check()) {
-            return redirect()->back()->with('error', 'Please login to access checkout.');
+            return back()->with('error', 'Please login to access checkout.');
 
         }
 

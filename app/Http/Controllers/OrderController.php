@@ -27,90 +27,74 @@ class OrderController extends Controller
     return Inertia::render('admin/order/Create', compact('products'));
 }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string',
-            'phone_number' => 'required|numeric',
-            'payment_method' => 'nullable|string',
-            'discount' => 'nullable|numeric|min:0|max:100',
-            'products' => 'required|array',
-            'products.*.product_id' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    if (!Product::where('id', $value)->whereNull('deleted_at')->exists()) {
-                        $fail("The selected {$attribute} is invalid.");
-                    }
-                },
-            ],
-            'products.*.purchase_id' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    if (!PurchaseProduct::where('id', $value)->whereNull('deleted_at')->exists()) {
-                        $fail("The selected {$attribute} is invalid.");
-                    }
-                },
-            ],
-            'products.*.qty' => 'required|integer|min:1',
-            'products.*.sale_price' => 'required|numeric|min:0',
+public function store(Request $request)
+{
+    dd($request->all());
+    $validatedData = $request->validate([
+        'name' => 'required|string',
+        'phone_number' => 'required|numeric',
+        'email' => 'required|email',
+        'address' => 'required|string',
+        'country' => 'required|string',
+        'state' => 'required|string',
+        'city' => 'required|string',
+        'zip_code' => 'required|numeric',
+        'payment_method' => 'required|string',
+    ]);
+
+    $cart = session('cart', []);
+
+    if (empty($cart)) {
+        return back()->with('error', 'Cart is empty.');
+    }
+
+    try {
+        DB::beginTransaction();
+
+        $subTotal = collect($cart)->sum(fn($product) => $product['final_price'] * $product['qty']);
+        $discount = 0; // You can set dynamic discount logic
+        $discountAmount = ($discount / 100) * $subTotal;
+        $totalPrice = $subTotal - $discountAmount;
+
+        $order = Order::create([
+            'name' => $request->name,
+            'phone_number' => $request->phone_number,
+            'email' => $request->email,
+            'address' => $request->address,
+            'country' => $request->country,
+            'state' => $request->state,
+            'city' => $request->city,
+            'zip_code' => $request->zip_code,
+            'payment_method' => $request->payment_method,
+            'user_id' => Auth::id(),
+            'subtotal_price' => $subTotal,
+            'discount' => $discount,
+            'total_price' => $totalPrice,
         ]);
 
-        try {
-            DB::beginTransaction();
+        foreach ($cart as $product) {
+            SaleProduct::create([
+                'order_id' => $order->id,
+                'product_id' => $product['product_id'],
+                'user_id' => Auth::id(),
+                'sale_price' => $product['final_price'],
+                'qty' => $product['qty'],
+                'total_price' => $product['final_price'] * $product['qty'],
+            ]);
 
-                        // Calculate subtotal
-                $subTotal = collect($request->products)->sum(fn($product) => $product['sale_price'] * $product['qty']);
-
-                // Calculate discount amount
-                $discountAmount = ($request->discount / 100) * $subTotal;
-
-                // Calculate total price after discount
-                $totalPrice = $subTotal - $discountAmount;
-
-                // Create the order
-                $order = Order::create([
-                    'name' => $request->name,
-                    'phone_number' => $request->phone_number,
-                    'total_price' => $totalPrice,
-                    'discount' => $request->discount,
-                    'subtotal_price' => $subTotal,
-                    'payment_method' => $request->payment_method,
-                    'user_id' => Auth::id(),
-                ]);
-
-
-            // Process each ordered product
-            foreach ($request->products as $product) {
-                $purchaseProduct = PurchaseProduct::findOrFail($product['purchase_id']);
-
-                // Ensure stock is available
-                if ($purchaseProduct->remaining_stock < $product['qty']) {
-                    throw new \Exception("Insufficient stock for product ID: {$product['product_id']}");
-                }
-
-                // Create sale product record
-                SaleProduct::create([
-                    'order_id' => $order->id,
-                    'product_id' => $product['product_id'],
-                    'purchase_id' => $product['purchase_id'],
-                    'user_id' => Auth::id(),
-                    'sale_price' => $product['sale_price'],
-                    'qty' => $product['qty'],
-                    'total_price' => $product['sale_price'] * $product['qty'],
-                ]);
-
-                // Update stock
-                $purchaseProduct->decrement('stock', $product['qty']);
-                $purchaseProduct->decrement('remaining_stock', $product['qty']);
-            }
-
-            DB::commit();
-            return redirect()->back()->with('success', 'Order created successfully!');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['error' => 'Failed to create order: ' . $e->getMessage()], 500);
+            // Optionally update product stock here
+            Product::where('id', $product['product_id'])->decrement('stock', $product['qty']);
         }
+
+        DB::commit();
+        session()->forget('cart'); // Clear cart
+        return redirect()->route('home')->with('success', 'Order placed successfully!');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json(['error' => 'Failed to create order: ' . $e->getMessage()], 500);
     }
+}
+
 
     public function orderList()
 {

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SaleProduct extends Model
 {
-    protected $fillable = ['order_id', 'product_id', 'purchase_id', 'user_id', 'qty', 'sale_price', 'total_price'];
+    protected $fillable = ['order_id', 'product_id', 'user_id', 'qty', 'sale_price', 'total_price'];
 
     public function order()
     {
@@ -22,10 +22,6 @@ class SaleProduct extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function purchase()
-    {
-        return $this->belongsTo(PurchaseProduct::class, 'purchase_id');
-    }
 
     public function user()
     {

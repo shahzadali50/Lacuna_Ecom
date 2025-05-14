@@ -189,22 +189,22 @@ class MainController extends Controller
         // Send all orders instead of filtering them
         $orders = Order::where('user_id', Auth::id())->select('total_price', 'created_at')->get();
 
-        $products = Product::where('user_id', Auth::id())
-            ->with(['purchaseProducts' => function ($query) {
-                $query->select('product_id', 'stock');
-            }])
-            ->get()
-            ->map(function ($product) {
-                $product->total_stock = $product->purchaseProducts->sum('stock');
-                return $product;
-            });
+        // $products = Product::where('user_id', Auth::id())
+        //     ->with(['purchaseProducts' => function ($query) {
+        //         $query->select('product_id', 'stock');
+        //     }])
+        //     ->get()
+        //     ->map(function ($product) {
+        //         $product->total_stock = $product->purchaseProducts->sum('stock');
+        //         return $product;
+        //     });
 
         return Inertia::render('admin/Dashboard', [
             'brands' => $brands,
             'totalProduct' => $totalProduct,
             'category' => $category,
             'orders' => $orders,
-            'products' => $products,
+            // 'products' => $products, 
             'translations' => __('messages'),
             'locale' => App::getLocale(),
         ]);

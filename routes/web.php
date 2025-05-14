@@ -18,6 +18,7 @@ Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::post('cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
 Route::get('cart/checkout', [CartController::class, 'cartCheckout'])->name('cart.checkout');
 Route::post('login-modal', [MainController::class, 'loginModal'])->name('loginModal');
+Route::post('order/store', [OrderController::class, 'store'])->name('order.store');
 
 Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function () {
     Route::get('cache-clear', [MainController::class, 'cacheClear'])->name('cache.clear');
@@ -49,7 +50,7 @@ Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function
     Route::get('purchase/product/logs', [PurchaseProductController::class, 'purchaseProductLog'])->name('purchase.product.log');
     Route::get('order/create', [OrderController::class, 'orderCreate'])->name('order.create');
     Route::get('order/list', [OrderController::class, 'orderList'])->name('order.list');
-    Route::post('order/store', [OrderController::class, 'store'])->name('order.store');
+    // Route::post('order/store', [OrderController::class, 'store'])->name('order.store');
     Route::get('admin/get-brands-by-category/{category}', [ProductController::class, 'getBrandsByCategory'])->name('admin.get.brands.by.category');
 });
 

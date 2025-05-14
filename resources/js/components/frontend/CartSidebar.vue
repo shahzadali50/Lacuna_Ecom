@@ -39,7 +39,7 @@ const user = computed(() => (page.props.auth as any)?.user);
 
 const goToCheckout = () => {
     if (user.value) {
-        router.visit(route("cart.view"));
+        router.visit(route("cart.checkout"));
     } else {
         isLoginModalVisible.value = true;
     }

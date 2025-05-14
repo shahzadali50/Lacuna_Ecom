@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -130,9 +131,14 @@ class CartController extends Controller
         }
     }
 
-    public function cartView()
+    public function cartCheckout()
     {
-        return Inertia::render('frontend/cart/CartView', [
+        if (!Auth::check()) {
+            return redirect()->back()->with('error', 'Please login to access checkout.');
+
+        }
+
+        return Inertia::render('frontend/cart/CartCheckout', [
             'translations' => __('messages'),
             'locale' => App::getLocale(),
         ]);

@@ -39,29 +39,22 @@ const goToProductDetail = (slug: string) => {
 };
 
 // Add to cart function
+const addingToCart = ref(new Set<number>());
 const addToCart = (product: Product) => {
+  addingToCart.value.add(product.id);
   router.post(route('cart.add'), {
     id: product.id,
     qty: 1,
   }, {
     preserveScroll: true,
     onSuccess: () => {
-    //   console.log('Added to cart');
+      addingToCart.value.delete(product.id);
     },
     onError: (errors) => {
+      addingToCart.value.delete(product.id);
       console.error('Failed to add to cart', errors);
     }
   });
-};
-
-
-
-
-// Add to favorites function
-const addToFavorites = (e: Event, productId: number) => {
-  e.stopPropagation(); // Prevent triggering the card click
-  // In a real app, this would add the product to favorites
-  console.log(`Adding product ${productId} to favorites`);
 };
 </script>
 
@@ -103,18 +96,17 @@ const addToFavorites = (e: Event, productId: number) => {
                         shape="circle"
                         size="small"
                         class="flex items-center justify-center bg-primary !w-6 !h-6"
+                        :loading="addingToCart.has(product.id)"
                         @click.stop="addToCart(product)"
-                        >
+                    >
                         <template #icon><shopping-cart-outlined /></template>
-                        </Button>
+                    </Button>
 
                   <Button
                     type="primary"
                     shape="circle"
                     size="small"
-                    class="flex items-center justify-center bg-danger hover:!bg-pink-700 !w-6 !h-6"
-                    @click="(e) => addToFavorites(e, product.id)"
-                  >
+                    class="flex items-center justify-center bg-danger hover:!bg-pink-700 !w-6 !h-6">
                     <template #icon><heart-outlined /></template>
                   </Button>
                 </div>

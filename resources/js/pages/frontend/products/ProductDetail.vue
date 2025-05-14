@@ -78,17 +78,21 @@ const decreaseQuantity = () => {
         quantity.value--;
     }
 };
+const isAddingToCart = ref(false);
 
 const addToCart = () => {
+    isAddingToCart.value = true;
     router.post(route('cart.add'), {
         id: props.product.id,
         qty: quantity.value,
     }, {
         preserveScroll: true,
         onSuccess: () => {
+            isAddingToCart.value = false;
             console.log('Added to cart');
         },
         onError: (errors) => {
+            isAddingToCart.value = false;
             console.error('Failed to add to cart', errors);
         }
     });
@@ -118,7 +122,7 @@ const addToCart = () => {
 
 
         <!-- Main Content Section -->
-        <section >
+        <section>
             <div class="container mx-auto px-4">
                 <Row :gutter="[32, 32]">
                     <!-- Product Images -->
@@ -175,7 +179,8 @@ const addToCart = () => {
                                 <CheckCircleOutlined
                                     :class="product.stock > 0 ? 'text-green-500 mr-2' : 'text-red-500 mr-2'" />
                                 <span class="text-gray-700">
-                                    {{ product.stock > 0 ? translations.in_stock || 'In Stock' : translations.out_of_stock || 'Out of Stock' }}
+                                    {{ product.stock > 0 ? translations.in_stock || 'In Stock' :
+                                        translations.out_of_stock || 'Out of Stock' }}
                                     <span v-if="product.stock > 0" class="text-gray-500">({{ product.stock }}
                                         {{ translations.available || 'Available' }})</span>
                                 </span>
@@ -206,7 +211,8 @@ const addToCart = () => {
 
                         <!-- Quantity -->
                         <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ translations.quantity || 'Quantity' }}</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ translations.quantity ||
+                                'Quantity' }}</label>
                             <div class="flex items-center">
                                 <button @click="decreaseQuantity"
                                     class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-l-md hover:bg-gray-100">
@@ -224,16 +230,21 @@ const addToCart = () => {
                         <!-- Buttons -->
                         <Row :gutter="[16, 16]" class="mb-6">
                             <Col :xs="24" :sm="12">
-                            <button @click="addToCart" :disabled="product.stock === 0"
+                            <button @click="addToCart" :disabled="product.stock === 0 || isAddingToCart"
                                 class="w-full bg-primary text-white py-3 px-6 rounded-md font-medium hover:bg-primary-dark transition-all duration-200 flex items-center justify-center transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:bg-primary">
-                                <ShoppingCartOutlined class="mr-2" />
-                                {{ product.stock === 0 ? translations.out_of_stock || 'Out of Stock' : translations.add_to_cart || 'Add to Cart' }}
+                                <div v-if="isAddingToCart"
+                                    class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2">
+                                </div>
+                                <ShoppingCartOutlined v-else class="mr-2" />
+                                {{ product.stock === 0 ? translations.out_of_stock || 'Out of Stock' :
+                                    translations.add_to_cart || 'Add to Cart' }}
                             </button>
                             </Col>
                             <Col :xs="24" :sm="12">
                             <button :disabled="product.stock === 0"
                                 class="w-full bg-gray-900 text-white py-3 px-6 rounded-md font-medium hover:bg-gray-800 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:bg-gray-900">
-                                {{ product.stock === 0 ? translations.out_of_stock || 'Out of Stock' : translations.buy_now || 'Buy Now' }}
+                                {{ product.stock === 0 ? translations.out_of_stock || 'Out of Stock' :
+                                translations.buy_now || 'Buy Now' }}
                             </button>
                             </Col>
                         </Row>

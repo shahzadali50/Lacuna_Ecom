@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { DeleteOutlined, ShoppingCartOutlined } from '@ant-design/icons-vue';
 import { usePage, router } from '@inertiajs/vue3';
 
 const page = usePage();
-const translations = computed(() => page.props.translations || {});
+const translations = computed(() => {
+    return (page.props.translations as any)?.products || {};
+});
+const deletingItems = ref(new Set<number>());
 
 const cart = computed(() => {
     const data = page.props.cart as any[] || [];
@@ -36,13 +39,15 @@ const updateQuantity = (productId: number, action: string) => {
 };
 
 const removeItem = (productId: number) => {
+    deletingItems.value.add(productId);
     router.post(route('cart.remove'), { id: productId }, {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => {
-            // Cart will be automatically updated through page props
+            deletingItems.value.delete(productId);
         },
         onError: (errors) => {
+            deletingItems.value.delete(productId);
             console.error('Remove failed', errors);
         }
     });
@@ -57,17 +62,17 @@ const removeItem = (productId: number) => {
         </div>
         <div v-else class="space-y-4">
             <div v-for="item in cart" :key="item.id" class="flex items-start gap-4 border-b">
-                <img :src="'/storage/' + item.thumnail_img" :alt="item.name"
-                    class="w-20 h-20 object-cover rounded">
+                <img :src="'/storage/' + item.thumnail_img" :alt="item.name" class="w-20 h-20 object-cover rounded">
                 <div class="flex-1">
                     <div>
                         <h3 class="font-medium">{{ item.name }}</h3>
                     </div>
                     <div class="flex items-center gap-2 mt-2">
-                        <a-button size="small" @click="updateQuantity(item.id, 'decrease')">-</a-button>
+                        <a-button size="small" @click="updateQuantity(item.id, 'decrease')"  :disabled="item.quantity <= 1">-</a-button>
                         <span class="text-gray-600">{{ item.quantity }}</span>
                         <a-button size="small" @click="updateQuantity(item.id, 'add')">+</a-button>
-                        <a-button type="text" shape="circle" class="text-red-500" @click="removeItem(item.id)">
+                        <a-button type="text" shape="circle" class="text-red-500" :loading="deletingItems.has(item.id)"
+                            @click="removeItem(item.id)">
                             <template #icon>
                                 <DeleteOutlined />
                             </template>

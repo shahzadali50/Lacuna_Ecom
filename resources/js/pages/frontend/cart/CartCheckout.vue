@@ -29,11 +29,11 @@ const formatPrice = (price: number) => {
 <template>
     <UserLayout>
 
-        <Head title="checkout" />
+        <Head title="Checkout" />
         <section class="py-14">
             <div class="container mx-auto px-2 sm:px-4">
                 <Row class="justify-between px-6">
-                    <Col :xs="24" :md="10">
+                    <Col :xs="24" :md="10" class="mb-5">
 
                         <div>
                             <h1 class="text-5xl font-bold text-green-800 mb-6 flex items-center gap-2">
@@ -77,7 +77,7 @@ const formatPrice = (price: number) => {
                         </div>
 
                     </Col>
-                    <Col :xs="24" :md="10">
+                    <Col :xs="24" :md="10" class="mb-5">
                     <div>
                         <h1 class="text-5xl font-bold text-green-800 mb-6 flex items-center gap-2">
                             2.
@@ -102,7 +102,7 @@ const formatPrice = (price: number) => {
                         <span class="font-bold text-primary"> {{ formatPrice(total) }} </span>
                     </div>
                     </Col>
-                    <Col :xs="24" :md="10">
+                    <Col :xs="24" :md="10" class="mb-5">
                     <div>
                         <h1 class="text-5xl font-bold text-green-800 mb-6 flex items-center gap-2">
                             3.

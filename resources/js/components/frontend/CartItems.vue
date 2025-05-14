@@ -2,6 +2,8 @@
 import { computed, ref } from 'vue';
 import { DeleteOutlined, ShoppingCartOutlined } from '@ant-design/icons-vue';
 import { usePage, router } from '@inertiajs/vue3';
+import { Link } from "@inertiajs/vue3";
+import { Button } from "@/components/ui/button";
 
 const page = usePage();
 const translations = computed(() => {
@@ -57,8 +59,14 @@ const removeItem = (productId: number) => {
 <template>
     <div class="flex-1 overflow-y-auto">
         <div v-if="!cart || cart.length === 0" class="text-center py-8">
-            <ShoppingCartOutlined class="text-4xl text-gray-400 mb-4" />
-            <p class="text-gray-500">{{ translations.cart_empty || 'Your cart is empty' }}</p>
+            <ShoppingCartOutlined class="text-5xl text-gray-400" />
+            <h4 class="text-gray-500 text-2xl my-4">{{ translations.cart_empty || 'Your cart is empty' }}</h4>
+                <Button class="btn-primary text-white">
+                    <Link :href="route('home')" class="text-white">
+                        Continue Shopping
+                </Link>
+        </Button>
+
         </div>
         <div v-else class="space-y-4">
             <div v-for="item in cart" :key="item.id" class="flex items-start gap-4 border-b">

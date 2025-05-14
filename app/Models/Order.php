@@ -11,8 +11,8 @@ class Order extends Model
 {
     protected $fillable = [
         'name', 'phone_number',
-        'total_price',
-         'discount', 'subtotal_price', 'status', 'payment_method', 'user_id'
+        'total_price', 'discount', 'subtotal_price', 'status', 'payment_method', 'user_id',
+        'email', 'address', 'city', 'state', 'zip_code', 'country', 'order_notes'
     ];
 
     public function saleProducts()

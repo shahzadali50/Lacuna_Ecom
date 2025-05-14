@@ -5,6 +5,8 @@ import { Head, usePage } from "@inertiajs/vue3";
 import { Row, Col } from "ant-design-vue";
 import CartItems from "@/components/frontend/CartItems.vue";
 import { Button } from "@/components/ui/button";
+import { ShoppingCartOutlined } from "@ant-design/icons-vue";
+import { Link } from "@inertiajs/vue3";
 
 const page = usePage();
 const translations = computed(() => {
@@ -32,7 +34,19 @@ const formatPrice = (price: number) => {
         <Head title="Checkout" />
         <section class="py-14">
             <div class="container mx-auto px-2 sm:px-4">
-                <Row class="justify-between px-6">
+            <Row  v-if="!cart || cart.length === 0" class="py-10">
+            <Col span="24">
+
+               <div class="text-center">
+                <ShoppingCartOutlined class="text-7xl text-gray-400 mb-4" />
+                <h4 class="text-gray-500 text-2xl">{{ translations.cart_empty || 'Your cart is empty' }}</h4>
+                <Link :href="route('home')" class="inline-block mt-4">
+                    <Button>Continue Shopping</Button>
+                </Link>
+               </div>
+            </Col>
+            </Row>
+                <Row  class="justify-between px-6" v-else>
                     <Col :xs="24" :md="10" class="mb-5">
 
                         <div>
@@ -60,6 +74,14 @@ const formatPrice = (price: number) => {
                             <a-textarea class="mt-2 w-full" placeholder="Enter Your Address" :rows="4" />
                         </div>
                         <div class="mb-4">
+                            <label class="block">Country <span class="text-red-500">*</span></label>
+                            <a-input class="mt-2 w-full" placeholder="Enter Your Country" />
+                        </div>
+                        <div class="mb-4">
+                            <label class="block">State <span class="text-red-500">*</span></label>
+                            <a-input class="mt-2 w-full" placeholder="Enter Your State" />
+                        </div>
+                        <div class="mb-4">
                             <label class="block">City <span class="text-red-500">*</span></label>
                             <a-input class="mt-2 w-full" placeholder="Enter Your City" />
                         </div>
@@ -67,10 +89,7 @@ const formatPrice = (price: number) => {
                             <label class="block">Postal Code <span class="text-red-500">*</span></label>
                             <a-input class="mt-2 w-full" placeholder="Enter Your Postal Code" />
                         </div>
-                        <div class="mb-4">
-                            <label class="block">Country <span class="text-red-500">*</span></label>
-                            <a-input class="mt-2 w-full" placeholder="Enter Your Country" />
-                        </div>
+
                         <div class="mb-4">
                             <label class="block">Order notes (optional)</label>
                             <a-textarea class="mt-2 w-full" placeholder="Enter Your Order Notes" :rows="4" />

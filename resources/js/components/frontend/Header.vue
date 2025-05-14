@@ -222,9 +222,7 @@ const handleLogout = () => {
 
     <!-- Mobile Bottom Navigation -->
     <MobileBottomNav
-        :is-authenticated="isAuthenticated"
         @toggle-cart="toggleCart"
-        @logout="handleLogout"
     />
 
     <!-- Cart Sidebar -->

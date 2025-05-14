@@ -32,11 +32,11 @@ const formatPrice = (price: number) => {
         <Head title="checkout" />
         <section class="py-14">
             <div class="container mx-auto px-2 sm:px-4">
-                <Row class="justify-between">
-                    <Col :span="10">
-                    <form>
+                <Row class="justify-between px-6">
+                    <Col :xs="24" :md="10">
+
                         <div>
-                            <h1 class="text-3xl sm:text-5xl font-bold text-green-800 mb-6 flex items-center gap-2">
+                            <h1 class="text-5xl font-bold text-green-800 mb-6 flex items-center gap-2">
                                 1.
                             </h1>
                             <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 flex items-center gap-2">
@@ -75,11 +75,11 @@ const formatPrice = (price: number) => {
                             <label class="block">Order notes (optional)</label>
                             <a-textarea class="mt-2 w-full" placeholder="Enter Your Order Notes" :rows="4" />
                         </div>
-                    </form>
+
                     </Col>
-                    <Col :span="10">
+                    <Col :xs="24" :md="10">
                     <div>
-                        <h1 class="text-3xl sm:text-5xl font-bold text-green-800 mb-6 flex items-center gap-2">
+                        <h1 class="text-5xl font-bold text-green-800 mb-6 flex items-center gap-2">
                             2.
                         </h1>
 
@@ -102,9 +102,9 @@ const formatPrice = (price: number) => {
                         <span class="font-bold text-primary"> {{ formatPrice(total) }} </span>
                     </div>
                     </Col>
-                    <Col :span="12">
+                    <Col :xs="24" :md="10">
                     <div>
-                        <h1 class="text-3xl sm:text-5xl font-bold text-green-800 mb-6 flex items-center gap-2">
+                        <h1 class="text-5xl font-bold text-green-800 mb-6 flex items-center gap-2">
                             3.
                         </h1>
                         <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
@@ -121,7 +121,7 @@ const formatPrice = (price: number) => {
                             </p>
                         </div>
                         <div>
-                            <Button type="submit" class="w-[500px] btn-primary mt-5"> Place Order </Button>
+                            <Button type="submit" class="w-full btn-primary mt-5"> Place Order </Button>
                         </div>
 
                     </div>

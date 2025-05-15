@@ -27,7 +27,7 @@ public function orderGenerate(Request $request)
         'country' => 'required|string',
         'state' => 'required|string',
         'city' => 'required|string',
-        'zip_code' => 'required|numeric',
+        'postal_code' => 'required|numeric',
         'payment_method' => 'required|string',
     ]);
 
@@ -56,7 +56,7 @@ public function orderGenerate(Request $request)
             'country' => $validatedData['country'],
             'state' => $validatedData['state'],
             'city' => $validatedData['city'],
-            'zip_code' => $validatedData['zip_code'],
+            'zip_code' => $validatedData['postal_code'],
             'payment_method' => $validatedData['payment_method'],
             'user_id' => Auth::id(),
             'subtotal_price' => $subTotal,

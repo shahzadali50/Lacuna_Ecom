@@ -2,6 +2,7 @@
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItemType } from '@/types';
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 
 defineProps<{
     breadcrumbs?: BreadcrumbItemType[];
@@ -16,6 +17,9 @@ defineProps<{
             <SidebarTrigger class="-ml-1" />
             <template v-if="breadcrumbs.length > 0">
                 <Breadcrumbs :breadcrumbs="breadcrumbs" />
+                <div class="text-end">
+                    <LanguageSwitcher />
+                </div>
             </template>
         </div>
     </header>

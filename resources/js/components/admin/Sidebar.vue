@@ -82,23 +82,6 @@ watch(currentPath, (newUrl) => {
                 <span>{{ translations.products || 'Products' }}</span>
                 </Link>
             </a-menu-item>
-
-            <!-- Purchase Products -->
-            <a-menu-item key="5" :class="{ 'active': currentPath.startsWith(route('admin.purchase.product.list', {}, false)) }">
-                <Link :href="route('admin.purchase.product.list')">
-                <ShoppingCartOutlined  />
-                <span>{{ translations.purchase_products || 'Purchase Products' }}</span>
-                </Link>
-            </a-menu-item>
-
-            <!-- Get Orders -->
-            <!-- <a-menu-item key="6" :class="{ 'active': currentPath.startsWith(route('admin.order.create', {}, false)) }">
-                <Link :href="route('admin.order.create')">
-                <FileTextOutlined  />
-                <span>{{ translations.get_orders || 'Get Orders' }}</span>
-                </Link>
-            </a-menu-item> -->
-
             <!-- Order List -->
             <a-menu-item key="7" :class="{ 'active': currentPath.startsWith(route('admin.order.list', {}, false)) }">
                 <Link :href="route('admin.order.list')">

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request; // ✅ Correct import
+use Illuminate\Support\Facades\App;
 
 class OrderController extends Controller
 {
@@ -95,7 +96,11 @@ public function store(Request $request)
         ->latest()
         ->paginate(10);
 
-    return Inertia::render('admin/order/OrderList', compact('orders'));
+    return Inertia::render('admin/order/OrderList', [
+        'orders' => $orders,
+        'translations' => __('messages'),
+        'locale' => App::getLocale(),
+    ]);
 }
 
 }

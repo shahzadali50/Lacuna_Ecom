@@ -41,15 +41,7 @@ Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function
     Route::delete('product/delete/{id}', [ProductController::class, 'destroy'])->name('product.delete');
     Route::post('product/update/{id}', [ProductController::class, 'update'])->name('product.update');
     Route::get('product/logs', [ProductController::class, 'product_log'])->name('product-log');
-
-    Route::post('purchase-product-detail/store', [PurchaseProductController::class, 'store'])->name('purchase.product.detail.store');
-    Route::get('related-purchase-products/list/{slug}', [PurchaseProductController::class, 'relatedPurchaseProductList'])->name('related.purchase.product.list');
-    Route::delete('purchase-product-delete/{id}', [PurchaseProductController::class, 'destroy'])->name('purchase.product.delete');
-    Route::put('purchase-product-update/{id}', [PurchaseProductController::class, 'update'])->name('purchase.product.update');
-    Route::get('purchase/products/list', [PurchaseProductController::class, 'purchaseProductList'])->name('purchase.product.list');
-    Route::get('purchase/product/logs', [PurchaseProductController::class, 'purchaseProductLog'])->name('purchase.product.log');
     Route::get('order/list', [OrderController::class, 'orderList'])->name('order.list');
-    // Route::post('order/store', [OrderController::class, 'store'])->name('order.store');
     Route::get('admin/get-brands-by-category/{category}', [ProductController::class, 'getBrandsByCategory'])->name('admin.get.brands.by.category');
 });
 

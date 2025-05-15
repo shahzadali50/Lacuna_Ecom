@@ -80,6 +80,16 @@ const addToCart = (product: Product) => {
                   {{ product.category_name }}
 
                 </div>
+                <Button
+                    type="primary"
+                    shape="circle"
+                    size="small"
+                    class="flex items-center justify-center bg-danger hover:!bg-pink-700 !w-6 !h-6 absolute top-7 right-1 bg-white ">
+                    <template #icon><heart-outlined /></template>
+                  </Button>
+                <!-- <div class="absolute top-7 right-1 bg-white ">
+                  <heart-outlined class="text-red-500 hover:text-red-700 cursor-pointer" />
+                </div> -->
               </div>
             </template>
             <div class="">
@@ -90,26 +100,14 @@ const addToCart = (product: Product) => {
                 <span class="text-xs sm:text-sm md:text-base text-secondary line-through">{{ formatPrice(product.sale_price) }}</span>
                </div>
               </div>
-                <div class="flex gap-1 mt-2">
-                    <Button
-                        type="primary"
-                        shape="circle"
-                        size="small"
-                        class="flex items-center justify-center bg-primary !w-6 !h-6"
-                        :loading="addingToCart.has(product.id)"
-                        @click.stop="addToCart(product)"
-                    >
-                        <template #icon><shopping-cart-outlined /></template>
-                    </Button>
-
-                  <Button
+                <Button
                     type="primary"
-                    shape="circle"
-                    size="small"
-                    class="flex items-center justify-center bg-danger hover:!bg-pink-700 !w-6 !h-6">
-                    <template #icon><heart-outlined /></template>
-                  </Button>
-                </div>
+                    class="btn-primary flex items-center justify-center mt-2"
+                    :loading="addingToCart.has(product.id)"
+                    @click.stop="addToCart(product)"
+                >
+                    <template #icon><shopping-cart-outlined /></template>Add to Cart
+                </Button>
             </div>
           </Card>
         </Col>

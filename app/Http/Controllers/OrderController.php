@@ -17,7 +17,7 @@ class OrderController extends Controller
 {
 
 
-public function store(Request $request)
+public function orderGenerate(Request $request)
 {
     $validatedData = $request->validate([
         'name' => 'required|string',

@@ -36,15 +36,15 @@ const form = useForm({
     country: '',
     state: '',
     city: '',
-    zip_code: '',
+    postal_code: '',
     order_notes: '',
     payment_method: '',
 })
 
 const orderGenerate = () => {
-    form.post(route('order.store'), {
+    form.post(route('order.generate'), {
         onSuccess: () => {
-            form.reset(); // Reset form on success
+            form.reset();
         },
     });
 }
@@ -117,10 +117,10 @@ const orderGenerate = () => {
                             <div v-if="form.errors.city" class="text-red-500">{{ form.errors.city }}</div>
                         </div>
                         <div class="mb-4">
-                            <label class="block">Zip Code <span class="text-red-500">*</span></label>
-                            <a-input type="number" v-model:value="form.zip_code" class="mt-2 w-full"
-                                placeholder="Enter Your Zip Code" />
-                            <div v-if="form.errors.zip_code" class="text-red-500">{{ form.errors.zip_code }}</div>
+                            <label class="block">Postal Code <span class="text-red-500">*</span></label>
+                            <a-input type="number" v-model:value="form.postal_code" class="mt-2 w-full"
+                                placeholder="Enter Your Postal Code" />
+                            <div v-if="form.errors.postal_code" class="text-red-500">{{ form.errors.postal_code }}</div>
                         </div>
                         <div class="mb-4">
                             <label class="block">Order notes (optional)</label>

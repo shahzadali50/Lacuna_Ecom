@@ -48,7 +48,6 @@ Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function
     Route::put('purchase-product-update/{id}', [PurchaseProductController::class, 'update'])->name('purchase.product.update');
     Route::get('purchase/products/list', [PurchaseProductController::class, 'purchaseProductList'])->name('purchase.product.list');
     Route::get('purchase/product/logs', [PurchaseProductController::class, 'purchaseProductLog'])->name('purchase.product.log');
-    Route::get('order/create', [OrderController::class, 'orderCreate'])->name('order.create');
     Route::get('order/list', [OrderController::class, 'orderList'])->name('order.list');
     // Route::post('order/store', [OrderController::class, 'store'])->name('order.store');
     Route::get('admin/get-brands-by-category/{category}', [ProductController::class, 'getBrandsByCategory'])->name('admin.get.brands.by.category');

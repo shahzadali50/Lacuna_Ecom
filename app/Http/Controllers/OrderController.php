@@ -14,19 +14,7 @@ use Illuminate\Http\Request; // ✅ Correct import
 
 class OrderController extends Controller
 {
- public function orderCreate()
-{
-    $products = Product::with(['purchaseProducts' => function ($query) {
-        $query->where('remaining_stock', '>', 0);
-    }])
-    ->where('user_id', Auth::id())
-    ->whereHas('purchaseProducts', function ($query) {
-        $query->where('remaining_stock', '>', 0);
-    })
-    ->get(['id', 'name']);
 
-    return Inertia::render('admin/order/Create', compact('products'));
-}
 
 public function store(Request $request)
 {

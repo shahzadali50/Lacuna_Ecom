@@ -92,12 +92,12 @@ watch(currentPath, (newUrl) => {
             </a-menu-item>
 
             <!-- Get Orders -->
-            <a-menu-item key="6" :class="{ 'active': currentPath.startsWith(route('admin.order.create', {}, false)) }">
+            <!-- <a-menu-item key="6" :class="{ 'active': currentPath.startsWith(route('admin.order.create', {}, false)) }">
                 <Link :href="route('admin.order.create')">
                 <FileTextOutlined  />
                 <span>{{ translations.get_orders || 'Get Orders' }}</span>
                 </Link>
-            </a-menu-item>
+            </a-menu-item> -->
 
             <!-- Order List -->
             <a-menu-item key="7" :class="{ 'active': currentPath.startsWith(route('admin.order.list', {}, false)) }">

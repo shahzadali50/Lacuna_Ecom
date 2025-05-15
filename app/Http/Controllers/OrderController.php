@@ -104,7 +104,6 @@ public function store(Request $request)
     public function orderList()
 {
     $orders = Order::with('saleProducts.product') // Eager load products
-        ->where('user_id', Auth::id())
         ->latest()
         ->paginate(10);
 

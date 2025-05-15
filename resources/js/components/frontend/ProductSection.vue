@@ -106,7 +106,7 @@ const addToCart = (product: Product) => {
                     :loading="addingToCart.has(product.id)"
                     @click.stop="addToCart(product)"
                 >
-                    <template #icon><shopping-cart-outlined /></template>Add to Cart
+                    <template #icon><shopping-cart-outlined /></template> {{ translations.add_to_cart || 'Add to Cart' }}
                 </Button>
             </div>
           </Card>

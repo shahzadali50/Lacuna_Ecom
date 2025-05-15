@@ -173,7 +173,7 @@ class MainController extends Controller
                 return redirect()->route('admin.dashboard')->with('success', 'login successfully');
             } else {
 
-                return redirect()->route('home')->with('success', 'login successfully');
+                return redirect()->route('profile.edit')->with('success', 'login successfully');
             }
         } else {
 

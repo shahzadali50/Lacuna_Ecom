@@ -49,7 +49,6 @@ const orderGenerate = () => {
     });
 }
 </script>
-
 <template>
     <UserLayout>
 
@@ -147,7 +146,7 @@ const orderGenerate = () => {
                             <span class="font-medium">{{ translations.total || "Total" }}:</span>
                             <span class="font-bold text-primary"> {{ formatPrice(total) }} </span>
                         </div>
-                        
+
                         </Col>
                         <Col :xs="24" :md="10" class="mb-5">
                         <div>

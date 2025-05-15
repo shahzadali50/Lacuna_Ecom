@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\SaleProduct;
 use App\Models\PurchaseProduct;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request; // ✅ Correct import
 
@@ -29,7 +30,6 @@ class OrderController extends Controller
 
 public function store(Request $request)
 {
-    dd($request->all());
     $validatedData = $request->validate([
         'name' => 'required|string',
         'phone_number' => 'required|numeric',
@@ -56,26 +56,30 @@ public function store(Request $request)
         $discountAmount = ($discount / 100) * $subTotal;
         $totalPrice = $subTotal - $discountAmount;
 
+        // Generate a random order ID with prefix ORD-
+        $randomOrderId = 'ORD-' . rand(100000, 999999);
+
         $order = Order::create([
-            'name' => $request->name,
-            'phone_number' => $request->phone_number,
-            'email' => $request->email,
-            'address' => $request->address,
-            'country' => $request->country,
-            'state' => $request->state,
-            'city' => $request->city,
-            'zip_code' => $request->zip_code,
-            'payment_method' => $request->payment_method,
+            'name' => $validatedData['name'],
+            'phone_number' => $validatedData['phone_number'],
+            'email' => $validatedData['email'],
+            'address' => $validatedData['address'],
+            'country' => $validatedData['country'],
+            'state' => $validatedData['state'],
+            'city' => $validatedData['city'],
+            'zip_code' => $validatedData['zip_code'],
+            'payment_method' => $validatedData['payment_method'],
             'user_id' => Auth::id(),
             'subtotal_price' => $subTotal,
             'discount' => $discount,
             'total_price' => $totalPrice,
+            'order_id' => $randomOrderId,
         ]);
 
         foreach ($cart as $product) {
             SaleProduct::create([
                 'order_id' => $order->id,
-                'product_id' => $product['product_id'],
+                'product_id' => $product['id'],
                 'user_id' => Auth::id(),
                 'sale_price' => $product['final_price'],
                 'qty' => $product['qty'],
@@ -83,15 +87,16 @@ public function store(Request $request)
             ]);
 
             // Optionally update product stock here
-            Product::where('id', $product['product_id'])->decrement('stock', $product['qty']);
+            Product::where('id', $product['id'])->decrement('stock', $product['qty']);
         }
 
         DB::commit();
         session()->forget('cart'); // Clear cart
-        return redirect()->route('home')->with('success', 'Order placed successfully!');
+        return redirect()->back()->with('success', 'Order Created successfully!');
     } catch (\Exception $e) {
         DB::rollBack();
-        return response()->json(['error' => 'Failed to create order: ' . $e->getMessage()], 500);
+        Log::error('Order creation failed: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Something went wrong! Please try again.');
     }
 }
 

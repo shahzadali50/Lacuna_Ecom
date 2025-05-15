@@ -80,51 +80,51 @@ const orderGenerate = () => {
                         </div>
                         <div class="mb-4">
                             <label class="block">Full Name <span class="text-red-500">*</span></label>
-                            <a-input v-model="form.name" class="mt-2 w-full" placeholder="Enter Your Full Name" />
+                            <a-input v-model:value="form.name" class="mt-2 w-full" placeholder="Enter Your Full Name" />
                             <div v-if="form.errors.name" class="text-red-500">{{ form.errors.name }}</div>
                         </div>
                         <div class="mb-4">
                             <label class="block">Email <span class="text-red-500">*</span></label>
-                            <a-input v-model="form.email" class="mt-2 w-full" placeholder="Enter Your Email" />
+                            <a-input type="email" v-model:value="form.email" class="mt-2 w-full" placeholder="Enter Your Email" />
                             <div v-if="form.errors.email" class="text-red-500">{{ form.errors.email }}</div>
                         </div>
                         <div class="mb-4">
                             <label class="block">Phone Number <span class="text-red-500">*</span></label>
-                            <a-input v-model="form.phone_number" class="mt-2 w-full"
+                            <a-input type="number" v-model:value="form.phone_number" class="mt-2 w-full"
                                 placeholder="Enter Your Phone Number" />
                             <div v-if="form.errors.phone_number" class="text-red-500">{{ form.errors.phone_number }}
                             </div>
                         </div>
                         <div class="mb-4">
                             <label class="block">Address <span class="text-red-500">*</span></label>
-                            <a-textarea v-model="form.address" class="mt-2 w-full" placeholder="Enter Your Address"
+                            <a-textarea v-model:value="form.address" class="mt-2 w-full" placeholder="Enter Your Address"
                                 :rows="4" />
                             <div v-if="form.errors.address" class="text-red-500">{{ form.errors.address }}</div>
                         </div>
                         <div class="mb-4">
                             <label class="block">Country <span class="text-red-500">*</span></label>
-                            <a-input v-model="form.country" class="mt-2 w-full" placeholder="Enter Your Country" />
+                            <a-input v-model:value="form.country" class="mt-2 w-full" placeholder="Enter Your Country" />
                             <div v-if="form.errors.country" class="text-red-500">{{ form.errors.country }}</div>
                         </div>
                         <div class="mb-4">
                             <label class="block">State <span class="text-red-500">*</span></label>
-                            <a-input v-model="form.state" class="mt-2 w-full" placeholder="Enter Your State" />
+                            <a-input v-model:value="form.state" class="mt-2 w-full" placeholder="Enter Your State" />
                             <div v-if="form.errors.state" class="text-red-500">{{ form.errors.state }}</div>
                         </div>
                         <div class="mb-4">
                             <label class="block">City <span class="text-red-500">*</span></label>
-                            <a-input v-model="form.city" class="mt-2 w-full" placeholder="Enter Your City" />
+                            <a-input v-model:value="form.city" class="mt-2 w-full" placeholder="Enter Your City" />
                             <div v-if="form.errors.city" class="text-red-500">{{ form.errors.city }}</div>
                         </div>
                         <div class="mb-4">
                             <label class="block">Zip Code <span class="text-red-500">*</span></label>
-                            <a-input v-model="form.zip_code" class="mt-2 w-full"
+                            <a-input type="number" v-model:value="form.zip_code" class="mt-2 w-full"
                                 placeholder="Enter Your Zip Code" />
                             <div v-if="form.errors.zip_code" class="text-red-500">{{ form.errors.zip_code }}</div>
                         </div>
                         <div class="mb-4">
                             <label class="block">Order notes (optional)</label>
-                            <a-textarea v-model="form.order_notes" class="mt-2 w-full"
+                            <a-textarea v-model:value="form.order_notes" class="mt-2 w-full"
                                 placeholder="Enter Your Order Notes" :rows="4" />
                             <div v-if="form.errors.order_notes" class="text-red-500">{{ form.errors.order_notes }}</div>
                         </div>
@@ -151,14 +151,13 @@ const orderGenerate = () => {
                         <Col :xs="24" :md="10" class="mb-5">
                         <div>
                             <h1 class="text-5xl font-bold text-green-800 mb-6 flex items-center gap-2">3.</h1>
+                            <div v-if="form.errors.payment_method" class="text-red-500">{{ form.errors.payment_method }}</div>
                             <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Payment Method</h1>
                             <div class="">
                                 <div class="flex items-center">
                                     <a-radio-group v-model:value="form.payment_method" class="ml-2">
-                                        <a-radio value="cod">Cash On Delivery</a-radio>
+                                        <a-radio value="Cash On Delivery">Cash On Delivery</a-radio>
                                         </a-radio-group>
-
-
                                 </div>
                                 <p class="text-gray-500 text-sm ml-6">
                                     Pay with cash upon delivery.

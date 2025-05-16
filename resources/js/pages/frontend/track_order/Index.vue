@@ -89,6 +89,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                             <template v-else-if="column.dataIndex === 'total_price'">
                                 {{ Math.floor(record.total_price) }}
                             </template>
+                            
                             <template v-else-if="column.dataIndex === 'created_at'">
                                 {{ formatDate(record.created_at) }}
                             </template>

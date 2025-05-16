@@ -7,6 +7,9 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import UserLayout from '@/layouts/UserLayout.vue';
+import { computed } from 'vue';
+import { type SharedData } from '@/types';
+
 interface Props {
     token: string;
     email: string;
@@ -14,6 +17,8 @@ interface Props {
 
 const props = defineProps<Props>();
 const { props: pageProps } = usePage();
+const page = usePage<SharedData>();
+const translations = computed(() => page.props.translations as Record<string, string>);
 
 const form = useForm({
     token: props.token,
@@ -33,19 +38,19 @@ const submit = () => {
 
 <template>
     <UserLayout>
-    <AuthLayout :title="pageProps.translations.reset_password" :description="pageProps.translations.enter_new_password">
-        <Head :title="pageProps.translations.reset_password" />
+    <AuthLayout :title="translations.reset_password" :description="translations.enter_new_password">
+        <Head :title="translations.reset_password" />
 
         <form @submit.prevent="submit">
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="email">{{ pageProps.translations.email }}</Label>
+                    <Label for="email">{{ translations.email }}</Label>
                     <Input id="email" type="email" name="email" autocomplete="email" v-model="form.email" class="mt-1 block w-full" readonly />
                     <InputError :message="form.errors.email" class="mt-2" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password">{{ pageProps.translations.password }}</Label>
+                    <Label for="password">{{ translations.password }}</Label>
                     <Input
                         id="password"
                         type="password"
@@ -54,13 +59,13 @@ const submit = () => {
                         v-model="form.password"
                         class="mt-1 block w-full"
                         autofocus
-                        :placeholder="pageProps.translations.password_placeholder"
+                        :placeholder="translations.password_placeholder"
                     />
                     <InputError :message="form.errors.password" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password_confirmation">{{ pageProps.translations.confirm_password }}</Label>
+                    <Label for="password_confirmation">{{ translations.confirm_password }}</Label>
                     <Input
                         id="password_confirmation"
                         type="password"
@@ -68,14 +73,14 @@ const submit = () => {
                         autocomplete="new-password"
                         v-model="form.password_confirmation"
                         class="mt-1 block w-full"
-                        :placeholder="pageProps.translations.confirm_password_placeholder"
+                        :placeholder="translations.confirm_password_placeholder"
                     />
                     <InputError :message="form.errors.password_confirmation" />
                 </div>
 
                 <Button type="submit" class="mt-4 w-full" :disabled="form.processing">
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                    {{ pageProps.translations.reset_password }}
+                    {{ translations.reset_password }}
                 </Button>
             </div>
         </form>

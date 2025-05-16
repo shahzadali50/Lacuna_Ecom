@@ -8,8 +8,12 @@ import AuthBase from '@/layouts/AuthLayout.vue';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import UserLayout from '@/layouts/UserLayout.vue';
+import {computed } from 'vue';
+import { type SharedData } from '@/types';
 
 const { props } = usePage();
+const page = usePage<SharedData>();
+const translations = computed(() => page.props.translations as Record<string, string>);
 
 const form = useForm({
     name: '',
@@ -27,25 +31,25 @@ const submit = () => {
 
 <template>
     <UserLayout>
-    <AuthBase :title="props.translations.create_account" :description="props.translations.enter_details">
-        <Head :title="props.translations.register" />
+    <AuthBase :title="translations.create_account" :description="translations.enter_details">
+        <Head :title="translations.register" />
 
         <form @submit.prevent="submit" class="flex flex-col gap-6">
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="name">{{ props.translations.name }}</Label>
-                    <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" v-model="form.name" :placeholder="props.translations.name_placeholder" />
+                    <Label for="name">{{ translations.name }}</Label>
+                    <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" v-model="form.name" :placeholder="translations.name_placeholder" />
                     <InputError :message="form.errors.name" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="email">{{ props.translations.email }}</Label>
-                    <Input id="email" type="email" required :tabindex="2" autocomplete="email" v-model="form.email" :placeholder="props.translations.email_placeholder" />
+                    <Label for="email">{{ translations.email }}</Label>
+                    <Input id="email" type="email" required :tabindex="2" autocomplete="email" v-model="form.email" :placeholder="translations.email_placeholder" />
                     <InputError :message="form.errors.email" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password">{{ props.translations.password }}</Label>
+                    <Label for="password">{{ translations.password }}</Label>
                     <Input
                         id="password"
                         type="password"
@@ -53,13 +57,13 @@ const submit = () => {
                         :tabindex="3"
                         autocomplete="new-password"
                         v-model="form.password"
-                        :placeholder="props.translations.password_placeholder"
+                        :placeholder="translations.password_placeholder"
                     />
                     <InputError :message="form.errors.password" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password_confirmation">{{ props.translations.confirm_password }}</Label>
+                    <Label for="password_confirmation">{{ translations.confirm_password }}</Label>
                     <Input
                         id="password_confirmation"
                         type="password"
@@ -67,20 +71,20 @@ const submit = () => {
                         :tabindex="4"
                         autocomplete="new-password"
                         v-model="form.password_confirmation"
-                        :placeholder="props.translations.confirm_password_placeholder"
+                        :placeholder="translations.confirm_password_placeholder"
                     />
                     <InputError :message="form.errors.password_confirmation" />
                 </div>
 
                 <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="form.processing">
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                    {{ props.translations.create_account }}
+                    {{ translations.create_account }}
                 </Button>
             </div>
 
             <div class="text-center text-sm text-muted-foreground">
-                {{ props.translations.have_account }}
-                <TextLink :href="route('login')" class="underline underline-offset-4" :tabindex="6">{{ props.translations.login }}</TextLink>
+                {{ translations.have_account }}
+                <TextLink :href="route('login')" class="underline underline-offset-4" :tabindex="6">{{ translations.login }}</TextLink>
             </div>
         </form>
     </AuthBase>

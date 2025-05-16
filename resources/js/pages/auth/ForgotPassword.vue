@@ -8,11 +8,16 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import UserLayout from '@/layouts/UserLayout.vue';
+import { computed } from 'vue';
+import { type SharedData } from '@/types';
+
 defineProps<{
     status?: string;
 }>();
 
 const { props } = usePage();
+const page = usePage<SharedData>();
+const translations = computed(() => page.props.translations as Record<string, string>);
 
 const form = useForm({
     email: '',
@@ -24,10 +29,9 @@ const submit = () => {
 </script>
 
 <template>
-
     <UserLayout>
-    <AuthLayout :title="props.translations.forgot_password" :description="props.translations.enter_email_reset">
-        <Head :title="props.translations.forgot_password" />
+    <AuthLayout :title="translations.forgot_password" :description="translations.enter_email_reset">
+        <Head :title="translations.forgot_password" />
 
         <div v-if="status" class="mb-4 text-center text-sm font-medium text-green-600">
             {{ status }}
@@ -36,22 +40,22 @@ const submit = () => {
         <div class="space-y-6">
             <form @submit.prevent="submit">
                 <div class="grid gap-2">
-                    <Label for="email">{{ props.translations.email }}</Label>
-                    <Input id="email" type="email" name="email" autocomplete="off" v-model="form.email" autofocus :placeholder="props.translations.email_placeholder" />
+                    <Label for="email">{{ translations.email }}</Label>
+                    <Input id="email" type="email" name="email" autocomplete="off" v-model="form.email" autofocus :placeholder="translations.email_placeholder" />
                     <InputError :message="form.errors.email" />
                 </div>
 
                 <div class="my-6 flex items-center justify-start">
                     <Button class="w-full" :disabled="form.processing">
                         <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                        {{ props.translations.email_reset_link }}
+                        {{ translations.email_reset_link }}
                     </Button>
                 </div>
             </form>
 
             <div class="space-x-1 text-center text-sm text-muted-foreground">
-                <span>{{ props.translations.or_return_to }}</span>
-                <TextLink :href="route('login')">{{ props.translations.login }}</TextLink>
+                <span>{{ translations.or_return_to }}</span>
+                <TextLink :href="route('login')">{{ translations.login }}</TextLink>
             </div>
         </div>
     </AuthLayout>

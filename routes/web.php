@@ -45,6 +45,11 @@ Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function
     Route::get('admin/get-brands-by-category/{category}', [ProductController::class, 'getBrandsByCategory'])->name('admin.get.brands.by.category');
 });
 
+Route::middleware('auth')->name('user.')->group(function () {
+    Route::get('order/detail', [OrderController::class, 'userOrderDetail'])->name('order.detail');
+
+});
+
 
 Route::get('lacuna-migrate', [MainController::class, 'migrate'])->name('migrate');
 Route::get('storage-link', [MainController::class, 'storageLink'])->name('storage.link');

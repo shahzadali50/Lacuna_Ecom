@@ -102,5 +102,18 @@ public function orderGenerate(Request $request)
         'locale' => App::getLocale(),
     ]);
 }
+    public function userOrderDetail()
+    {
+        $orders = Order::with('saleProducts.product')
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->paginate(10);
+
+        return Inertia::render('frontend/track_order/Index', [
+            'orders' => $orders,
+            'translations' => __('messages'),
+            'locale' => App::getLocale(),
+        ]);
+    }
 
 }

@@ -20,8 +20,8 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Order',
-        href: '/',
+        title: 'Order Details',
+        href: route('user.order.detail'),
         icon: LayoutGrid,
     },
 

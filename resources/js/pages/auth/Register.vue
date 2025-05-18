@@ -11,7 +11,6 @@ import UserLayout from '@/layouts/UserLayout.vue';
 import {computed } from 'vue';
 import { type SharedData } from '@/types';
 
-const { props } = usePage();
 const page = usePage<SharedData>();
 const translations = computed(() => page.props.translations as Record<string, string>);
 

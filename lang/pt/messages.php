@@ -142,6 +142,8 @@ return [
         'get_orders' => 'Obter Pedidos',
         'order_list' => 'Lista de Pedidos',
         'settings' => 'Configurações',
+        'profile' => 'Perfil',
+        'logout' => 'Sair',
     ],
 
     'dashboardMainPage' => [

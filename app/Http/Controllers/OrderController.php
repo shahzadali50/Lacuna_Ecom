@@ -92,7 +92,7 @@ public function orderGenerate(Request $request)
 
     public function orderList()
 {
-    $orders = Order::with('saleProducts.product') // Eager load products
+    $orders = Order::with('saleProducts.product')
         ->latest()
         ->paginate(10);
 

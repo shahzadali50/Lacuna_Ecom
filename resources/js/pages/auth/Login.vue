@@ -21,7 +21,6 @@ defineProps<{
 const page = usePage<SharedData>();
 const translations = computed(() => page.props.translations as Record<string, string>);
 
-const { props } = usePage();
 
 const form = useForm({
   email: "",

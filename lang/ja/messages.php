@@ -143,6 +143,8 @@ return [
         'get_orders' => '注文を取得',
         'order_list' => '注文一覧',
         'settings' => '設定',
+        'profile' => 'プロフィール',
+        'logout' => 'ログアウト',
     ],
     'dashboardMainPage' => [
         'welcome_to_dashboard' => 'ダッシュボードへようこそ',

@@ -25,7 +25,6 @@ const { props } = usePage();
 const mobileMenuOpen = ref(false);
 const cartDrawerVisible = ref(false);
 const searchQuery = ref('');
-// const currentLocale = computed(() => usePage().props.locale || 'en');
 const isAuthenticated = computed(() => props.auth?.user);
 
 const toggleMobileMenu = () => {

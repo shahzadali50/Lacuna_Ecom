@@ -16,7 +16,6 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const { props: pageProps } = usePage();
 const page = usePage<SharedData>();
 const translations = computed(() => page.props.translations as Record<string, string>);
 

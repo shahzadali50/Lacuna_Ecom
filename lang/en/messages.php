@@ -143,6 +143,8 @@ return [
         'get_orders' => 'Get Orders',
         'order_list' => 'Order List',
         'settings' => 'Settings',
+        'profile' => 'Profile',
+        'logout' => 'Logout',
     ],
 
     'dashboardMainPage' => [

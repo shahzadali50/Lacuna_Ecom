@@ -12,7 +12,6 @@ defineProps<{
     status?: string;
 }>();
 
-const { props } = usePage();
 const page = usePage<SharedData>();
 const translations = computed(() => page.props.translations as Record<string, string>);
 

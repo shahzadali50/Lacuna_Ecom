@@ -2,7 +2,7 @@
 import { Head } from '@inertiajs/vue3';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import SaleManagement from '@/components/admin/SaleManagement.vue';
-import { TaobaoCircleOutlined, DollarCircleOutlined, ShoppingCartOutlined, BranchesOutlined, CiOutlined } from '@ant-design/icons-vue';
+import {  DollarCircleOutlined, ShoppingCartOutlined, BranchesOutlined, CiOutlined } from '@ant-design/icons-vue';
 import DashboardCard from '@/components/admin/DashboardCard.vue';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';

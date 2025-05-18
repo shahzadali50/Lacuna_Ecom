@@ -1,47 +1,43 @@
 <script setup lang="ts">
 import { ref, watch, computed, defineProps } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
+import { SharedData } from '@/types';
+
 import {
     SettingOutlined,
     DatabaseOutlined,
     AppstoreOutlined,
     TrademarkCircleOutlined,
     ShoppingOutlined,
-    ShoppingCartOutlined,
-    FileTextOutlined,
-    OrderedListOutlined
+    OrderedListOutlined,
+    PoweroffOutlined
 } from '@ant-design/icons-vue';
-
-// Define the type for translations
-interface Translations {
-    sidebar?: {
-        dashboard?: string;
-        categories?: string;
-        brands?: string;
-        products?: string;
-        purchase_products?: string;
-        get_orders?: string;
-        order_list?: string;
-        settings?: string;
-    };
-}
+// Get translations from page props with proper typing
+const page = usePage<SharedData>();
+const translations = computed(() =>
+    (page.props.translations as { sidebar: Record<string, string> }).sidebar
+);
+const user = computed(() => page.props.auth?.user);
+const isAdmin = computed(() => user.value?.role === 'admin');
+const isUser = computed(() => user.value?.role === 'user');
 
 defineProps<{ collapsed: boolean }>();
 
 const selectedKeys = ref<string[]>([]);
-const page = usePage();
 const currentPath = computed(() => page.url);
 
-// Get translations from page props with proper typing
-const translations = computed(() => {
-    const props = page.props as { translations?: Translations };
-    return props.translations?.sidebar || {};
-});
 
-// Watch URL changes to update active keys
+
+
 watch(currentPath, (newUrl) => {
     selectedKeys.value = [newUrl];
 }, { immediate: true });
+
+// logot function
+const handleLogout = () => {
+    router.post(route('logout'));
+};
 </script>
 
 <template>
@@ -50,54 +46,100 @@ watch(currentPath, (newUrl) => {
             <h3 class="mb-0" v-if="!collapsed">LaCuna-Marketplace</h3>
         </div>
         <div class="scrollbar" id="style-2">
-        <a-menu v-model:selectedKeys="selectedKeys" class="force-overflow">
-            <!-- Dashboard -->
-            <a-menu-item key="1" :class="{ 'active': currentPath.startsWith(route('admin.dashboard', {}, false)) }">
-                <Link :href="route('admin.dashboard')">
-                <DatabaseOutlined />
-                <span>{{ translations.dashboard || 'Dashboard' }}</span>
-                </Link>
-            </a-menu-item>
+            <div v-if="isAdmin">
+                <a-menu v-model:selectedKeys="selectedKeys" class="force-overflow">
+                    <!-- Dashboard -->
+                    <a-menu-item key="1"
+                        :class="{ 'active': currentPath.startsWith(route('admin.dashboard', {}, false)) }">
+                        <Link :href="route('admin.dashboard')">
+                        <DatabaseOutlined />
+                        <span>{{ translations.dashboard || 'Dashboard' }}</span>
+                        </Link>
+                    </a-menu-item>
 
-            <!-- Categories -->
-            <a-menu-item key="2"  :class="{ 'active': currentPath.startsWith(route('admin.categories', {}, false)) }">
-                <Link :href="route('admin.categories')">
-                <AppstoreOutlined  />
-                <span>{{ translations.categories || 'Categories' }}</span>
-                </Link>
-            </a-menu-item>
+                    <!-- Categories -->
+                    <a-menu-item key="2"
+                        :class="{ 'active': currentPath.startsWith(route('admin.categories', {}, false)) }">
+                        <Link :href="route('admin.categories')">
+                        <AppstoreOutlined />
+                        <span>{{ translations.categories || 'Categories' }}</span>
+                        </Link>
+                    </a-menu-item>
 
-            <!-- Brands -->
-            <a-menu-item key="3" :class="{ 'active': currentPath.startsWith(route('admin.brands', {}, false)) }">
-                <Link :href="route('admin.brands')">
-                <TrademarkCircleOutlined  />
-                <span>{{ translations.brands || 'Brands' }}</span>
-                </Link>
-            </a-menu-item>
+                    <!-- Brands -->
+                    <a-menu-item key="3"
+                        :class="{ 'active': currentPath.startsWith(route('admin.brands', {}, false)) }">
+                        <Link :href="route('admin.brands')">
+                        <TrademarkCircleOutlined />
+                        <span>{{ translations.brands || 'Brands' }}</span>
+                        </Link>
+                    </a-menu-item>
 
-            <!-- Products -->
-            <a-menu-item key="4" :class="{ 'active': currentPath.startsWith(route('admin.products', {}, false)) }">
-                <Link :href="route('admin.products')">
-                <ShoppingOutlined />
-                <span>{{ translations.products || 'Products' }}</span>
-                </Link>
-            </a-menu-item>
-            <!-- Order List -->
-            <a-menu-item key="7" :class="{ 'active': currentPath.startsWith(route('admin.order.list', {}, false)) }">
-                <Link :href="route('admin.order.list')">
-                <OrderedListOutlined  />
-                <span>{{ translations.order_list || 'Order List' }}</span>
-                </Link>
-            </a-menu-item>
+                    <!-- Products -->
+                    <a-menu-item key="4"
+                        :class="{ 'active': currentPath.startsWith(route('admin.products', {}, false)) }">
+                        <Link :href="route('admin.products')">
+                        <ShoppingOutlined />
+                        <span>{{ translations.products || 'Products' }}</span>
+                        </Link>
+                    </a-menu-item>
+                    <!-- Order List -->
+                    <a-menu-item key="7"
+                        :class="{ 'active': currentPath.startsWith(route('admin.order.list', {}, false)) }">
+                        <Link :href="route('admin.order.list')">
+                        <OrderedListOutlined />
+                        <span>{{ translations.order_list || 'Order List' }}</span>
+                        </Link>
+                    </a-menu-item>
+                    <!-- Profile -->
+                    <a-menu-item key="8"
+                        :class="{ 'active': currentPath.startsWith(route('profile.edit', {}, false)) }">
+                        <Link :href="route('profile.edit')">
+                        <SettingOutlined />
+                        <span>{{ translations.profile || 'Profile' }}</span>
+                        </Link>
+                    </a-menu-item>
+                        <!-- Website -->
+                    <a-menu-item key="9">
+                        <Link :href="route('home')">
+                            <AppstoreOutlined />
+                            <span>{{ translations.website || 'Website' }}</span>
+                        </Link>
+                    </a-menu-item>
+                    <a-menu-item key="10">
+                        <a href="#" @click.prevent="handleLogout">
+                            <PoweroffOutlined />
+                            {{ translations.logout || 'Logout' }}
+                        </a>
+                    </a-menu-item>
+                </a-menu>
+            </div>
+            <div v-if="isUser">
+                <a-menu v-model:selectedKeys="selectedKeys" class="force-overflow">
 
-            <!-- Settings -->
-            <a-menu-item key="8" :class="{ 'active': currentPath.startsWith(route('profile.edit', {}, false)) }">
-                <Link :href="route('profile.edit')">
-                <SettingOutlined />
-                <span>{{ translations.settings || 'Settings' }}</span>
-                </Link>
-            </a-menu-item>
-        </a-menu>
+                    <!-- Website -->
+                    <a-menu-item key="1">
+                        <Link :href="route('home')">
+                            <AppstoreOutlined />
+                            <span>{{ translations.website || 'Website' }}</span>
+                        </Link>
+                    </a-menu-item>
+                    <a-menu-item key="1"
+                        :class="{ 'active': currentPath.startsWith(route('profile.edit', {}, false)) }">
+                        <Link :href="route('profile.edit')">
+                        <SettingOutlined />
+                        <span>{{ translations.profile || 'Profile' }}</span>
+                        </Link>
+                    </a-menu-item>
+                    <a-menu-item key="2">
+                        <a href="#" @click.prevent="handleLogout">
+                            <PoweroffOutlined />
+                            {{ translations.logout || 'Logout' }}
+                        </a>
+                    </a-menu-item>
+                </a-menu>
+            </div>
+
         </div>
     </a-layout-sider>
 </template>

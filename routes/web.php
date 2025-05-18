@@ -1,7 +1,6 @@
 <?php
 
-use Inertia\Inertia;
-use Illuminate\Support\Facades\App;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\MainController;
@@ -9,7 +8,6 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\PurchaseProductController;
 
 Route::get('/', [MainController::class, 'index'])->name('home');
 Route::get('product/{slug}', [MainController::class, 'productDetail'])->name('product.detail');

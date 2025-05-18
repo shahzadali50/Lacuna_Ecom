@@ -135,12 +135,12 @@ class CartController extends Controller
     {
         if (!Auth::check()) {
             return back()->with('error', 'Please login to access checkout.');
-
         }
 
         return Inertia::render('frontend/cart/CartCheckout', [
             'translations' => __('messages'),
             'locale' => App::getLocale(),
+            'success' => session('success', 'Welcome to checkout! Review your order details below.'),
         ]);
     }
 }

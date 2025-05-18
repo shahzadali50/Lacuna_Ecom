@@ -13,6 +13,9 @@ const page = usePage();
 const translations = computed(() => {
     return (page.props.translations as any)?.products || {};
 });
+const success = computed(() => {
+    return page.props.success;
+});
 const cart = computed(() => {
     const data = (usePage().props.cart as any[]) || [];
     return data;
@@ -55,6 +58,8 @@ const orderGenerate = () => {
         <Head title="Checkout" />
         <section class="py-14">
             <div class="container mx-auto px-2 sm:px-4">
+                <div v-if="success" class="text-green-500 text-2xl mb-4">{{ success }}</div>
+
                 <Row v-if="!cart || cart.length === 0" class="py-10">
                     <Col span="24">
 

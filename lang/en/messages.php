@@ -85,7 +85,37 @@ return [
         'share' => 'Share',
         'shop_by_category' => 'Shop By Category',
     ],
-
+    'cart_checkout' => [
+        'checkout'=>'checkout',
+        'name' => 'Full Name',
+        'name_placeholder' => 'Enter your full name',
+        'email' => 'Email',
+        'email_placeholder' => 'Enter your email',
+        'phone' => 'Phone Number',
+        'phone_placeholder' => 'Enter your phone number',
+        'address' => 'Shipping Address',
+        'address_placeholder' => 'Enter your shipping address',
+        'country' => 'Country',
+        'country_placeholder' => 'Enter your Country',
+        'city' => 'City',
+        'city_placeholder' => 'Enter your city',
+        'state' => 'State',
+        'state_placeholder' => 'Enter your state',
+        'pcode' => 'Postal Code',
+        'pcode_placeholder' => 'Enter your postal code',
+        'payment_method' => 'Payment Method',
+        'place_order' => 'Place Order',
+        'billing_detail' => 'Billing Details',
+        'check_your_order' => 'Check Your Order',
+        'subtotal' => 'Subtotal',
+        'total' => 'Total',
+        'shipping_charge' => 'Shipping Charges',
+        'free_delivery'=>'Free Delivery',
+        'cash_on_delivery'=>'Cash On Delivery',
+        'pay_cash_on_delivery'=>'Pay with cash upon delivery.',
+        'continue_shopping'=>'Continue Shopping',
+        'cart_empty'=>'Your cart is empty'
+    ],
     'header' => [
        'home' => 'Home',
        'products' => 'Products',
@@ -146,6 +176,7 @@ return [
         'profile' => 'Profile',
         'logout' => 'Logout',
     ],
+
 
     'dashboardMainPage' => [
         'welcome_to_dashboard' => 'Welcome to your dashboard',

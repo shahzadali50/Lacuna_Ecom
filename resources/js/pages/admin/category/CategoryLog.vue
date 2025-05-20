@@ -3,10 +3,7 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import dayjs from "dayjs";
 import { Link } from '@inertiajs/vue3';
-import DataTable from 'datatables.net-vue3';
-import DataTablesCore from 'datatables.net-dt';
 
-DataTable.use(DataTablesCore);
 
 const formatDate = (date: string) => {
     return date ? dayjs(date).format("DD-MM-YYYY hh:mm A") : "N/A";

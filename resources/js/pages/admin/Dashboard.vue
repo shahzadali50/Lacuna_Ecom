@@ -17,13 +17,6 @@ interface Order {
     total_price: string | number;
     created_at: string;
 }
-
-interface Product {
-    id: number;
-    name: string;
-    total_stock: number;
-}
-
 interface Props {
     brands: number;
     totalProduct: number;

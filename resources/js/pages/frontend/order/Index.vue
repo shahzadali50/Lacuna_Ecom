@@ -43,9 +43,7 @@ const getStatusColor = (status: string) => {
     }
 };
 
-const openImagePreview = (image: string) => {
-    window.open('/storage/' + image, '_blank');
-};
+
 </script>
 
 <template>

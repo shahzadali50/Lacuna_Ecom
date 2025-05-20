@@ -182,21 +182,31 @@ class MainController extends Controller
     }
     public function dashboard()
     {
-        $brands = Brand::where('user_id', Auth::id())->count();
-        $totalProduct = Product::where('user_id', Auth::id())->count();
-        $category = Category::where('user_id', Auth::id())->count();
+        try {
+            $brands = Brand::where('user_id', Auth::id())->count();
+            $totalProduct = Product::where('user_id', Auth::id())->count();
+            $category = Category::where('user_id', Auth::id())->count();
 
-        // Send all orders instead of filtering them
-        $orders = Order::select('total_price', 'created_at')->get();
+            // Send all orders instead of filtering them
+            $orders = Order::select('total_price', 'created_at')->get();
 
-        return Inertia::render('admin/Dashboard', [
-            'brands' => $brands,
-            'totalProduct' => $totalProduct,
-            'category' => $category,
-            'orders' => $orders,
-            'translations' => __('messages'),
-            'locale' => App::getLocale(),
-        ]);
+            return Inertia::render('admin/Dashboard', [
+                'brands' => $brands,
+                'totalProduct' => $totalProduct,
+                'category' => $category,
+                'orders' => $orders,
+                'translations' => __('messages'),
+                'locale' => App::getLocale(),
+            ]);
+        } catch (\Throwable $e) {
+            // Optional: log the error for debugging
+            Log::error('Dashboard error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            // You can return a fallback view or redirect with error
+            return redirect()->back()->withErrors(['message' => 'Something went wrong while loading the dashboard.']);
+        }
     }
     public function loginModal(LoginRequest $request): RedirectResponse
     {

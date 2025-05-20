@@ -6,12 +6,12 @@ use Inertia\Inertia;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\SaleProduct;
-use App\Models\PurchaseProduct;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request; // ✅ Correct import
 use Illuminate\Support\Facades\App;
+use App\Jobs\OrderTranslationJob;
 
 class OrderController extends Controller
 {
@@ -29,6 +29,7 @@ public function orderGenerate(Request $request)
         'city' => 'required|string',
         'postal_code' => 'required|numeric',
         'payment_method' => 'required|string',
+        'order_notes' => 'nullable|string',
     ]);
 
     $cart = session('cart', []);
@@ -58,6 +59,7 @@ public function orderGenerate(Request $request)
             'city' => $validatedData['city'],
             'postal_code' => $validatedData['postal_code'],
             'payment_method' => $validatedData['payment_method'],
+            'order_notes' => $validatedData['order_notes'] ?? null,
             'user_id' => Auth::id(),
             'subtotal_price' => $subTotal,
             'discount' => $discount,
@@ -75,9 +77,12 @@ public function orderGenerate(Request $request)
                 'total_price' => $product['final_price'] * $product['qty'],
             ]);
 
-            // Optionally update product stock here
+            // Update product stock
             Product::where('id', $product['id'])->decrement('stock', $product['qty']);
         }
+
+        // Dispatch translation job
+        OrderTranslationJob::dispatch($order);
 
         DB::commit();
         session()->forget('cart'); // Clear cart

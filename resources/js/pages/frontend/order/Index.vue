@@ -98,9 +98,31 @@ const openImagePreview = (image: string) => {
             @cancel="isOrderViewModalVisible = false" :footer="null">
             <a-row>
                 <a-col :xs="24">
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold mb-3">Shipping Details</h3>
+                        <a-row :gutter="16">
+                            <a-col :xs="24" :sm="12">
+                                <p class="mb-2"><span class="font-semibold">Name:</span> {{ selectedOrder.name }}</p>
+                                <p class="mb-2"><span class="font-semibold">Phone:</span> {{ selectedOrder.phone_number }}</p>
+                                <p class="mb-2"><span class="font-semibold">Email:</span> {{ selectedOrder.email }}</p>
+                            </a-col>
+                            <a-col :xs="24" :sm="12">
+                                <p class="mb-2"><span class="font-semibold">Address:</span> {{ selectedOrder.address }}</p>
+                                <p class="mb-2"><span class="font-semibold">City:</span> {{ selectedOrder.city }}</p>
+                                <p class="mb-2"><span class="font-semibold">State:</span> {{ selectedOrder.state }}</p>
+                                <p class="mb-2"><span class="font-semibold">Postal Code:</span> {{ selectedOrder.postal_code }}</p>
+                                <p class="mb-2"><span class="font-semibold">Country:</span> {{ selectedOrder.country }}</p>
+                            </a-col>
+                        </a-row>
+                        <div v-if="selectedOrder.order_notes" class="mt-2">
+                            <p class="mb-2"><span class="font-semibold">Order Notes:</span> {{ selectedOrder.order_notes }}</p>
+                        </div>
+                    </div>
+                 
+                </a-col>
+                <a-col :xs="24">
                     <div class="mb-2 overflow-x-auto">
-                    <div class="border-gray-500 border  my-4">
-                    </div class="overflow-x-auto">
+                        <div class="border-gray-500 border my-4"></div>
                         <table class="table-auto w-full min-w-[600px]">
                             <thead>
                                 <tr class="text-left">
@@ -131,9 +153,8 @@ const openImagePreview = (image: string) => {
                         </table>
                     </div>
                 </a-col>
-                <a-col  :xs="24">
-                    <div class="border-gray-500 border  my-4">
-                    </div>
+                <a-col :xs="24">
+                    <div class="border-gray-500 border my-4"></div>
                     <div class="my-3">
                         <h4 class="mb-2">Subtotal: <span class="font-bold text-primary">{{ selectedOrder?.subtotal_price }}</span></h4>
                         <h4 class="mb-2">Shipping Charges: <span class="font-bold text-primary">Free Delivery</span></h4>

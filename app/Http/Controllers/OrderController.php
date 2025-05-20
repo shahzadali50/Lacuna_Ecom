@@ -113,7 +113,7 @@ public function orderGenerate(Request $request)
             ->where('user_id', Auth::id())
             ->latest()
             ->paginate(10);
-
+            
         return Inertia::render('frontend/order/Index', [
             'orders' => $orders,
             'translations' => __('messages'),

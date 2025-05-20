@@ -86,7 +86,7 @@ public function orderGenerate(Request $request)
 
         DB::commit();
         session()->forget('cart'); // Clear cart
-        return redirect()->back()->with('success', 'Order Created successfully!');
+        return redirect()->route('user.order.list')->with('success', 'Your order has been placed successfully! Order ID: ' . $randomOrderId);
     } catch (\Exception $e) {
         DB::rollBack();
         Log::error('Order creation failed: ' . $e->getMessage());
@@ -118,6 +118,8 @@ public function orderGenerate(Request $request)
             'orders' => $orders,
             'translations' => __('messages'),
             'locale' => App::getLocale(),
+            'flash' => session()->only(['success', 'error']),
+
         ]);
     }
 

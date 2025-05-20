@@ -7,6 +7,10 @@ import { EyeOutlined } from '@ant-design/icons-vue';
 const formatDate = (date: string) => {
     return date ? dayjs(date).format("DD-MM-YYYY hh:mm A") : "N/A";
 };
+import { message } from 'ant-design-vue';
+import { onMounted } from 'vue';
+
+
 
 const columns = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
@@ -19,7 +23,11 @@ const columns = [
 
 defineProps({
     orders: Object,
-});
+    flash: {
+        type: Object,
+        default: () => ({})
+    }
+})
 const isOrderViewModalVisible = ref(false);
 const selectedOrder = ref<any>(null);
 
@@ -54,6 +62,16 @@ const openImagePreview = (image: string) => {
         <Head title="Order List" />
         <a-row>
             <a-col :span="24">
+                <!-- Success Message -->
+                <div v-if="flash.success"
+                    class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                    {{ flash.success }}
+                </div>
+
+                <!-- Error Message -->
+                <div v-if="flash.error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    {{ flash.error }}
+                </div>
                 <div class="bg-white rounded-lg p-4 shadow-md responsive-table">
                     <div class="mb-4 flex items-center justify-between">
                         <h2 class="text-lg font-semibold">Order List</h2>
@@ -65,7 +83,7 @@ const openImagePreview = (image: string) => {
                                 {{ index + 1 }}
                             </template>
                             <template v-else-if="column.dataIndex === 'order_id'">
-                            <a-badge :count="record.order_id" :number-style="{ backgroundColor: '#1890ff' }" />
+                                <a-badge :count="record.order_id" :number-style="{ backgroundColor: '#1890ff' }" />
                             </template>
 
                             <template v-else-if="column.dataIndex === 'status'">
@@ -103,22 +121,28 @@ const openImagePreview = (image: string) => {
                         <a-row :gutter="16">
                             <a-col :xs="24" :sm="12">
                                 <p class="mb-2"><span class="font-semibold">Name:</span> {{ selectedOrder.name }}</p>
-                                <p class="mb-2"><span class="font-semibold">Phone:</span> {{ selectedOrder.phone_number }}</p>
+                                <p class="mb-2"><span class="font-semibold">Phone:</span> {{ selectedOrder.phone_number
+                                    }}</p>
                                 <p class="mb-2"><span class="font-semibold">Email:</span> {{ selectedOrder.email }}</p>
                             </a-col>
                             <a-col :xs="24" :sm="12">
-                                <p class="mb-2"><span class="font-semibold">Address:</span> {{ selectedOrder.address }}</p>
+                                <p class="mb-2"><span class="font-semibold">Address:</span> {{ selectedOrder.address }}
+                                </p>
                                 <p class="mb-2"><span class="font-semibold">City:</span> {{ selectedOrder.city }}</p>
                                 <p class="mb-2"><span class="font-semibold">State:</span> {{ selectedOrder.state }}</p>
-                                <p class="mb-2"><span class="font-semibold">Postal Code:</span> {{ selectedOrder.postal_code }}</p>
-                                <p class="mb-2"><span class="font-semibold">Country:</span> {{ selectedOrder.country }}</p>
+                                <p class="mb-2"><span class="font-semibold">Postal Code:</span> {{
+                                    selectedOrder.postal_code }}
+                                </p>
+                                <p class="mb-2"><span class="font-semibold">Country:</span> {{ selectedOrder.country }}
+                                </p>
                             </a-col>
                         </a-row>
                         <div v-if="selectedOrder.order_notes" class="mt-2">
-                            <p class="mb-2"><span class="font-semibold">Order Notes:</span> {{ selectedOrder.order_notes }}</p>
+                            <p class="mb-2"><span class="font-semibold">Order Notes:</span> {{ selectedOrder.order_notes
+                                }}</p>
                         </div>
                     </div>
-                 
+
                 </a-col>
                 <a-col :xs="24">
                     <div class="mb-2 overflow-x-auto">
@@ -135,14 +159,12 @@ const openImagePreview = (image: string) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(sale, index) in selectedOrder?.sale_products" :key="sale.id" class="border-b py-3">
+                                <tr v-for="(sale, index) in selectedOrder?.sale_products" :key="sale.id"
+                                    class="border-b py-3">
                                     <td class="py-2">{{ index + 1 }}</td>
                                     <td class="py-2">
-                                        <img
-                                            :src="'/storage/' + sale.product.thumnail_img"
-                                            :alt="sale.product.name"
-                                            class="w-16 h-16 object-cover rounded"
-                                        />
+                                        <img :src="'/storage/' + sale.product.thumnail_img" :alt="sale.product.name"
+                                            class="w-16 h-16 object-cover rounded" />
                                     </td>
                                     <td class="py-2">{{ sale.product.name }}</td>
                                     <td class="py-2">{{ sale.sale_price }}</td>
@@ -156,9 +178,12 @@ const openImagePreview = (image: string) => {
                 <a-col :xs="24">
                     <div class="border-gray-500 border my-4"></div>
                     <div class="my-3">
-                        <h4 class="mb-2">Subtotal: <span class="font-bold text-primary">{{ selectedOrder?.subtotal_price }}</span></h4>
-                        <h4 class="mb-2">Shipping Charges: <span class="font-bold text-primary">Free Delivery</span></h4>
-                        <h4 class="mb-2">Total Price: <span class="font-bold text-primary">{{ selectedOrder?.total_price }}</span></h4>
+                        <h4 class="mb-2">Subtotal: <span class="font-bold text-primary">{{ selectedOrder?.subtotal_price
+                                }}</span></h4>
+                        <h4 class="mb-2">Shipping Charges: <span class="font-bold text-primary">Free Delivery</span>
+                        </h4>
+                        <h4 class="mb-2">Total Price: <span class="font-bold text-primary">{{ selectedOrder?.total_price
+                                }}</span></h4>
                     </div>
                 </a-col>
             </a-row>

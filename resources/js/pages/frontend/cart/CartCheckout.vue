@@ -50,6 +50,9 @@ const orderGenerate = () => {
         },
     });
 }
+const success = computed(() => {
+    return page.props.success;
+});
 </script>
 <template>
     <UserLayout>
@@ -57,6 +60,9 @@ const orderGenerate = () => {
         <Head :title="translations.checkout" />
         <section class="py-14">
             <div class="container mx-auto px-2 sm:px-4">
+                <div v-if="success" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                    {{ success }}
+                </div>
                 <Row v-if="!cart || cart.length === 0" class="py-10">
                     <Col span="24">
 

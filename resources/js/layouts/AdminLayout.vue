@@ -57,7 +57,7 @@ const clearCache = () => {
         </div>
 
         <!-- Main Layout -->
-        <a-layout :style="{ height: '100vh', marginLeft: isMobile ? '0' : collapsed ? '0' : '200px' }">
+        <a-layout :style="{ height: '100vh', marginLeft: isMobile ? '0' : collapsed ? '0' : '200px' }" style="z-index: 200;">
             <!-- Header -->
             <a-layout-header class="header">
                 <div class="trigger-button mr-2">

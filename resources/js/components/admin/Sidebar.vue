@@ -124,14 +124,21 @@ const handleLogout = () => {
                             <span>{{ translations.website || 'Website' }}</span>
                         </Link>
                     </a-menu-item>
-                    <a-menu-item key="1"
+                    <a-menu-item key="2"
+                        :class="{ 'active': currentPath.startsWith(route('user.order.list', {}, false)) }">
+                        <Link :href="route('user.order.list')">
+                        <OrderedListOutlined />
+                        <span>{{ translations.order_list || 'Order List' }}</span>
+                        </Link>
+                    </a-menu-item>
+                    <a-menu-item key="2"
                         :class="{ 'active': currentPath.startsWith(route('profile.edit', {}, false)) }">
                         <Link :href="route('profile.edit')">
                         <SettingOutlined />
                         <span>{{ translations.profile || 'Profile' }}</span>
                         </Link>
                     </a-menu-item>
-                    <a-menu-item key="2">
+                    <a-menu-item key="3">
                         <a href="#" @click.prevent="handleLogout">
                             <PoweroffOutlined />
                             {{ translations.logout || 'Logout' }}

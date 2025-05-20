@@ -82,7 +82,6 @@ const clearCache = () => {
 .header {
     padding: 0 10px;
 }
-
 .trigger-button {
     z-index: 1200;
     cursor: pointer;

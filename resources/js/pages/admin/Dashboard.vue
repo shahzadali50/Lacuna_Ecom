@@ -29,7 +29,6 @@ interface Props {
     totalProduct: number;
     category: number;
     orders: Order[];
-    products: Product[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -37,7 +36,6 @@ const props = withDefaults(defineProps<Props>(), {
     totalProduct: 0,
     category: 0,
     orders: () => [],
-    products: () => []
 });
 
 interface Translations {

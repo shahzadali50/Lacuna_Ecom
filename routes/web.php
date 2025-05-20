@@ -44,7 +44,7 @@ Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function
 });
 
 Route::middleware('auth')->name('user.')->group(function () {
-    Route::get('order/list', [OrderController::class, 'userOrderList'])->name('order.list');
+    Route::get('user/order/list', [OrderController::class, 'userOrderList'])->name('order.list');
 
 });
 

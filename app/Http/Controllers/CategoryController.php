@@ -252,4 +252,5 @@ public function destroy($id)
             'CategoryLog' => $CategoryLog,
         ]);
     }
+    
 }

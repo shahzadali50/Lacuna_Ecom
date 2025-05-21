@@ -200,6 +200,7 @@ const openImagePreview = (imagePath: string) => {
                             <a-button @click="openAddCategoryModal()" type="default">
                                 {{ translations.add_category || 'Add Category' }}
                             </a-button>
+                          
                             <Link :href="route('admin.category.log')">
                                 <a-button type="default">
                                     {{ translations.category_logs || 'Category Logs' }}

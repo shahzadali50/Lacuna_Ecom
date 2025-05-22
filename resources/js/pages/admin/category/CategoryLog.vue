@@ -17,8 +17,6 @@ const data = [
   [3, 4],
   [3, 4],
 ];
-
-
 const formatDate = (date: string) => {
     return date ? dayjs(date).format("DD-MM-YYYY hh:mm A") : "N/A";
 };

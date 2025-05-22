@@ -3,6 +3,20 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import dayjs from "dayjs";
 import { Link } from '@inertiajs/vue3';
+import DataTable from 'datatables.net-vue3';
+import DataTablesCore from 'datatables.net-dt';
+import 'datatables.net-dt/css/dataTables.dataTables.css';
+
+
+DataTable.use(DataTablesCore);
+const data = [
+  [1, 2],
+  [3, 4],
+  [3, 4],
+  [3, 4],
+  [3, 4],
+  [3, 4],
+];
 
 
 const formatDate = (date: string) => {
@@ -27,6 +41,14 @@ defineProps({
     <Head title="Category Logs" />
         <a-row>
         <a-col-12>
+          <DataTable :data="data" class="display">
+        <thead>
+            <tr>
+                <th>A</th>
+                <th>B</th>
+            </tr>
+        </thead>
+    </DataTable>
 
 
 

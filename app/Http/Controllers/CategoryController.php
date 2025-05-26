@@ -246,7 +246,7 @@ public function destroy($id)
         $CategoryLog = CategoryLog::with('user')
         ->where('user_id', Auth::id())
         ->latest()
-        ->paginate(10);
+        ->paginate(20);
 
         return Inertia::render('admin/category/CategoryLog', [
             'CategoryLog' => $CategoryLog,

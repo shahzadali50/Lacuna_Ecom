@@ -8,7 +8,9 @@ import 'datatables.net-dt/css/dataTables.dataTables.css';
 
 DataTable.use(DataTablesCore);
 defineProps<{
-    CategoryLog: Object,
+  CategoryLog: {
+    data: Array<any>;
+  };
 }>();
 
 const formatDate = (date: string) => {
@@ -22,7 +24,6 @@ const dataTableColumns = [
   { title: 'Category', data: 'category_name', render: (data: string | undefined) => data ?? 'Deleted Category' },
   { title: 'User', data: 'user', render: (data: { name: string } | undefined) => data?.name ?? 'N/A' },
   { title: 'Created At', data: 'created_at', render: (data: string) => formatDate(data) },
-  // Add more columns here without changing the interface
 ];
 
 const options = {
@@ -52,7 +53,6 @@ const options = {
             :options="options"
             class="display"
           >
-
           </DataTable>
         </div>
       </a-col>

@@ -2,7 +2,7 @@
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { Modal } from 'ant-design-vue';
-import { ref, computed, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import dayjs from "dayjs";
 import DataTable from 'datatables.net-vue3';
@@ -18,9 +18,8 @@ const formatDate = (date: string) => {
 };
 
 const page = usePage();
-
 const translations = computed(() => {
-    return page.props.translations?.dashboard_all_pages || {};
+    return (page.props.translations as any)?.dashboard_all_pages || {};
 });
 
 defineProps<{
@@ -73,16 +72,25 @@ const dataTableColumns = [
     { title: translations.value.name || 'Name', data: 'name' },
     { title: translations.value.description || 'Description', data: 'description', render: (data: string) => data ?? 'N/A' },
     { title: translations.value.created_at || 'Created At', data: 'created_at', render: (data: string) => formatDate(data) },
-    {
-        title: translations.value.action || 'Action',
-        data: null,
-        orderable: false,
-        render: (data: any, type: any, row: any) => `
-            <button class="edit-btn p-2 " data-id="${row.id}" title="Edit"><i class="fa fa-pencil-square-o text-green-500"></i></button>
-            <button class="delete-btn  p-2" data-id="${row.id}" title="Delete"><i class="fa fa-trash text-red-500"></i></button>
-            <button class="brand-btn  p-2" data-id="${row.id}" title="Add Brand"><i class="fa fa-creative-commons"></i></button>
-            <button class="related-brand-btn  p-2" data-id="${row.slug}" title="Brand List"><i class="fa fa-list text-slate-800"></i></button> `
-    }
+   {
+    title: translations.value.action || 'Action',
+    data: null,
+    orderable: false,
+    render: (data, type, row) => `
+        <button class="edit-btn p-2" data-id="${row.id}" title="${translations.value.edit || 'Edit'}">
+            <i class="fa fa-pencil-square-o text-green-500"></i>
+        </button>
+        <button class="delete-btn p-2" data-id="${row.id}" title="${translations.value.delete || 'Delete'}">
+            <i class="fa fa-trash text-red-500"></i>
+        </button>
+        <button class="brand-btn p-2" data-id="${row.id}" title="${translations.value.add_brand || 'Add Brand'}">
+            <i class="fa fa-creative-commons"></i>
+        </button>
+        <button class="related-brand-btn p-2" data-id="${row.slug}" title="${translations.value.brand_list || 'Brand List'}">
+            <i class="fa fa-list text-slate-800"></i>
+        </button>
+    `
+}
 ];
 
 // DataTable options

@@ -24,40 +24,41 @@ use Illuminate\Support\Facades\Storage;
 class CategoryController extends Controller
 {
     public function index()
-    {
-        try {
-            $locale = session('locale', App::getLocale());
+{
+    try {
+        $locale = session('locale', App::getLocale());
 
-            // Eager load translations for the current session language
-            $categories = Category::with([
-                    'category_translations' => fn($q) => $q->where('lang', $locale)
-                ])
-                ->where('user_id', Auth::id())
-                ->latest()
-                ->paginate(10);
+        // Eager load translations for the current session language
+        $categories = Category::with([
+                'category_translations' => fn($q) => $q->where('lang', $locale)
+            ])
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
 
-            // Transform each category with translation fallback
-            $categories->getCollection()->transform(fn($category) => [
-                'id' => $category->id,
-                'slug' => $category->slug,
-                'image' => $category->image,
-                'created_at' => $category->created_at->format('Y-m-d H:i'),
-                'name' => $category->category_translations->first()?->name ?? $category->name,
-                'description' => $category->category_translations->first()?->description ?? $category->description,
-            ]);
+        // Transform each category with translation fallback
+        $categories = $categories->map(fn($category) => [
+            'id' => $category->id,
+            'slug' => $category->slug,
+            'image' => $category->image,
+            'created_at' => $category->created_at->format('Y-m-d H:i'),
+            'name' => $category->category_translations->first()?->name ?? $category->name,
+            'description' => $category->category_translations->first()?->description ?? $category->description,
+        ]);
 
-            return Inertia::render('admin/category/Index', [
-                'categories' => $categories,
-                'translations' => __('messages'),
-                'locale' => App::getLocale(),
-            ]);
+        return Inertia::render('admin/category/Index', [
+            'categories' => [
+                'data' => $categories // Wrap the collection in a data key
+            ],
+            'translations' => __('messages'),
+            'locale' => App::getLocale(),
+        ]);
 
-        } catch (\Throwable $e) {
-            \Log::error('Failed to load categories in index(): ' . $e->getMessage());
-
-            return redirect()->back()->with('error', 'Something went wrong while loading categories.');
-        }
+    } catch (\Throwable $e) {
+        \Log::error('Failed to load categories in index(): ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Something went wrong while loading categories.');
     }
+}
 
     public function store(Request $request)
 {

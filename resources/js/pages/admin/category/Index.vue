@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import DataTable from 'datatables.net-vue3';
 import DataTablesCore from 'datatables.net-dt';
 import 'datatables.net-dt/css/dataTables.dataTables.css';
+import { router } from '@inertiajs/vue3';
 
 DataTable.use(DataTablesCore);
 
@@ -77,10 +78,10 @@ const dataTableColumns = [
         data: null,
         orderable: false,
         render: (data: any, type: any, row: any) => `
-            <button class="edit-btn px-2 " data-id="${row.id}" title="Edit"><i class="fa fa-pencil-square-o text-green-500"></i></button>
-            <button class="delete-btn  px-2" data-id="${row.id}" title="Delete"><i class="fa fa-trash text-red-500"></i></button>
-            <button class="brand-btn  px-2" data-id="${row.id}" title="Add Brand"><i class="fa fa-creative-commons"></i></button>
-<a href="${route('admin.related-brand-list', row.slug)}" class="inertia-link text-blue-500 hover:underline" data-inertia-link title="Brand List"><i class="fa fa-list text-slate-800"></i></a>        `
+            <button class="edit-btn p-2 " data-id="${row.id}" title="Edit"><i class="fa fa-pencil-square-o text-green-500"></i></button>
+            <button class="delete-btn  p-2" data-id="${row.id}" title="Delete"><i class="fa fa-trash text-red-500"></i></button>
+            <button class="brand-btn  p-2" data-id="${row.id}" title="Add Brand"><i class="fa fa-creative-commons"></i></button>
+            <button class="related-brand-btn  p-2" data-id="${row.slug}" title="Brand List"><i class="fa fa-list text-slate-800"></i></button> `
     }
 ];
 
@@ -90,12 +91,13 @@ const options = {
     searching: true,
     ordering: true,
     responsive: true,
-    pageLength: 10, // Match the backend per_page value
+    pageLength: 10,
     createdRow: (row: HTMLElement, data: any) => {
         setTimeout(() => {
             row.querySelector('.edit-btn')?.addEventListener('click', () => openEditModal(data));
             row.querySelector('.delete-btn')?.addEventListener('click', () => deleteCategory(data.id));
             row.querySelector('.brand-btn')?.addEventListener('click', () => openBrandModal(data));
+            row.querySelector('.related-brand-btn ')?.addEventListener('click', () => moveRelatedBrand(data));
             row.querySelector('img')?.addEventListener('click', () => {
                 if (data.image) openImagePreview(data.image);
             });
@@ -180,6 +182,10 @@ const openBrandModal = (record: any) => {
     brandForm.category_id = record.id;
     isbrandModalVisible.value = true;
 };
+const moveRelatedBrand = (record: any) => {
+      router.get(route('admin.related-brand-list', record.slug))
+
+};
 const saveBrand = () => {
     isLoading.value = true;
     brandForm.post(route('admin.brand.store'), {
@@ -232,7 +238,7 @@ const openImagePreview = (imagePath: string) => {
 
         <a-row>
             <a-col :xs="24">
-                <div class="bg-white rounded-lg responsive-table p-4 shadow-md w-full">
+                <div class="bg-white rounded-lg responsive-table p-4 shadow-md">
                     <div class="mb-4 flex items-center justify-between">
                         <h2 class="text-lg font-semibold mb-4">{{ translations.category_title || 'Category List' }}</h2>
                         <div>

@@ -184,7 +184,7 @@ const addToCart = (product: Product) => {
       <div v-if="props.showAllProductsButton === true" class="text-center mt-8 sm:mt-12">
         <Button size="large" class="btn-primary" aria-label="View all products">
           <Link :href="route('all.products')">
-            {{ translations.all_products || 'All Products' }}
+           {{ translations.all_products || 'All Products' }}<i class="fa fa-long-arrow-right ml-2" aria-hidden="true"></i>
           </Link>
         </Button>
       </div>

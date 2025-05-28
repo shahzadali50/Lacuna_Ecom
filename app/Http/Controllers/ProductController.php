@@ -33,10 +33,10 @@ class ProductController extends Controller
                     'product_translations' => fn($q) => $q->where('lang', $locale),
                 ])
                 ->orderBy('created_at', 'desc')
-                ->paginate(10);
+                ->get();
 
-            // Transform products to include translated fields
-            $products->getCollection()->transform(function ($product) use ($locale) {
+            // Transform the collection to include translated fields
+            $products = $products->map(function ($product) use ($locale) {
                 return [
                     'id' => $product->id,
                     'slug' => $product->slug,
@@ -82,9 +82,9 @@ class ProductController extends Controller
                 });
 
             return Inertia::render('admin/product/Index', [
-                'products' => $products,
-                'brands' => $brands,
-                'categories' => $categories,
+                'products' => ['data' => $products], // Wrap in data key
+                'brands' => ['data' => $brands], // Wrap in data key
+                'categories' => ['data' => $categories], // Wrap in data key
                 'translations' => __('messages'),
                 'locale' => $locale,
             ]);

@@ -136,12 +136,12 @@ class CartController extends Controller
         if (!Auth::check()) {
             return back()->with('error', 'Please login to access checkout.');
         }
-        session()->flash('success', 'Welcome to checkout page');
+        // session()->flash('success', 'Welcome to checkout page');
 
         return Inertia::render('frontend/cart/CartCheckout', [
             'translations' => __('messages'),
             'locale' => App::getLocale(),
-            'flash' => session()->only(['success']),
+            // 'flash' => session()->only(['success']),
         ]);
     }
 }

@@ -4,9 +4,20 @@ import { Head } from '@inertiajs/vue3';
 import dayjs from "dayjs";
 import { ref } from "vue";
 import { EyeOutlined } from '@ant-design/icons-vue';
+import {  usePage } from "@inertiajs/vue3";
+
+import type { PageProps as InertiaPageProps } from '@inertiajs/core';
+
 const formatDate = (date: string) => {
     return date ? dayjs(date).format("DD-MM-YYYY hh:mm A") : "N/A";
 };
+const page = usePage<PageProps>();
+interface PageProps extends InertiaPageProps {
+  flash?: {
+    success?: string;
+    error?: string;
+  };
+}
 
 const columns = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
@@ -51,6 +62,17 @@ const getStatusColor = (status: string) => {
 
         <Head title="Order List" />
         <a-row>
+            <a-col :span="24">
+                <a-alert
+          v-if="page.props.flash?.success"
+          message="Success"
+          :description="page.props.flash.success"
+          type="success"
+          show-icon
+          class="mb-4"
+        />
+            </a-col>
+
             <a-col :span="24">
                 <div class="bg-white rounded-lg p-4 shadow-md responsive-table">
                     <div class="mb-4 flex items-center justify-between">

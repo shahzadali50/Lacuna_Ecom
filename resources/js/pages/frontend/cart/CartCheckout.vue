@@ -9,8 +9,17 @@ import { ShoppingCartOutlined, ShoppingOutlined } from "@ant-design/icons-vue";
 import { Link } from "@inertiajs/vue3";
 import { useForm } from "@inertiajs/vue3";
 import { LoaderCircle } from "lucide-vue-next";
+import type { PageProps as InertiaPageProps } from '@inertiajs/core';
 
-const page = usePage();
+// Add interface for page props
+interface PageProps extends InertiaPageProps {
+  flash?: {
+    success?: string;
+    error?: string;
+  };
+}
+
+const page = usePage<PageProps>();
 const translations = computed(() => {
   return (page.props.translations as any)?.cart_checkout || {};
 });
@@ -55,6 +64,15 @@ const orderGenerate = () => {
     <Head :title="translations.checkout" />
     <section class="py-14">
       <div class="container mx-auto px-2 sm:px-4">
+        <a-alert
+          v-if="page.props.flash?.success"
+          :message="translations.success || 'Success'"
+          :description="page.props.flash.success"
+          type="success"
+          show-icon
+          class="mb-4"
+        />
+
         <Row v-if="!cart || cart.length === 0" class="py-10">
           <Col span="24">
             <div class="text-center">

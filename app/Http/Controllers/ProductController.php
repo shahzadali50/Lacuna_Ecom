@@ -20,80 +20,79 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
-    {
-        try {
-            $locale = session('locale', App::getLocale());
+public function index()
+{
+    try {
+        $locale = session('locale', App::getLocale());
 
-            // Load products with brand, category, and their translations for current locale
-            $products = Product::where('user_id', Auth::id())
-                ->with([
-                    'brand' => fn($q) => $q->with(['brand_translations' => fn($q) => $q->where('lang', $locale)]),
-                    'category' => fn($q) => $q->with(['category_translations' => fn($q) => $q->where('lang', $locale)]),
-                    'product_translations' => fn($q) => $q->where('lang', $locale),
-                ])
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
+        // Load products with brand, category, and their translations for current locale
+        $products = Product::with([
+            'brand' => fn($q) => $q->with(['brand_translations' => fn($query) => $query->where('lang', $locale)]),
+            'category' => fn($q) => $q->with(['category_translations' => fn($query) => $query->where('lang', $locale)]),
+            'product_translations' => fn($query) => $query->where('lang', $locale),
+        ])
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-            // Transform products to include translated fields
-            $products->getCollection()->transform(function ($product) use ($locale) {
+        // Transform products to include translated fields
+        $products = $products->map(function ($product) use ($locale) {
+            return [
+                'id' => $product->id,
+                'slug' => $product->slug,
+                'name' => $product->product_translations->first()?->name ?? $product->name,
+                'thumnail_img' => $product->thumnail_img,
+                'gallary_img' => $product->gallary_img,
+                'description' => $product->product_translations->first()?->description ?? $product->description,
+                'stock' => $product->stock,
+                'purchase_price' => $product->purchase_price,
+                'sale_price' => $product->sale_price,
+                'brand_id' => $product->brand_id,
+                'discount' => $product->discount,
+                'final_price' => $product->final_price,
+                'barcode' => $product->barcode,
+                'feature' => $product->feature,
+                'status' => $product->status,
+                'category_id' => $product->category_id,
+                'created_at' => $product->created_at->format('Y-m-d H:i'),
+                'brand_name' => $product->brand?->brand_translations->first()?->name ?? $product->brand?->name ?? 'N/A',
+                'category_name' => $product->category?->category_translations->first()?->name ?? $product->category?->name ?? 'N/A',
+            ];
+        });
+
+        // Load brands with translations
+        $brands = Brand::with(['brand_translations' => fn($q) => $q->where('lang', $locale)])
+            ->get()
+            ->map(function ($brand) use ($locale) {
                 return [
-                    'id' => $product->id,
-                    'slug' => $product->slug,
-                    'name' => $product->product_translations->first()?->name ?? $product->name,
-                    'thumnail_img' => $product->thumnail_img,
-                    'gallary_img' => $product->gallary_img,
-                    'description' => $product->product_translations->first()?->description ?? $product->description,
-                    'stock' => $product->stock,
-                    'purchase_price' => $product->purchase_price,
-                    'sale_price' => $product->sale_price,
-                    'brand_id' => $product->brand_id,
-                    'discount' => $product->discount,
-                    'final_price' => $product->final_price,
-                    'barcode' => $product->barcode,
-                    'feature' => $product->feature,
-                    'status' => $product->status,
-                    'category_id' => $product->category_id,
-                    'created_at' => $product->created_at->format('Y-m-d H:i'),
-                    'brand_name' => $product->brand?->brand_translations->first()?->name ?? $product->brand?->name ?? 'N/A',
-                    'category_name' => $product->category?->category_translations->first()?->name ?? $product->category?->name ?? 'N/A',
+                    'id' => $brand->id,
+                    'category_id' => $brand->category_id,
+                    'name' => $brand->brand_translations->first()?->name ?? $brand->name,
                 ];
             });
 
-            // Load brands with translations
-            $brands = Brand::with(['brand_translations' => fn($q) => $q->where('lang', $locale)])
-                ->get()
-                ->map(function ($brand) use ($locale) {
-                    return [
-                        'id' => $brand->id,
-                        'category_id' => $brand->category_id,
-                        'name' => $brand->brand_translations->first()?->name ?? $brand->name,
-                    ];
-                });
+        // Load categories with translations
+        $categories = Category::with(['category_translations' => fn($q) => $q->where('lang', $locale)])
+            ->get()
+            ->map(function ($category) use ($locale) {
+                return [
+                    'id' => $category->id,
+                    'name' => $category->category_translations->first()?->name ?? $category->name,
+                ];
+            });
 
-            // Load categories with translations
-            $categories = Category::with(['category_translations' => fn($q) => $q->where('lang', $locale)])
-                ->get()
-                ->map(function ($category) use ($locale) {
-                    return [
-                        'id' => $category->id,
-                        'name' => $category->category_translations->first()?->name ?? $category->name,
-                    ];
-                });
-
-            return Inertia::render('admin/product/Index', [
-                'products' => $products,
-                'brands' => $brands,
-                'categories' => $categories,
-                'translations' => __('messages'),
-                'locale' => $locale,
-            ]);
-
-        } catch (\Throwable $e) {
-            \Log::error('Failed to load products in index(): ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Something went wrong while loading products.');
-        }
+        return Inertia::render('admin/product/Index', [
+            'products' => ['data' => $products], // Wrap in data key
+            'brands' => ['data' => $brands], // Wrap in data key
+            'categories' => ['data' => $categories], // Wrap in data key
+            'translations' => __('messages'),
+            'locale' => $locale,
+        ]);
+    } catch (\Throwable $e) {
+        \Log::error('Failed to load products in index(): ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Something went wrong while loading products.');
     }
+}
     public function store(Request $request)
     {
         $request->validate([

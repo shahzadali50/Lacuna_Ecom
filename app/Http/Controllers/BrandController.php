@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Storage;
 class BrandController extends Controller
 {
 
-   public function index()
+      public function index()
 {
     try {
         $locale = session('locale', App::getLocale());

@@ -22,57 +22,55 @@ use Illuminate\Support\Facades\Storage;
 class BrandController extends Controller
 {
 
-    public function index()
-    {
-        try {
-            $locale = session('locale', App::getLocale());
+   public function index()
+{
+    try {
+        $locale = session('locale', App::getLocale());
 
-            // Load brand and category translations for current locale
-            $brands = Brand::with([
-                    'brand_translations' => fn($q) => $q->where('lang', $locale),
-                    'category' => fn($q) => $q->with(['category_translations' => fn($q) => $q->where('lang', $locale)])
-                ])
-                ->where('user_id', Auth::id())
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
+        // Load brand and category translations for current locale
+        $brands = Brand::with([
+            'brand_translations' => fn($q) => $q->where('lang', $locale),
+            'category' => fn($q) => $q->with(['category_translations' => fn($q) => $q->where('lang', $locale)])
+        ])
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-            // Transform the collection to include translated names
-            $brands->getCollection()->transform(function ($brand) use ($locale) {
+        // Transform the collection to include translated names
+        $brands = $brands->map(function ($brand) use ($locale) {
+            return [
+                'id' => $brand->id,
+                'slug' => $brand->slug,
+                'image' => $brand->image,
+                'created_at' => $brand->created_at->format('Y-m-d H:i'),
+                'name' => $brand->brand_translations->first()?->name ?? $brand->name,
+                'description' => $brand->brand_translations->first()?->description ?? $brand->description,
+                'category_id' => $brand->category_id, // For edit modal
+                'category_name' => $brand->category?->category_translations->first()?->name ?? $brand->category?->name ?? 'N/A',
+            ];
+        });
+
+        // Load categories with translations
+        $categories = Category::with(['category_translations' => fn($q) => $q->where('lang', $locale)])
+            ->get()
+            ->map(function ($category) use ($locale) {
                 return [
-                    'id' => $brand->id,
-                    'slug' => $brand->slug,
-                    'image' => $brand->image,
-                    'created_at' => $brand->created_at->format('Y-m-d H:i'),
-                    'name' => $brand->brand_translations->first()?->name ?? $brand->name,
-                    'description' => $brand->brand_translations->first()?->description ?? $brand->description,
-                    'category_id' => $brand->category_id, // Added for edit modal
-                    'category_name' => $brand->category?->category_translations->first()?->name ?? $brand->category?->name ?? 'N/A',
+                    'id' => $category->id,
+                    'name' => $category->category_translations->first()?->name ?? $category->name,
                 ];
             });
 
-            // Load categories with translations
-            $categories = Category::with(['category_translations' => fn($q) => $q->where('lang', $locale)])
-                ->get()
-                ->map(function ($category) use ($locale) {
-                    return [
-                        'id' => $category->id,
-                        'name' => $category->category_translations->first()?->name ?? $category->name,
-                    ];
-                });
-
-            return Inertia::render('admin/brand/Index', [
-                'brands' => $brands,
-                'categories' => $categories,
-                'translations' => __('messages'),
-                'locale' => $locale,
-            ]);
-
-        } catch (\Throwable $e) {
-            \Log::error('Failed to load brands in index(): ' . $e->getMessage());
-
-            return redirect()->back()->with('error', 'Something went wrong while loading brands.');
-        }
+        return Inertia::render('admin/brand/Index', [
+            'brands' => ['data' => $brands], // Wrap in data key
+            'categories' => ['data' => $categories], // Wrap in data key
+            'translations' => __('messages'),
+            'locale' => $locale,
+        ]);
+    } catch (\Throwable $e) {
+        \Log::error('Failed to load brands in index(): ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Something went wrong while loading brands.');
     }
+}
 
 public function related_brand_list($slug)
 {

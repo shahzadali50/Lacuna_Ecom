@@ -193,12 +193,5 @@ const addToCart = (product: Product) => {
 </template>
 
 <style scoped>
-.btn-primary {
-  background-color: #1890ff;
-  color: white;
-  border: none;
-}
-.btn-primary:hover {
-  background-color: #40a9ff;
-}
+
 </style>

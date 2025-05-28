@@ -211,7 +211,7 @@ const updateProduct = () => {
   <div v-if="isLoading" class="loading-overlay">
     <a-spin size="large" />
   </div>
-  <a-modal 
+  <a-modal
     width="1000px"
     style="top: 20px"
     :open="isVisible"
@@ -298,6 +298,7 @@ const updateProduct = () => {
             <div v-if="editForm.errors.purchase_price" class="text-red-500">
               {{ editForm.errors.purchase_price }}
             </div>
+            
           </div>
         </a-col>
         <a-col :span="12">

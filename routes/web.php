@@ -42,6 +42,7 @@ Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function
     Route::get('product/logs', [ProductController::class, 'product_log'])->name('product-log');
     Route::get('order/list', [OrderController::class, 'orderList'])->name('order.list');
     Route::get('admin/get-brands-by-category/{category}', [ProductController::class, 'getBrandsByCategory'])->name('admin.get.brands.by.category');
+    Route::get('user', [MainController::class, 'getUser'])->name('login.user');
 });
 
 Route::middleware('auth')->name('user.')->group(function () {

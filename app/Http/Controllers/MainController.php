@@ -255,4 +255,34 @@ class MainController extends Controller
         return redirect()->back()->with('error', 'Something went wrong while loading products.');
     }
 }
+public function getUser(){
+    try {
+        $locale = App::getLocale();
+
+        // Get all users with role 'user'
+        $users = User::where('role', 'user')
+            ->select('id', 'name', 'email', 'created_at')
+            ->latest()
+            ->get()
+            ->map(function($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'created_at' => $user->created_at->format('Y-m-d H:i'),
+                ];
+            });
+        return Inertia::render('admin/user/Index', [
+            'users' => [
+                'data' => $users // Wrap the collection in a data key
+            ],
+            'translations' => __('messages'),
+            'locale' => $locale,
+        ]);
+
+    } catch (\Throwable $e) {
+        \Log::error('Failed to load users in getUser(): ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Something went wrong while loading users.');
+    }
+}
 }

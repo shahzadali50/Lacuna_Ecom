@@ -499,9 +499,6 @@ const updateProduct = () => {
                     <LoaderCircle v-if="editForm.processing" class="h-4 w-4 animate-spin" />
                     {{ translations.update || 'Update' }}
                 </Button>
-        <!-- <a-button type="primary" html-type="submit" class="ml-2">
-          {{ translations.update || 'Update' }}
-        </a-button> -->
       </div>
     </form>
   </a-modal>

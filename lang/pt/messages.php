@@ -280,6 +280,9 @@ return [
     'product' => 'Produto',
     'user' => 'Usuário',
     'id' => 'ID',
+    'users' => 'Usuários',
+    'user_list' => 'Lista de Usuários',
+    'email' => 'Email',
 ],
 
 ];

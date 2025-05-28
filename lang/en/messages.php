@@ -282,6 +282,9 @@ return [
     'product' => 'Product',
     'user' => 'User',
     'id' => 'ID',
+    'users' => 'Users',
+    'user_list' => 'User List',
+    'email' => 'Email',
 ],
 
 ];

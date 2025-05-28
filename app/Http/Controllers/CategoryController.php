@@ -17,10 +17,6 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
-
-
-
-
 class CategoryController extends Controller
 {
     public function index()

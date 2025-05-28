@@ -109,16 +109,23 @@ public function orderGenerate(Request $request)
 }
     public function userOrderList()
     {
-        $orders = Order::with('saleProducts.product')
-            ->where('user_id', Auth::id())
-            ->latest()
-            ->paginate(10);
+        try {
+            $orders = Order::with('saleProducts.product')
+                ->where('user_id', Auth::id())
+                ->latest()
+                ->get();
 
-        return Inertia::render('frontend/order/Index', [
-            'orders' => $orders,
-            'translations' => __('messages'),
-            'locale' => App::getLocale(),
-        ]);
+            return Inertia::render('frontend/order/Index', [
+                'orders' => [
+                    'data' => $orders // Wrap the collection in a data key
+                ],
+                'translations' => __('messages'),
+                'locale' => App::getLocale(),
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Failed to load user orders: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong while loading your orders.');
+        }
     }
 
 }

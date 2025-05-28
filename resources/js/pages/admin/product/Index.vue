@@ -142,12 +142,12 @@ const openImagePreview = (imagePath: string) => {
         <a-spin size="large" />
     </div>
     <AdminLayout>
-        <Head :title="translations.product_title || 'Product List'" />
+        <Head :title="translations.product_list || 'Product List'" />
         <a-row>
             <a-col :span="24">
                 <div class="bg-white rounded-lg p-4 shadow-md responsive-table">
                     <div class="mb-4 flex items-center justify-between">
-                        <h2 class="text-lg font-semibold">{{ translations.product_title || 'Product List' }}</h2>
+                        <h2 class="text-lg font-semibold">{{ translations.product_list || 'Product List' }}</h2>
                         <div>
                             <a-button @click="isAddProductModalVisible = true" type="default">
                                 {{ translations.add_product || 'Add Product' }}

@@ -11,7 +11,8 @@ import {
     TrademarkCircleOutlined,
     ShoppingOutlined,
     OrderedListOutlined,
-    PoweroffOutlined
+    PoweroffOutlined,
+    UsergroupAddOutlined
 } from '@ant-design/icons-vue';
 // Get translations from page props with proper typing
 const page = usePage<SharedData>();
@@ -56,9 +57,16 @@ const handleLogout = () => {
                         <span>{{ translations.dashboard || 'Dashboard' }}</span>
                         </Link>
                     </a-menu-item>
+                    <a-menu-item key="2"
+                        :class="{ 'active': currentPath.startsWith(route('admin.login.user', {}, false)) }">
+                        <Link :href="route('admin.login.user')">
+                            <UsergroupAddOutlined />
+                        <span>{{ translations.users || 'Users' }}</span>
+                        </Link>
+                    </a-menu-item>
 
                     <!-- Categories -->
-                    <a-menu-item key="2"
+                    <a-menu-item key="3"
                         :class="{ 'active': currentPath.startsWith(route('admin.categories', {}, false)) }">
                         <Link :href="route('admin.categories')">
                         <AppstoreOutlined />
@@ -67,7 +75,7 @@ const handleLogout = () => {
                     </a-menu-item>
 
                     <!-- Brands -->
-                    <a-menu-item key="3"
+                    <a-menu-item key="4"
                         :class="{ 'active': currentPath.startsWith(route('admin.brands', {}, false)) }">
                         <Link :href="route('admin.brands')">
                         <TrademarkCircleOutlined />
@@ -76,7 +84,7 @@ const handleLogout = () => {
                     </a-menu-item>
 
                     <!-- Products -->
-                    <a-menu-item key="4"
+                    <a-menu-item key="5"
                         :class="{ 'active': currentPath.startsWith(route('admin.products', {}, false)) }">
                         <Link :href="route('admin.products')">
                         <ShoppingOutlined />
@@ -84,7 +92,7 @@ const handleLogout = () => {
                         </Link>
                     </a-menu-item>
                     <!-- Order List -->
-                    <a-menu-item key="5"
+                    <a-menu-item key="6"
                         :class="{ 'active': currentPath.startsWith(route('admin.order.list', {}, false)) }">
                         <Link :href="route('admin.order.list')">
                         <OrderedListOutlined />
@@ -92,7 +100,7 @@ const handleLogout = () => {
                         </Link>
                     </a-menu-item>
                     <!-- Profile -->
-                    <a-menu-item key="6"
+                    <a-menu-item key="7"
                         :class="{ 'active': currentPath.startsWith(route('profile.edit', {}, false)) }">
                         <Link :href="route('profile.edit')">
                         <SettingOutlined />
@@ -100,13 +108,13 @@ const handleLogout = () => {
                         </Link>
                     </a-menu-item>
                         <!-- Website -->
-                    <a-menu-item key="7">
+                    <a-menu-item key="8">
                         <Link :href="route('home')">
                             <AppstoreOutlined />
                             <span>{{ translations.website || 'Website' }}</span>
                         </Link>
                     </a-menu-item>
-                    <a-menu-item key="8">
+                    <a-menu-item key="9">
                         <a href="#" @click.prevent="handleLogout">
                             <PoweroffOutlined />
                             {{ translations.logout || 'Logout' }}

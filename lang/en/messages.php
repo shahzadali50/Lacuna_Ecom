@@ -55,6 +55,7 @@ return [
     'products' => [
         'home' => 'Home',
         'products' => 'Products',
+        'all_products' => 'All Products',
         'cart' => 'Cart',
         'cart_empty' => 'Your cart is empty',
         'checkout' => 'Proceed to Checkout',

@@ -61,7 +61,7 @@ const clearCache = () => {
             <!-- Header -->
             <a-layout-header class="header">
                 <div class="trigger-button mr-2">
-                    <i class="fa trigger" :class="collapsed ? 'fa-arrow-right' : 'fa-arrow-left'"
+                    <i class="fa trigger" :class="collapsed ? 'fa fa-align-right' : 'fa fa-align-left'"
                         @click.stop="collapsed = !collapsed"></i>
                 </div>
                 <a-button  @click="clearCache"  type="dashed" danger> <FilterOutlined />Clear Cache</a-button>

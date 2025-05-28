@@ -17,6 +17,7 @@ Route::post('cart/remove', [CartController::class, 'removeFromCart'])->name('car
 Route::get('cart/checkout', [CartController::class, 'cartCheckout'])->name('cart.checkout');
 Route::post('login-modal', [MainController::class, 'loginModal'])->name('loginModal');
 Route::post('order/generate', [OrderController::class, 'orderGenerate'])->name('order.generate');
+Route::get('products/list', [MainController::class, 'allProducts'])->name('all.products');
 
 Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function () {
     Route::get('cache-clear', [MainController::class, 'cacheClear'])->name('cache.clear');

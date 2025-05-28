@@ -63,7 +63,7 @@ const handleLogout = () => {
                     <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
                     {{ translations.home || 'Home' }}
                     </Link>
-                    <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
+                    <Link :href="route('all.products')" class="text-gray-600 hover:text-gray-900">
                     {{ translations.products || 'Products' }}
                     </Link>
                     <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">

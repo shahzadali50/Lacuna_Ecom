@@ -72,11 +72,11 @@ const dataTableColumns = [
     { title: translations.value.name || 'Name', data: 'name' },
     { title: translations.value.description || 'Description', data: 'description', render: (data: string) => data ?? 'N/A' },
     { title: translations.value.created_at || 'Created At', data: 'created_at', render: (data: string) => formatDate(data) },
-   {
-    title: translations.value.action || 'Action',
-    data: null,
-    orderable: false,
-    render: (data, type, row) => `
+    {
+        title: translations.value.action || 'Action',
+        data: null,
+        orderable: false,
+        render: (data, type, row) => `
         <button class="edit-btn p-2" data-id="${row.id}" title="${translations.value.edit || 'Edit'}">
             <i class="fa fa-pencil-square-o text-green-500"></i>
         </button>
@@ -90,7 +90,7 @@ const dataTableColumns = [
             <i class="fa fa-list text-slate-800"></i>
         </button>
     `
-}
+    }
 ];
 
 // DataTable options
@@ -191,7 +191,7 @@ const openBrandModal = (record: any) => {
     isbrandModalVisible.value = true;
 };
 const moveRelatedBrand = (record: any) => {
-      router.get(route('admin.related-brand-list', record.slug))
+    router.get(route('admin.related-brand-list', record.slug))
 
 };
 const saveBrand = () => {
@@ -348,16 +348,16 @@ const openImagePreview = (imagePath: string) => {
                     </div>
                     <div v-if="editImagePreview" class="mt-2">
                         <p class="text-sm text-gray-600 mb-1">{{ translations.new_image_preview || 'New Image Preview'
-                            }}:</p>
+                        }}:</p>
                         <img :src="editImagePreview" alt="New Image Preview"
                             class="w-24 h-24 object-cover rounded border" />
                     </div>
                 </div>
                 <div class="text-right">
                     <a-button type="default" @click="isEditModalVisible = false">{{ translations.cancel || 'Cancel'
-                        }}</a-button>
+                    }}</a-button>
                     <a-button type="primary" html-type="submit" class="ml-2">{{ translations.update || 'Update'
-                        }}</a-button>
+                    }}</a-button>
                 </div>
             </form>
         </a-modal>
@@ -395,9 +395,9 @@ const openImagePreview = (imagePath: string) => {
                 </div>
                 <div class="text-right">
                     <a-button type="default" @click="isbrandModalVisible = false">{{ translations.cancel || 'Cancel'
-                        }}</a-button>
+                    }}</a-button>
                     <a-button type="primary" html-type="submit" class="ml-2">{{ translations.save || 'Save'
-                        }}</a-button>
+                    }}</a-button>
                 </div>
             </form>
         </a-modal>

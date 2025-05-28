@@ -54,6 +54,7 @@ return [
     'products' => [
         'home' => 'ホーム',
         'products' => '商品',
+        'all_products' => 'すべての商品',
         'cart' => 'カート',
         'cart_empty' => 'カートは空です',
         'checkout' => 'レジに進む',

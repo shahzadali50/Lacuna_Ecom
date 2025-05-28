@@ -13,7 +13,8 @@ import ShopByCategory from '@/components/frontend/CategorySection.vue';
   <UserLayout>
     <Head title="Welcome" />
     <BannerSection />
-    <ProductSection />
+    <ProductSection
+    :showAllProductsButton="true"/>
     <ShopByCategory />
   </UserLayout>
 </template>

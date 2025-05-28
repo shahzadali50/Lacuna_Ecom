@@ -4,6 +4,7 @@ import { usePage } from '@inertiajs/vue3';
 import { ShoppingCartOutlined, HeartOutlined } from '@ant-design/icons-vue';
 import { Row, Col, Card, Button } from 'ant-design-vue';
 import { router } from '@inertiajs/vue3';
+import { Link } from "@inertiajs/vue3";
 
 
 
@@ -56,14 +57,19 @@ const addToCart = (product: Product) => {
     }
   });
 };
+const props = defineProps<{
+  title?: string;
+  subtitle?: string;
+  showAllProductsButton?: boolean;
+}>();
 </script>
 
 <template>
   <section class="py-14">
     <div class="container mx-auto px-2 sm:px-4">
       <div class="text-center mb-8 sm:mb-12">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">{{ translations.title || 'Product List' }}</h2>
-        <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">{{ translations.subtitle || '' }}</p>
+        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">{{ props.title || translations.title || 'Product List' }}     </h2>
+        <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">{{ props.subtitle || translations.subtitle || 'Explore our wide range of high-quality products tailored to your needs.' }}</p>
       </div>
 
       <Row :gutter="[8, 8]">
@@ -113,9 +119,11 @@ const addToCart = (product: Product) => {
         </Col>
       </Row>
 
-      <div class="text-center mt-8 sm:mt-12">
-        <Button size="middle" class="btn-primary">
-          <a href="/marketplace">{{ translations.view_all || 'View All' }}</a>
+      <div v-if="props.showAllProductsButton === true" class="text-center mt-8 sm:mt-12">
+        <Button size="large" class="btn-primary" aria-label="View all products">
+          <Link :href="route('all.products')">
+            {{ translations.all_products || 'All Products' }}
+          </Link>
         </Button>
       </div>
     </div>

@@ -54,6 +54,7 @@ return [
     'products' => [
         'home' => 'Início',
         'products' => 'Produtos',
+        'all_products' => 'Todos os Produtos',
         'cart' => 'Carrinho',
         'cart_empty' => 'Seu carrinho está vazio',
         'checkout' => 'Finalizar Compra',

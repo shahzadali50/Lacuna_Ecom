@@ -215,4 +215,39 @@ class MainController extends Controller
         $request->session()->regenerate();
         return back()->with('success', 'login successfully');
     }
+    public function allProducts()
+    {
+        try {
+            $locale = session('locale', App::getLocale());
+            $products = Product::where('status', 1)
+                ->with([
+                    'category' => fn($q) => $q->with(['category_translations' => fn($q) => $q->where('lang', $locale)]),
+                    'product_translations' => fn($q) => $q->where('lang', $locale),
+                ])
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+
+            // Transform products to include translated fields
+            $products->getCollection()->transform(function ($product) use ($locale) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->product_translations->first()?->name ?? $product->name,
+                    'slug' => $product->slug,
+                    'thumnail_img' => $product->thumnail_img,
+                    'sale_price' => $product->sale_price,
+                    'final_price' => $product->final_price,
+                    'category_name' => $product->category?->category_translations->first()?->name ?? $product->category?->name ?? 'N/A',
+                ];
+            });
+
+            return Inertia::render('frontend/products/AllProducts', [
+                'products' => $products,
+                'translations' => __('messages'),
+                'locale' => $locale,
+            ]);
+        } catch (\Throwable $e) {
+            \Log::error('Failed to load products: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong while loading products.');
+        }
+    }
 }

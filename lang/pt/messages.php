@@ -177,6 +177,8 @@ return [
         'settings' => 'Configurações',
         'profile' => 'Perfil',
         'logout' => 'Sair',
+        'users' => 'Usuários',
+        'website' => 'Website',
     ],
 
     'dashboardMainPage' => [

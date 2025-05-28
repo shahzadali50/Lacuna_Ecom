@@ -178,6 +178,8 @@ return [
         'settings' => '設定',
         'profile' => 'プロフィール',
         'logout' => 'ログアウト',
+        'users' => 'ユーザー',
+        'website' => 'ウェブサイト',
     ],
     'dashboardMainPage' => [
         'welcome_to_dashboard' => 'ダッシュボードへようこそ',

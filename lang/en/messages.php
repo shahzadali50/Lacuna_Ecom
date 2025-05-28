@@ -176,6 +176,8 @@ return [
         'settings' => 'Settings',
         'profile' => 'Profile',
         'logout' => 'Logout',
+        'users' => 'Users',
+        'website' => 'Website',
     ],
 
 
@@ -305,7 +307,7 @@ return [
     'total_price' => 'Total Price',
     'shiping_details' => 'Shiping Details',
     'shipping_charge' => 'Shipping Charge',
-   
+
 
 
 

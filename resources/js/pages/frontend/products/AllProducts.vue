@@ -12,12 +12,10 @@ const translations = computed(() => {
 
 <template>
   <UserLayout>
-    <Head title="Products" />
+   <Head :title="translations.products || 'Products'" />
     <ProductSection
     :title="translations.title || 'Products List'"
-    subtitle="Explore our wide range of high-quality products tailored to your needs."
-    :showPagination="true"
-
-  />
+    :subtitle="translations.subtitle || 'Explore our wide range of high-quality products tailored to your needs.'"
+    :showPagination="true"/>
   </UserLayout>
 </template>

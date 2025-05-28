@@ -16,7 +16,8 @@ interface Product {
   thumnail_img: string;
   category_name: string;
 }
-// Define props with TypeScript
+
+// Props
 const props = defineProps<{
   title?: string;
   subtitle?: string;
@@ -27,13 +28,18 @@ const props = defineProps<{
 const page = usePage();
 
 const translations = computed(() => {
-    return (page.props.translations as any)?.products || {};
+  return (page.props.translations as any)?.products || {};
 });
 
-// Get products from props
+// Drawer state for filter sidebar
+const isFilterDrawerVisible = ref(false);
+const openFilterDrawer = () => { isFilterDrawerVisible.value = true; };
+const closeFilterDrawer = () => { isFilterDrawerVisible.value = false; };
+
+// Products
 const products = ref<Product[]>((page.props.products as any)?.data || []);
 
-// Format price with currency symbol
+// Format price
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -42,12 +48,12 @@ const formatPrice = (price: number) => {
   }).format(price);
 };
 
-// Navigate to product detail page
+// Product detail navigation
 const goToProductDetail = (slug: string) => {
   router.visit(route('product.detail', { slug }));
 };
 
-// Add to cart function
+// Add to cart
 const addingToCart = ref(new Set<number>());
 const addToCart = (product: Product) => {
   addingToCart.value.add(product.id);
@@ -74,6 +80,25 @@ const addToCart = (product: Product) => {
 <template>
   <section class="py-14">
     <div class="container mx-auto px-2 sm:px-4">
+      <!-- Filter Button and Drawer -->
+      <div>
+        <a-button size="large" @click="openFilterDrawer">
+           Show Filter
+        </a-button>
+        <a-drawer
+          title="Filter Products"
+          placement="left"
+          :open="isFilterDrawerVisible"
+          @close="closeFilterDrawer"
+        >
+          <!-- Add your filter form or content here -->
+          <div>
+            <p>Filter options go here.</p>
+          </div>
+        </a-drawer>
+      </div>
+
+      <!-- Heading and Subtitle -->
       <div class="text-center mb-8 sm:mb-12">
         <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
           {{ props.title || translations.title || 'Product List' }}
@@ -83,6 +108,7 @@ const addToCart = (product: Product) => {
         </p>
       </div>
 
+      <!-- Product Cards -->
       <Row :gutter="[16, 16]">
         <Col
           :xs="12"
@@ -147,12 +173,14 @@ const addToCart = (product: Product) => {
         </Col>
       </Row>
 
+      <!-- Pagination -->
       <PaginationComponent
         v-if="props.showPagination !== false"
         :pagination-data="page.props.products"
         route-name="all.products"
       />
 
+      <!-- All Products Button -->
       <div v-if="props.showAllProductsButton === true" class="text-center mt-8 sm:mt-12">
         <Button size="large" class="btn-primary" aria-label="View all products">
           <Link :href="route('all.products')">

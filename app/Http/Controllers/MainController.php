@@ -228,7 +228,7 @@ class MainController extends Controller
                 'product_translations' => fn($q) => $q->where('lang', $locale),
             ])
             ->orderBy('created_at', 'desc')
-            ->paginate(5, ['*'], 'page', $page); // Ensure page parameter is used
+            ->paginate(10, ['*'], 'page', $page); // Ensure page parameter is used
 
         // Transform products to include translated fields
         $products->getCollection()->transform(function ($product) use ($locale) {

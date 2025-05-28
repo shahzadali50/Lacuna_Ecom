@@ -15,8 +15,9 @@ const translations = computed(() => {
     <Head title="Products" />
     <ProductSection
     :title="translations.title || 'Products List'"
-    subtitle="Explore our wide range of high-quality products tailored to your needs. "
-    
+    subtitle="Explore our wide range of high-quality products tailored to your needs."
+    :showPagination="true"
+
   />
   </UserLayout>
 </template>

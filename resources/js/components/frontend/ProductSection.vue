@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, defineProps, watch } from 'vue';
+import { ref, computed, defineProps } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { ShoppingCartOutlined, HeartOutlined } from '@ant-design/icons-vue';
-import { Row, Col, Card, Button, Pagination } from 'ant-design-vue';
+import { Row, Col, Card, Button } from 'ant-design-vue';
 import { router } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
+import PaginationComponent from '@/components/frontend/PaginationComponent.vue';
 
 interface Product {
   id: number;
@@ -15,47 +16,22 @@ interface Product {
   thumnail_img: string;
   category_name: string;
 }
-
-interface PaginationData {
-  current_page: number;
-  last_page: number;
-  total: number;
-  per_page: number;
-  from: number;
-  to: number;
-}
 // Define props with TypeScript
 const props = defineProps<{
   title?: string;
   subtitle?: string;
   showAllProductsButton?: boolean;
+  showPagination?: boolean;
 }>();
 
 const page = usePage();
+
 const translations = computed(() => {
     return (page.props.translations as any)?.products || {};
 });
 
-// Get products and pagination data from props
+// Get products from props
 const products = ref<Product[]>((page.props.products as any)?.data || []);
-const pagination = computed<PaginationData>(() => ({
-  current_page: (page.props.products as any)?.current_page || 1,
-  last_page: (page.props.products as any)?.last_page || 1,
-  total: (page.props.products as any)?.total || 0,
-  per_page: (page.props.products as any)?.per_page || 5,
-  from: (page.props.products as any)?.from || 1,
-  to: (page.props.products as any)?.to || 0,
-}));
-
-// Watch for changes in page.props.products to update products
-watch(
-  () => page.props.products,
-  (newProducts) => {
-    console.log('Products prop updated:', newProducts); // Debug log
-    products.value = (newProducts as any)?.data || [];
-  },
-  { deep: true }
-);
 
 // Format price with currency symbol
 const formatPrice = (price: number) => {
@@ -92,15 +68,6 @@ const addToCart = (product: Product) => {
       },
     }
   );
-};
-
-// Handle page change
-const handlePageChange = (newPage: number) => {
-  console.log('Navigating to page:', newPage); // Debug log
-  router.visit(route('all.products', { page: newPage }), {
-    preserveState: false, // Ensure full prop refresh
-    preserveScroll: true,
-  });
 };
 </script>
 
@@ -180,16 +147,11 @@ const handlePageChange = (newPage: number) => {
         </Col>
       </Row>
 
-      <div class="text-center mt-8 sm:mt-12">
-        <Pagination
-          :current="pagination.current_page"
-          :total="pagination.total"
-          :page-size="pagination.per_page"
-          :show-total="(total, range) => `${range[0]}-${range[1]} of ${total} items`"
-          @change="handlePageChange"
-          class="inline-block"
-        />
-      </div>
+      <PaginationComponent
+        v-if="props.showPagination !== false"
+        :pagination-data="page.props.products"
+        route-name="all.products"
+      />
 
       <div v-if="props.showAllProductsButton === true" class="text-center mt-8 sm:mt-12">
         <Button size="large" class="btn-primary" aria-label="View all products">

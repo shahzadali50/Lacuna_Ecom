@@ -46,7 +46,7 @@ class MainController extends Controller
                     'product_translations' => fn($q) => $q->where('lang', $locale),
                 ])
                 ->orderBy('created_at', 'desc')
-                ->paginate(10);
+                ->paginate(8);
 
             // Transform products to include translated fields
             $products->getCollection()->transform(function ($product) use ($locale) {

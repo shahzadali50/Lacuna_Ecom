@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 import { ref, computed, watch } from 'vue';
+import { Button } from "@/components/ui/button";
+import { LoaderCircle } from "lucide-vue-next";
 
 // Define props
 const props = defineProps<{
@@ -22,8 +24,8 @@ const props = defineProps<{
     discount: number;
     final_price: number;
   } | null;
-  categories: Array<{ id: number; name: string }>;
-  brands: Array<{ id: number; name: string; category_id: number }>;
+  categories: { data: Array<{ id: number; name: string }> };
+  brands: { data: Array<{ id: number; name: string; category_id: number }> };
   translations: Record<string, string>;
 }>();
 
@@ -112,14 +114,14 @@ watch(() => props.isVisible, handleModalVisibility, { immediate: true });
 
 // Reset brand_id when category_id changes and set default brand
 watch(() => editForm.category_id, () => {
-  const availableBrands = props.brands.filter((brand) => brand.category_id === editForm.category_id);
+  const availableBrands = props.brands.data.filter((brand) => brand.category_id === editForm.category_id);
   editForm.brand_id = availableBrands.length > 0 ? availableBrands[0].id : null;
 });
 
 // Computed properties for select options
 const brandOptions = computed(() => {
   return (
-    props.brands
+    props.brands.data
       ?.filter((brand) => brand.category_id === editForm.category_id)
       .map((brand) => ({
         value: brand.id,
@@ -130,7 +132,7 @@ const brandOptions = computed(() => {
 
 const categoryOptions = computed(() => {
   return (
-    props.categories?.map((category) => ({
+    props.categories.data?.map((category) => ({
       value: category.id,
       label: category.name,
     })) || []
@@ -298,7 +300,7 @@ const updateProduct = () => {
             <div v-if="editForm.errors.purchase_price" class="text-red-500">
               {{ editForm.errors.purchase_price }}
             </div>
-            
+
           </div>
         </a-col>
         <a-col :span="12">
@@ -493,9 +495,13 @@ const updateProduct = () => {
         <a-button type="default" @click="$emit('update:isVisible', false)">
           {{ translations.cancel || 'Cancel' }}
         </a-button>
-        <a-button type="primary" html-type="submit" class="ml-2">
+        <Button type="submit" class="\btn-primary ml-2" :disabled="editForm.processing">
+                    <LoaderCircle v-if="editForm.processing" class="h-4 w-4 animate-spin" />
+                    {{ translations.update || 'Update' }}
+                </Button>
+        <!-- <a-button type="primary" html-type="submit" class="ml-2">
           {{ translations.update || 'Update' }}
-        </a-button>
+        </a-button> -->
       </div>
     </form>
   </a-modal>

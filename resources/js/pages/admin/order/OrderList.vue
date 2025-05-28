@@ -3,17 +3,18 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import dayjs from "dayjs";
 import { ref } from "vue";
-import { FundViewOutlined } from '@ant-design/icons-vue';
+import { ShoppingCartOutlined } from '@ant-design/icons-vue';
 const formatDate = (date: string) => {
     return date ? dayjs(date).format("DD-MM-YYYY hh:mm A") : "N/A";
 };
 
 const columns = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
+    { title: 'Order ID', dataIndex: 'order_id', key: 'order_id' },
+    { title: 'Status', dataIndex: 'status', key: 'status' },
     { title: 'Customer Name', dataIndex: 'name', key: 'name' },
     { title: 'Phone No', dataIndex: 'phone_no', key: 'phone_no' },
     { title: 'SubTotal', dataIndex: 'subtotal', key: 'subtotal' },
-    { title: 'Discount (%)', dataIndex: 'discount', key: 'discount' },
     { title: 'Total', dataIndex: 'total', key: 'total' },
     { title: 'Created At', dataIndex: 'created_at', key: 'created_at' },
     { title: 'Action', dataIndex: 'action', key: 'action' },
@@ -28,6 +29,20 @@ const selectedOrder = ref<any>(null);
 const openOrderView = (order: any) => {
     selectedOrder.value = order;
     isOrderViewModalVisible.value = true;
+};
+const getStatusColor = (status: string) => {
+    switch (status?.toLowerCase()) {
+        case 'pending':
+            return 'orange';
+        case 'processing':
+            return 'blue';
+        case 'completed':
+            return 'green';
+        case 'cancelled':
+            return 'red';
+        default:
+            return 'default';
+    }
 };
 </script>
 
@@ -47,6 +62,14 @@ const openOrderView = (order: any) => {
                             <template v-if="column.dataIndex === 'id'">
                                 {{ index + 1 }}
                             </template>
+                            <template v-else-if="column.dataIndex === 'order_id'">
+                            <a-badge :count="record.order_id" :number-style="{ backgroundColor: '#1890ff' }" />
+                            </template>
+                            <template v-else-if="column.dataIndex === 'status'">
+                                <a-tag :color="getStatusColor(record.status)">
+                                    {{ record.status }}
+                                </a-tag>
+                            </template>
                             <template v-else-if="column.dataIndex === 'name'">
                                 {{ record.name }}
                             </template>
@@ -57,9 +80,7 @@ const openOrderView = (order: any) => {
 
                                 {{ Math.floor(record.subtotal_price) }}
                             </template>
-                            <template v-else-if="column.dataIndex === 'discount'">
-                                {{ Math.floor(record.discount) }}
-                            </template>
+
                             <template v-else-if="column.dataIndex === 'total'">
                                 {{ Math.floor(record.total_price) }}
                             </template>
@@ -69,7 +90,7 @@ const openOrderView = (order: any) => {
                             <template v-else-if="column.dataIndex === 'action'">
                                 <a-tooltip placement="top">
                                     <template #title>Order View</template>
-                                    <a-button type="link" @click="openOrderView(record)"><FundViewOutlined /></a-button>
+                                    <a-button type="link" @click="openOrderView(record)"><ShoppingCartOutlined /></a-button>
                                 </a-tooltip>
                             </template>
                         </template>
@@ -83,13 +104,36 @@ const openOrderView = (order: any) => {
             @cancel="isOrderViewModalVisible = false" :footer="null">
             <a-row>
                 <a-col :xs="24">
-                    <div class="mb-2 overflow-x-auto">
-                    <div class="border-gray-500 border  my-4">
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold mb-3">Shipping Details</h3>
+                        <a-row :gutter="16">
+                            <a-col :xs="24" :sm="12">
+                                <p class="mb-2"><span class="font-semibold">Name:</span> {{ selectedOrder.name }}</p>
+                                <p class="mb-2"><span class="font-semibold">Phone:</span> {{ selectedOrder.phone_number }}</p>
+                                <p class="mb-2"><span class="font-semibold">Email:</span> {{ selectedOrder.email }}</p>
+                            </a-col>
+                            <a-col :xs="24" :sm="12">
+                                <p class="mb-2"><span class="font-semibold">Address:</span> {{ selectedOrder.address }}</p>
+                                <p class="mb-2"><span class="font-semibold">City:</span> {{ selectedOrder.city }}</p>
+                                <p class="mb-2"><span class="font-semibold">State:</span> {{ selectedOrder.state }}</p>
+                                <p class="mb-2"><span class="font-semibold">Postal Code:</span> {{ selectedOrder.postal_code }}</p>
+                                <p class="mb-2"><span class="font-semibold">Country:</span> {{ selectedOrder.country }}</p>
+                            </a-col>
+                        </a-row>
+                        <div v-if="selectedOrder.order_notes" class="mt-2">
+                            <p class="mb-2"><span class="font-semibold">Order Notes:</span> {{ selectedOrder.order_notes }}</p>
+                        </div>
                     </div>
-                        <table class="table-auto w-full">
+
+                </a-col>
+                <a-col :xs="24">
+                    <div class="mb-2 overflow-x-auto">
+                        <div class="border-gray-500 border my-4"></div>
+                        <table class="table-auto w-full min-w-[600px]">
                             <thead>
                                 <tr class="text-left">
                                     <th>Sr</th>
+                                    <th>Image</th>
                                     <th>Product</th>
                                     <th>Price</th>
                                     <th>QTY</th>
@@ -97,9 +141,16 @@ const openOrderView = (order: any) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(sale, index) in selectedOrder?.sale_products" :key="sale.id">
+                                <tr v-for="(sale, index) in selectedOrder?.sale_products" :key="sale.id" class="border-b py-3">
                                     <td class="py-2">{{ index + 1 }}</td>
-                                    <td class="py-2">{{ sale.product.name  }}</td>
+                                    <td class="py-2">
+                                        <img
+                                            :src="'/storage/' + sale.product.thumnail_img"
+                                            :alt="sale.product.name"
+                                            class="w-16 h-16 object-cover rounded"
+                                        />
+                                    </td>
+                                    <td class="py-2">{{ sale.product.name }}</td>
                                     <td class="py-2">{{ sale.sale_price }}</td>
                                     <td class="py-2">{{ sale.qty }}</td>
                                     <td class="py-2">{{ sale.total_price }}</td>
@@ -108,15 +159,12 @@ const openOrderView = (order: any) => {
                         </table>
                     </div>
                 </a-col>
-                <a-col  :xs="24">
-                    <div class="border-gray-500 border  my-4">
-                    </div>
+                <a-col :xs="24">
+                    <div class="border-gray-500 border my-4"></div>
                     <div class="my-3">
-                        <h4 class="mb-2">Subtotal: {{ selectedOrder?.subtotal_price }}</h4>
-                        <div class="flex items-center mb-2">
-                            <h4>Discount: {{ Math.floor(selectedOrder?.discount) }}%</h4>
-                        </div>
-                        <h4 class="mb-2">Total: {{ selectedOrder?.total_price }}</h4>
+                        <h4 class="mb-2">Subtotal: <span class="font-bold text-primary">{{ selectedOrder?.subtotal_price }}</span></h4>
+                        <h4 class="mb-2">Shipping Charges: <span class="font-bold text-primary">Free Delivery</span></h4>
+                        <h4 class="mb-2">Total Price: <span class="font-bold text-primary">{{ selectedOrder?.total_price }}</span></h4>
                     </div>
                 </a-col>
             </a-row>

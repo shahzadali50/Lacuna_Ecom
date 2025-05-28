@@ -285,6 +285,30 @@ return [
     'users' => 'Users',
     'user_list' => 'User List',
     'email' => 'Email',
+    'order_id' => 'Order ID',
+   'order_list' => 'Order List',
+    'view' => 'View',
+    'status' => 'Status',
+    'customer_name' => 'Customer Name',
+    'total' => 'Total',
+    'phone_number' => 'Phone Number',
+    'address' => 'Address',
+    'city' => 'City',
+    'state' => 'State',
+    'postal_code' => 'Postal Code',
+    'country' => 'Country',
+    'order_notes' => 'Order Notes',
+    'price' => 'Price',
+    'product_name' => 'Product',
+    'quantity' => 'Quantity',
+    'subtotal' => 'Subtotal',
+    'total_price' => 'Total Price',
+    'shiping_details' => 'Shiping Details',
+    'shipping_charge' => 'Shipping Charge',
+   
+
+
+
 ],
 
 ];

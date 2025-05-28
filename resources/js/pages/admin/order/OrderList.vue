@@ -1,28 +1,29 @@
 <script setup lang="ts">
 import AdminLayout from '@/layouts/AdminLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import dayjs from "dayjs";
-import { ref } from "vue";
-import { ShoppingCartOutlined } from '@ant-design/icons-vue';
+import { ref, computed } from "vue";
+import DataTable from 'datatables.net-vue3';
+import DataTablesCore from 'datatables.net-dt';
+import 'datatables.net-dt/css/dataTables.dataTables.css';
+
+DataTable.use(DataTablesCore);
+
+const isLoading = ref(false);
+
+const page = usePage();
+const translations = computed(() => {
+    return (page.props.translations as any)?.dashboard_all_pages || {};
+});
+
 const formatDate = (date: string) => {
     return date ? dayjs(date).format("DD-MM-YYYY hh:mm A") : "N/A";
 };
 
-const columns = [
-    { title: 'ID', dataIndex: 'id', key: 'id' },
-    { title: 'Order ID', dataIndex: 'order_id', key: 'order_id' },
-    { title: 'Status', dataIndex: 'status', key: 'status' },
-    { title: 'Customer Name', dataIndex: 'name', key: 'name' },
-    { title: 'Phone No', dataIndex: 'phone_no', key: 'phone_no' },
-    { title: 'SubTotal', dataIndex: 'subtotal', key: 'subtotal' },
-    { title: 'Total', dataIndex: 'total', key: 'total' },
-    { title: 'Created At', dataIndex: 'created_at', key: 'created_at' },
-    { title: 'Action', dataIndex: 'action', key: 'action' },
-];
-
 defineProps({
     orders: Object,
 });
+
 const isOrderViewModalVisible = ref(false);
 const selectedOrder = ref<any>(null);
 
@@ -30,6 +31,7 @@ const openOrderView = (order: any) => {
     selectedOrder.value = order;
     isOrderViewModalVisible.value = true;
 };
+
 const getStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
         case 'pending':
@@ -44,87 +46,150 @@ const getStatusColor = (status: string) => {
             return 'default';
     }
 };
+
+// DataTable columns for orders
+const dataTableColumns = [
+    {
+        title: translations.value.sr || 'Sr.',
+        data: null,
+        render: (data: any, type: any, row: any, meta: any) => meta.row + 1,
+    },
+    {
+        title: translations.value.order_id || 'Order ID',
+        data: 'order_id',
+        render: (data: string) => `<span class="badge bg-primary">${data}</span>`,
+    },
+    {
+        title: translations.value.status || 'Status',
+        data: 'status',
+        render: (data: string) => {
+            const color = getStatusColor(data);
+            return `<span class="badge bg-${color}">${data}</span>`;
+        }
+    },
+    {
+        title: translations.value.customer_name || 'Customer Name',
+        data: 'name'
+    },
+    {
+        title: translations.value.phone_number || 'Phone No',
+        data: 'phone_number'
+    },
+    {
+        title: translations.value.subtotal || 'SubTotal',
+        data: 'subtotal_price',
+        render: (data: number) => Math.floor(data)
+    },
+    {
+        title: translations.value.total || 'Total',
+        data: 'total_price',
+        render: (data: number) => Math.floor(data)
+    },
+    {
+        title: translations.value.created_at || 'Created At',
+        data: 'created_at',
+        render: (data: string) => formatDate(data)
+    },
+    {
+        title: translations.value.action || 'Action',
+        data: null,
+        orderable: false,
+        render: (data: any, type: any, row: any) => `
+            <button class="view-btn p-2" data-id="${row.id}" title="${translations.value.view || 'View'}">
+                 <i class="fa fa-cart-plus text-2xl" aria-hidden="true"></i>
+            </button>
+        `
+    }
+];
+
+// DataTable options
+const options = {
+    paging: true,
+    searching: true,
+    ordering: true,
+    responsive: true,
+    pageLength: 10,
+    createdRow: (row: HTMLElement, data: any) => {
+        setTimeout(() => {
+            row.querySelector('.view-btn')?.addEventListener('click', () => openOrderView(data));
+        }, 0);
+    },
+};
 </script>
 
 <template>
+    <div v-if="isLoading" class="loading-overlay">
+        <a-spin size="large" />
+    </div>
     <AdminLayout>
-
-        <Head title="Order List" />
+        <Head :title="translations.order_list || 'Order List'" />
         <a-row>
-            <a-col :span="24">
-                <div class="bg-white rounded-lg p-4 shadow-md responsive-table">
+
+
+            <a-col :xs="24">
+
+                <div class="bg-white rounded-lg responsive-table p-4 shadow-md">
                     <div class="mb-4 flex items-center justify-between">
-                        <h2 class="text-lg font-semibold">Order List</h2>
+                        <h2 class="text-lg font-semibold mb-4">{{ translations.order_list || 'Order List' }}</h2>
                     </div>
-
-                    <a-table v-if="orders" :columns="columns" :data-source="orders.data" rowKey="id">
-                        <template #bodyCell="{ column, record, index }">
-                            <template v-if="column.dataIndex === 'id'">
-                                {{ index + 1 }}
-                            </template>
-                            <template v-else-if="column.dataIndex === 'order_id'">
-                            <a-badge :count="record.order_id" :number-style="{ backgroundColor: '#1890ff' }" />
-                            </template>
-                            <template v-else-if="column.dataIndex === 'status'">
-                                <a-tag :color="getStatusColor(record.status)">
-                                    {{ record.status }}
-                                </a-tag>
-                            </template>
-                            <template v-else-if="column.dataIndex === 'name'">
-                                {{ record.name }}
-                            </template>
-                            <template v-else-if="column.dataIndex === 'phone_no'">
-                                {{ record.phone_number }}
-                            </template>
-                            <template v-else-if="column.dataIndex === 'subtotal'">
-
-                                {{ Math.floor(record.subtotal_price) }}
-                            </template>
-
-                            <template v-else-if="column.dataIndex === 'total'">
-                                {{ Math.floor(record.total_price) }}
-                            </template>
-                            <template v-else-if="column.dataIndex === 'created_at'">
-                                {{ formatDate(record.created_at) }}
-                            </template>
-                            <template v-else-if="column.dataIndex === 'action'">
-                                <a-tooltip placement="top">
-                                    <template #title>Order View</template>
-                                    <a-button type="link" @click="openOrderView(record)"><ShoppingCartOutlined /></a-button>
-                                </a-tooltip>
-                            </template>
-                        </template>
-                    </a-table>
-
+                    <DataTable
+                        v-if="orders?.data"
+                        :data="orders.data"
+                        :columns="dataTableColumns"
+                        :options="options"
+                        class="display"
+                    >
+                        <thead>
+                            <tr>
+                                <th>{{ translations.sr || 'Sr.' }}</th>
+                                <th>{{ translations.order_id || 'Order ID' }}</th>
+                                <th>{{ translations.status || 'Status' }}</th>
+                                <th>{{ translations.customer_name || 'Customer Name' }}</th>
+                                <th>{{ translations.phone || 'Phone No' }}</th>
+                                <th>{{ translations.subtotal || 'SubTotal' }}</th>
+                                <th>{{ translations.total || 'Total' }}</th>
+                                <th>{{ translations.created_at || 'Created At' }}</th>
+                                <th>{{ translations.action || 'Action' }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- DataTables will populate this automatically -->
+                        </tbody>
+                    </DataTable>
                 </div>
             </a-col>
         </a-row>
-        <!-- Edit Product Modal -->
-        <a-modal width="700px" v-model:open="isOrderViewModalVisible" title="Order Preview"
-            @cancel="isOrderViewModalVisible = false" :footer="null">
+
+        <!-- Order View Modal -->
+        <a-modal
+            width="700px"
+            v-model:open="isOrderViewModalVisible"
+            :title="translations.order_preview || 'Order Preview'"
+            @cancel="isOrderViewModalVisible = false"
+            :footer="null"
+        >
             <a-row>
                 <a-col :xs="24">
                     <div class="mb-4">
-                        <h3 class="text-lg font-semibold mb-3">Shipping Details</h3>
+                        <h3 class="text-lg font-semibold mb-3">{{ translations.shiping_details || 'Shipping Details' }}</h3>
                         <a-row :gutter="16">
                             <a-col :xs="24" :sm="12">
-                                <p class="mb-2"><span class="font-semibold">Name:</span> {{ selectedOrder.name }}</p>
-                                <p class="mb-2"><span class="font-semibold">Phone:</span> {{ selectedOrder.phone_number }}</p>
-                                <p class="mb-2"><span class="font-semibold">Email:</span> {{ selectedOrder.email }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.name || 'Name' }}:</span> {{ selectedOrder?.name }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.phone_number || 'Phone' }}:</span> {{ selectedOrder?.phone_number }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.email || 'Email' }}:</span> {{ selectedOrder?.email }}</p>
                             </a-col>
                             <a-col :xs="24" :sm="12">
-                                <p class="mb-2"><span class="font-semibold">Address:</span> {{ selectedOrder.address }}</p>
-                                <p class="mb-2"><span class="font-semibold">City:</span> {{ selectedOrder.city }}</p>
-                                <p class="mb-2"><span class="font-semibold">State:</span> {{ selectedOrder.state }}</p>
-                                <p class="mb-2"><span class="font-semibold">Postal Code:</span> {{ selectedOrder.postal_code }}</p>
-                                <p class="mb-2"><span class="font-semibold">Country:</span> {{ selectedOrder.country }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.address || 'Address' }}:</span> {{ selectedOrder?.address }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.city || 'City' }}:</span> {{ selectedOrder?.city }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.state || 'State' }}:</span> {{ selectedOrder?.state }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.postal_code || 'Postal Code' }}:</span> {{ selectedOrder?.postal_code }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.country || 'Country' }}:</span> {{ selectedOrder?.country }}</p>
                             </a-col>
                         </a-row>
-                        <div v-if="selectedOrder.order_notes" class="mt-2">
-                            <p class="mb-2"><span class="font-semibold">Order Notes:</span> {{ selectedOrder.order_notes }}</p>
+                        <div v-if="selectedOrder?.order_notes" class="mt-2">
+                            <p class="mb-2"><span class="font-semibold">{{ translations.order_notes || 'Order Notes' }}:</span> {{ selectedOrder.order_notes }}</p>
                         </div>
                     </div>
-
                 </a-col>
                 <a-col :xs="24">
                     <div class="mb-2 overflow-x-auto">
@@ -132,12 +197,12 @@ const getStatusColor = (status: string) => {
                         <table class="table-auto w-full min-w-[600px]">
                             <thead>
                                 <tr class="text-left">
-                                    <th>Sr</th>
-                                    <th>Image</th>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>QTY</th>
-                                    <th>Total</th>
+                                    <th>{{ translations.sr || 'Sr' }}</th>
+                                    <th>{{ translations.image || 'Image' }}</th>
+                                    <th>{{ translations.product || 'Product' }}</th>
+                                    <th>{{ translations.price || 'Price' }}</th>
+                                    <th>{{ translations.quantity || 'QTY' }}</th>
+                                    <th>{{ translations.total || 'Total' }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -162,13 +227,70 @@ const getStatusColor = (status: string) => {
                 <a-col :xs="24">
                     <div class="border-gray-500 border my-4"></div>
                     <div class="my-3">
-                        <h4 class="mb-2">Subtotal: <span class="font-bold text-primary">{{ selectedOrder?.subtotal_price }}</span></h4>
-                        <h4 class="mb-2">Shipping Charges: <span class="font-bold text-primary">Free Delivery</span></h4>
-                        <h4 class="mb-2">Total Price: <span class="font-bold text-primary">{{ selectedOrder?.total_price }}</span></h4>
+                        <h4 class="mb-2">{{ translations.subtotal || 'Subtotal' }}: <span class="font-bold text-primary">{{ selectedOrder?.subtotal_price }}</span></h4>
+                        <h4 class="mb-2">{{ translations.shipping_charge || 'Shipping Charges' }}: <span class="font-bold text-primary">{{ translations.free_delivery || 'Free Delivery' }}</span></h4>
+                        <h4 class="mb-2">{{ translations.total_price || 'Total Price' }}: <span class="font-bold text-primary">{{ selectedOrder?.total_price }}</span></h4>
                     </div>
                 </a-col>
             </a-row>
         </a-modal>
-
     </AdminLayout>
 </template>
+
+<style scoped>
+.display {
+    width: 100%;
+}
+
+.badge {
+    padding: 0.5em 0.75em;
+    border-radius: 0.25rem;
+    color: white;
+}
+
+.bg-primary {
+    background-color: #1890ff;
+}
+
+.bg-orange {
+    background-color: #fa8c16;
+}
+
+.bg-blue {
+    background-color: #1890ff;
+}
+
+.bg-green {
+    background-color: #52c41a;
+}
+
+.bg-red {
+    background-color: #f5222d;
+}
+
+.view-btn {
+    color: #1890ff;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.view-btn:hover {
+    color: #40a9ff;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+</style>

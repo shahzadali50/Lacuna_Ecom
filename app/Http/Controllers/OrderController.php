@@ -96,17 +96,65 @@ public function orderGenerate(Request $request)
 
 
     public function orderList()
-{
-    $orders = Order::with('saleProducts.product')
-        ->latest()
-        ->paginate(10);
+    {
+        try {
+            $locale = session('locale', App::getLocale());
 
-    return Inertia::render('admin/order/OrderList', [
-        'orders' => $orders,
-        'translations' => __('messages'),
-        'locale' => App::getLocale(),
-    ]);
-}
+            // Eager load relationships
+            $orders = Order::with([
+                'saleProducts.product',
+                'saleProducts.product.product_translations' => fn($q) => $q->where('lang', $locale)
+            ])
+            ->latest()
+            ->get();
+
+            // Transform orders data
+            $orders = $orders->map(function ($order) use ($locale) {
+                return [
+                    'id' => $order->id,
+                    'order_id' => $order->order_id,
+                    'status' => $order->status,
+                    'name' => $order->name,
+                    'email' => $order->email,
+                    'phone_number' => $order->phone_number,
+                    'address' => $order->address,
+                    'city' => $order->city,
+                    'state' => $order->state,
+                    'postal_code' => $order->postal_code,
+                    'country' => $order->country,
+                    'order_notes' => $order->order_notes,
+                    'subtotal_price' => $order->subtotal_price,
+                    'total_price' => $order->total_price,
+                    'created_at' => $order->created_at->format('Y-m-d H:i:s'),
+                    'sale_products' => $order->saleProducts->map(function ($saleProduct) use ($locale) {
+                        return [
+                            'id' => $saleProduct->id,
+                            'sale_price' => $saleProduct->sale_price,
+                            'qty' => $saleProduct->qty,
+                            'total_price' => $saleProduct->total_price,
+                            'product' => [
+                                'id' => $saleProduct->product->id,
+                                'name' => $saleProduct->product->product_translations->first()?->name ?? $saleProduct->product->name,
+                                'thumnail_img' => $saleProduct->product->thumnail_img,
+                            ]
+                        ];
+                    })
+                ];
+            });
+
+            return Inertia::render('admin/order/OrderList', [
+                'orders' => [
+                    'data' => $orders // Wrap the collection in a data key
+                ],
+                'translations' => __('messages'),
+                'locale' => App::getLocale(),
+            ]);
+
+        } catch (\Throwable $e) {
+            Log::error('Failed to load orders in orderList(): ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong while loading orders.');
+        }
+    }
     public function userOrderList()
     {
         try {

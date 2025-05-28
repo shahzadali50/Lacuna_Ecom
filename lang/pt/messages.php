@@ -283,6 +283,28 @@ return [
     'users' => 'Usuários',
     'user_list' => 'Lista de Usuários',
     'email' => 'Email',
+    'order_id' => 'ID do Pedido',
+    'order_list' => 'Lista de Pedidos',
+    'view' => 'Visualizar',
+    'status' => 'Status',
+    'customer_name' => 'Nome do Cliente',
+    'total' => 'Total',
+    'phone_number' => 'Número de Telefone',
+    'address' => 'Endereço',
+    'city' => 'Cidade',
+    'state' => 'Estado',
+    'postal_code' => 'Código Postal',
+    'country' => 'País',
+    'order_notes' => 'Notas do Pedido',
+    'price' => 'Preço',
+    'product_name' => 'Produto',
+    'quantity' => 'Quantidade',
+    'subtotal' => 'Subtotal',
+    'total_price' => 'Preço Total',
+    'shiping_details' => 'Detalhes de Envio',
+    'shipping_charge' => 'Taxas de Entrega',
+
+
 ],
 
 ];

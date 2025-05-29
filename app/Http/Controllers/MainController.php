@@ -220,13 +220,15 @@ public function allProducts(Request $request)
     try {
         $locale = session('locale', App::getLocale());
         $page = $request->query('page', 1);
-        $categorySlug = $request->query('category'); // Get the category slug from query params
+        $categorySlug = $request->query('category');
+        $minPrice = $request->query('min_price');
+        $maxPrice = $request->query('max_price');
 
         // Fetch categories with at least one product
         $categories = Category::withCount('products')
             ->with(['category_translations' => fn($q) => $q->where('lang', $locale)])
             ->whereHas('products', function ($q) {
-                $q->where('status', 1); // Only count active products
+                $q->where('status', 1);
             })
             ->get()
             ->map(function ($category) use ($locale) {
@@ -238,18 +240,27 @@ public function allProducts(Request $request)
                 ];
             });
 
-        // Fetch products with optional category filter
+        // Fetch products with optional filters
         $query = Product::where('status', 1)
             ->with([
                 'category' => fn($q) => $q->with(['category_translations' => fn($q) => $q->where('lang', $locale)]),
                 'product_translations' => fn($q) => $q->where('lang', $locale),
             ]);
 
-        // Apply category filter if a category slug is provided
+        // Category filter
         if ($categorySlug) {
             $query->whereHas('category', function ($q) use ($categorySlug) {
                 $q->where('slug', $categorySlug);
             });
+        }
+
+        // Min price filter
+        if ($minPrice !== null && $minPrice !== '') {
+            $query->where('final_price', '>=', $minPrice);
+        }
+        // Max price filter
+        if ($maxPrice !== null && $maxPrice !== '') {
+            $query->where('final_price', '<=', $maxPrice);
         }
 
         $products = $query->orderBy('created_at', 'desc')
@@ -268,19 +279,12 @@ public function allProducts(Request $request)
             ];
         });
 
-        \Log::info('Products fetched: ', [
-            'count' => count($products->items()),
-            'page' => $products->currentPage(),
-            'category' => $categorySlug ?: 'all',
-            'categories_count' => count($categories), // Log number of categories
-        ]);
-
         return Inertia::render('frontend/products/AllProducts', [
             'products' => $products,
             'categories' => $categories,
             'translations' => __('messages'),
             'locale' => $locale,
-            'selectedCategory' => $categorySlug, // Pass the selected category to frontend
+            'selectedCategory' => $categorySlug,
         ]);
     } catch (\Throwable $e) {
         \Log::error('Failed to load products: ' . $e->getMessage());

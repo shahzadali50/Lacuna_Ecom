@@ -84,15 +84,20 @@ const addToCart = (product: Product) => {
 </script>
 
 <template>
-  <section class="py-14">
-    <div class="container mx-auto px-2 sm:px-4">
-      <!-- Filter Component -->
-      <FilterProduct
+    <section>
+        <div class="container  mx-auto">
+        <FilterProduct
         v-if="props.showFilter === true"
         :categories="props.categories"
         :selectedCategory="props.selectedCategory"
         :translations="translations"
       />
+        </div>
+    </section>
+  <section class="py-14">
+    <div class="container mx-auto px-2 sm:px-4">
+      <!-- Filter Component -->
+
 
       <!-- Heading and Subtitle -->
       <div class="text-center mb-8 sm:mb-12">

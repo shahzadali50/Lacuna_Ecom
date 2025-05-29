@@ -64,6 +64,7 @@ const filterByPrice = () => {
         }
     );
 };
+
 const drawerWidth = ref(500);
 
 const updateDrawerWidth = () => {

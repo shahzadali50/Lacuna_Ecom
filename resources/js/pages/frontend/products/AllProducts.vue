@@ -19,6 +19,7 @@ const translations = computed(() => {
       :showPagination="true"
       :showFilter="true"
       :categories="page.props.categories"
+       :selectedCategory="page.props.selectedCategory"
     />
   </UserLayout>
 </template>

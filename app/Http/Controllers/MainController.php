@@ -222,9 +222,12 @@ public function allProducts(Request $request)
         $page = $request->query('page', 1);
         $categorySlug = $request->query('category'); // Get the category slug from query params
 
-        // Fetch categories
+        // Fetch categories with at least one product
         $categories = Category::withCount('products')
             ->with(['category_translations' => fn($q) => $q->where('lang', $locale)])
+            ->whereHas('products', function ($q) {
+                $q->where('status', 1); // Only count active products
+            })
             ->get()
             ->map(function ($category) use ($locale) {
                 return [
@@ -269,6 +272,7 @@ public function allProducts(Request $request)
             'count' => count($products->items()),
             'page' => $products->currentPage(),
             'category' => $categorySlug ?: 'all',
+            'categories_count' => count($categories), // Log number of categories
         ]);
 
         return Inertia::render('frontend/products/AllProducts', [

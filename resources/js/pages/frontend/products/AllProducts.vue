@@ -11,11 +11,14 @@ const translations = computed(() => {
 </script>
 
 <template>
-  <UserLayout>
-   <Head :title="translations.products || 'Products'" />
+<UserLayout>
+    <Head :title="translations.products || 'Products'" />
     <ProductSection
-    :title="translations.title || 'Products List'"
-    :subtitle="translations.subtitle || 'Explore our wide range of high-quality products tailored to your needs.'"
-    :showPagination="true"/>
+      :title="translations.title || 'Products List'"
+      :subtitle="translations.subtitle || 'Explore our wide range of high-quality products tailored to your needs.'"
+      :showPagination="true"
+      :showFilter="true"
+      :categories="page.props.categories"
+    />
   </UserLayout>
 </template>

@@ -215,20 +215,42 @@ class MainController extends Controller
         $request->session()->regenerate();
         return back()->with('success', 'login successfully');
     }
-    public function allProducts(Request $request)
+public function allProducts(Request $request)
 {
     try {
         $locale = session('locale', App::getLocale());
-        $page = $request->query('page', 1); // Explicitly get page parameter
-        \Log::info('Fetching products for page: ' . $page); // Debug log
+        $page = $request->query('page', 1);
+        $categorySlug = $request->query('category'); // Get the category slug from query params
 
-        $products = Product::where('status', 1)
+        // Fetch categories
+        $categories = Category::withCount('products')
+            ->with(['category_translations' => fn($q) => $q->where('lang', $locale)])
+            ->get()
+            ->map(function ($category) use ($locale) {
+                return [
+                    'id' => $category->id,
+                    'name' => $category->category_translations->first()?->name ?? $category->name,
+                    'slug' => $category->slug,
+                    'product_count' => $category->products_count,
+                ];
+            });
+
+        // Fetch products with optional category filter
+        $query = Product::where('status', 1)
             ->with([
                 'category' => fn($q) => $q->with(['category_translations' => fn($q) => $q->where('lang', $locale)]),
                 'product_translations' => fn($q) => $q->where('lang', $locale),
-            ])
-            ->orderBy('created_at', 'desc')
-            ->paginate(10, ['*'], 'page', $page); // Ensure page parameter is used
+            ]);
+
+        // Apply category filter if a category slug is provided
+        if ($categorySlug) {
+            $query->whereHas('category', function ($q) use ($categorySlug) {
+                $q->where('slug', $categorySlug);
+            });
+        }
+
+        $products = $query->orderBy('created_at', 'desc')
+            ->paginate(10, ['*'], 'page', $page);
 
         // Transform products to include translated fields
         $products->getCollection()->transform(function ($product) use ($locale) {
@@ -243,12 +265,18 @@ class MainController extends Controller
             ];
         });
 
-        \Log::info('Products fetched: ', ['count' => count($products->items()), 'page' => $products->currentPage()]); // Debug log
+        \Log::info('Products fetched: ', [
+            'count' => count($products->items()),
+            'page' => $products->currentPage(),
+            'category' => $categorySlug ?: 'all',
+        ]);
 
         return Inertia::render('frontend/products/AllProducts', [
             'products' => $products,
+            'categories' => $categories,
             'translations' => __('messages'),
             'locale' => $locale,
+            'selectedCategory' => $categorySlug, // Pass the selected category to frontend
         ]);
     } catch (\Throwable $e) {
         \Log::error('Failed to load products: ' . $e->getMessage());

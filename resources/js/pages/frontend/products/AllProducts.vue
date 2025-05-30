@@ -41,6 +41,6 @@ const translations = computed(() => {
         </section>
 
         <ProductSection :showPagination="true" :showFilter="true" :categories="page.props.categories"
-            :selectedCategory="page.props.selectedCategory"  />
+            :selectedCategory="page.props.selectedCategory"   sectionClass="py-4" />
     </UserLayout>
 </template>

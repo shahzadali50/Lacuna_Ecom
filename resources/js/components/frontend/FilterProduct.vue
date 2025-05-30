@@ -83,7 +83,7 @@ onUnmounted(() => {
 
 <template>
     <div>
-        <div class="flex item-center mb-4">
+        <div class="flex item-center">
 
             <Button type="text" class="flex items-center" size="large" @click="openFilterDrawer">
                 <FilterOutlined />Filter Products

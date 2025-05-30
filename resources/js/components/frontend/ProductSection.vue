@@ -34,6 +34,9 @@ const props = defineProps<{
   showPagination?: boolean;
   categories?: Category[];
   selectedCategory?: string | null;
+  showTitle?: boolean;
+  showSubTitle?: boolean;
+   sectionClass?: string;
 }>();
 
 const page = usePage();
@@ -94,17 +97,13 @@ const addToCart = (product: Product) => {
       />
         </div>
     </section>
-  <section class="py-14">
+  <section :class="['', props.sectionClass]">
     <div class="container mx-auto px-2 sm:px-4">
-      <!-- Filter Component -->
-
-
-      <!-- Heading and Subtitle -->
       <div class="text-center mb-8 sm:mb-12">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
+        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4" v-if="props.showTitle !== false">
           {{ props.title || translations.title || 'Product List' }}
         </h2>
-        <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
+        <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto" v-if="props.showSubTitle !== false">
           {{ props.subtitle || translations.subtitle || 'Explore our wide range of high-quality products tailored to your needs.' }}
         </p>
       </div>
@@ -194,5 +193,5 @@ const addToCart = (product: Product) => {
 </template>
 
 <style scoped>
-/* Add any custom styles if needed */
+
 </style>

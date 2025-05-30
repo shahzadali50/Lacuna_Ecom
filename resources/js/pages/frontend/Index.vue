@@ -13,7 +13,10 @@ import ProductSection from '@/components/frontend/ProductSection.vue';
     <Head title="Welcome" />
     <BannerSection />
     <ProductSection
-    :showAllProductsButton="true"/>
+    :showAllProductsButton="true"
+    :showTitle="true"
+    :showSubTitle="true" 
+    sectionClass="py-14" />
     <ShopByCategory />
   </UserLayout>
 </template>

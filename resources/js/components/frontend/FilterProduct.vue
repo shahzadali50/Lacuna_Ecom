@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {  defineProps } from 'vue';
+import { defineProps } from 'vue';
 import { router, Link } from '@inertiajs/vue3';
 import { Button, Collapse, CollapsePanel, Checkbox } from 'ant-design-vue';
 import { ClearOutlined, FilterOutlined } from '@ant-design/icons-vue';
@@ -83,19 +83,21 @@ onUnmounted(() => {
 
 <template>
     <div>
-        <Button class="flex items-center" size="large" @click="openFilterDrawer">
-            <FilterOutlined />Filter Products
-        </Button>
-        <a-drawer title="Filter Products" placement="left" :open="isFilterDrawerVisible" @close="closeFilterDrawer":width="drawerWidth">
-            <div>
-                <div class="text-end border-b pb-2">
-                    <Button size="small" type="primary">
-                        <Link :href="route('all.products')" class="hover:underline mb-4 flex items-center">
-                        <ClearOutlined />Clear Filters
-                        </Link>
-                    </Button>
+        <div class="flex item-center mb-4">
 
-                </div>
+            <Button type="text" class="flex items-center" size="large" @click="openFilterDrawer">
+                <FilterOutlined />Filter Products
+            </Button>
+            <Button size="large" type="text">
+                <Link :href="route('all.products')" class="flex items-center">
+                <ClearOutlined />Clear Filters
+                </Link>
+            </Button>
+        </div>
+        <a-drawer title="Filter Products" placement="left" :open="isFilterDrawerVisible" @close="closeFilterDrawer"
+            :width="drawerWidth">
+            <div>
+            
                 <div>
                     <div class="flex items-end gap-2 my-4">
                         <div class="">
@@ -106,12 +108,12 @@ onUnmounted(() => {
                             <label class="block text-xs mb-1">Max Price</label>
                             <a-input type="number" placeholder="Max price" min="0" v-model:value="maxPrice" />
                         </div>
-                    <div class="">
+                        <div class="">
 
-                        <Button type="dashed" @click="filterByPrice">
-                            <FilterOutlined /> Filter
-                        </Button>
-                    </div>
+                            <Button type="dashed" @click="filterByPrice">
+                                <FilterOutlined /> Filter
+                            </Button>
+                        </div>
                     </div>
                 </div>
                 <Collapse v-model:activeKey="activeKey" :bordered="false">

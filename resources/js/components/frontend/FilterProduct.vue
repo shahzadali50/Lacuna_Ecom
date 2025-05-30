@@ -86,7 +86,7 @@ onUnmounted(() => {
         <div class="flex item-center">
 
             <Button type="text" class="flex items-center" size="large" @click="openFilterDrawer">
-                <FilterOutlined />Filter
+                <FilterOutlined />Filter 
             </Button>
             <Button size="large" type="text">
                 <Link :href="route('all.products')" class="flex items-center">

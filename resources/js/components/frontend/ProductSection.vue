@@ -167,7 +167,7 @@ const addToCart = (product: Product) => {
                     </Button>
                 </div>
             </div>
-
+            
             <div v-else>
                 <a-result status="404" title="404" sub-title="We couldn’t find any products matching your search.">
                     <template #extra>
@@ -176,7 +176,6 @@ const addToCart = (product: Product) => {
                             Continue Shopping
                             </Link>
                         </Button>
-
                     </template>
                 </a-result>
             </div>

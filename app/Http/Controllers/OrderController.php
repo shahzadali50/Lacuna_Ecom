@@ -213,11 +213,11 @@ public function orderGenerate(Request $request)
             if (session()->has('billingDetail')) {
                 // Update existing session data
                 session()->put('billingDetail', $validatedData);
-                Log::info('Billing details updated in session', ['billingDetail' => $validatedData]);
+                // Log::info('Billing details updated in session', ['billingDetail' => $validatedData]);
             } else {
                 // Store new session data
                 session(['billingDetail' => $validatedData]);
-                Log::info('Billing details stored in session', ['billingDetail' => $validatedData]);
+                // Log::info('Billing details stored in session', ['billingDetail' => $validatedData]);
             }
              return redirect()->route('cart.payment')->with('success', 'Billing details stored successfully! ');
 

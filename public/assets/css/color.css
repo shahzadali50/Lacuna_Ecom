@@ -125,6 +125,11 @@
     border-color: var(--color-info-hover) !important;
     color: white !important;
 }
+.badge {
+    padding: 5px;
+    border-radius: 0.25rem;
+    color: white;
+}
 
 
 

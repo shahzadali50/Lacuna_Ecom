@@ -31,22 +31,6 @@ const openOrderView = (order: any) => {
     selectedOrder.value = order;
     isOrderViewModalVisible.value = true;
 };
-
-const getStatusColor = (status: string) => {
-    switch (status?.toLowerCase()) {
-        case 'pending':
-            return 'orange';
-        case 'processing':
-            return 'blue';
-        case 'completed':
-            return 'green';
-        case 'cancelled':
-            return 'red';
-        default:
-            return 'default';
-    }
-};
-
 // DataTable columns for orders
 const dataTableColumns = [
     {
@@ -63,8 +47,7 @@ const dataTableColumns = [
         title: translations.value.status || 'Status',
         data: 'status',
         render: (data: string) => {
-            const color = getStatusColor(data);
-            return `<span class="badge bg-${color}">${data}</span>`;
+            return `<span class="badge bg-secondary">${data}</span>`;
         }
     },
     {
@@ -238,48 +221,6 @@ const options = {
 </template>
 
 <style scoped>
-.display {
-    width: 100%;
-}
-
-.badge {
-    padding: 0.5em 0.75em;
-    border-radius: 0.25rem;
-    color: white;
-}
-
-.bg-primary {
-    background-color: #1890ff;
-}
-
-.bg-orange {
-    background-color: #fa8c16;
-}
-
-.bg-blue {
-    background-color: #1890ff;
-}
-
-.bg-green {
-    background-color: #52c41a;
-}
-
-.bg-red {
-    background-color: #f5222d;
-}
-
-.view-btn {
-    color: #1890ff;
-    text-decoration: none;
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-}
-
-.view-btn:hover {
-    color: #40a9ff;
-}
 
 .loading-overlay {
     position: fixed;

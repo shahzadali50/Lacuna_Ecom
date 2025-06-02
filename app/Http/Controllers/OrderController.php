@@ -227,4 +227,23 @@ public function orderGenerate(Request $request)
     }
 }
 
+    public function updateOrderStatus(Request $request, $id)
+    {
+        try {
+            $validated = $request->validate([
+                'status' => 'required|in:pending,processing,dispatched,delivered,cancelled,returned,refunded'
+            ]);
+
+            $order = Order::findOrFail($id);
+            $order->status = $validated['status'];
+            $order->save();
+
+            return redirect()->back()->with('success', 'Order status updated successfully.');
+
+        } catch (\Throwable $e) {
+            Log::error('Failed to update order status: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong! Please try again.');
+        }
+    }
+
 }

@@ -26,7 +26,7 @@ return new class extends Migration
             $table->decimal('subtotal_price', 10, 2);
             $table->decimal('discount', 10, 2);
             $table->decimal('total_price', 10, 2);
-            $table->enum('status', ['pending', 'completed', 'cancelled','delivered','on_the_way'])->default('pending');
+            $table->enum('status', ['pending', 'processing', 'dispatched', 'delivered', 'cancelled', 'returned', 'refunded'])->default('pending');
             $table->string('payment_method')->nullable();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

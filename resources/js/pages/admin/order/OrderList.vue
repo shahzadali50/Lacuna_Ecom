@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AdminLayout from '@/layouts/AdminLayout.vue';
-import { Head, usePage } from '@inertiajs/vue3';
+import { Head, usePage, useForm } from '@inertiajs/vue3';
 import dayjs from "dayjs";
 import { ref, computed } from "vue";
 import DataTable from 'datatables.net-vue3';
@@ -24,13 +24,26 @@ defineProps({
     orders: Object,
 });
 
-const isOrderViewModalVisible = ref(false);
-const selectedOrder = ref<any>(null);
+const isViewModal = ref(false);
+const isStatusModal = ref(false);
+const order = ref<any>(null);
+const status = ref('');
 
-const openOrderView = (order: any) => {
-    selectedOrder.value = order;
-    isOrderViewModalVisible.value = true;
+const statuses = [
+    { value: 'pending', label: 'Pending', icon: 'fa fa-clock-o' },
+    { value: 'processing', label: 'Processing', icon: 'fa-cog' },
+    { value: 'dispatched', label: 'Dispatched', icon: 'fa-truck' },
+    { value: 'delivered', label: 'Delivered', icon: 'fa-check-circle' },
+    { value: 'cancelled', label: 'Cancelled', icon: 'fa-times-circle' },
+    { value: 'returned', label: 'Returned', icon: 'fa-undo' },
+    { value: 'refunded', label: 'Refunded', icon: 'fa fa-retweet' }
+];
+
+const openView = (data: any) => {
+    order.value = data;
+    isViewModal.value = true;
 };
+
 // DataTable columns for orders
 const dataTableColumns = [
     {
@@ -41,13 +54,41 @@ const dataTableColumns = [
     {
         title: translations.value.order_id || 'Order ID',
         data: 'order_id',
-        render: (data: string) => `<span class="badge bg-primary">${data}</span>`,
+        render: (data: string) => `<span class="badge bg-secondary">${data}</span>`,
     },
     {
         title: translations.value.status || 'Status',
         data: 'status',
-        render: (data: string) => {
-            return `<span class="badge bg-secondary">${data}</span>`;
+        render: (data: any, type: any, row: any) => {
+            let btnClass = 'btn-secondary';
+            switch(data.toLowerCase()) {
+                case 'pending':
+                    btnClass = 'btn-warning';
+                    break;
+                case 'processing':
+                    btnClass = 'btn-info';
+                    break;
+                case 'dispatched':
+                    btnClass = 'btn-primary';
+                    break;
+                case 'delivered':
+                    btnClass = 'btn-success';
+                    break;
+                case 'cancelled':
+                    btnClass = 'btn-danger';
+                    break;
+                case 'returned':
+                    btnClass = 'btn-secondary';
+                    break;
+                case 'refunded':
+                    btnClass = 'btn-danger';
+                    break;
+            }
+            return `
+                <button class="btn-order-status ${btnClass} p-2" data-id="${row.id}">
+                    ${data}
+                </button>
+            `;
         }
     },
     {
@@ -94,16 +135,41 @@ const options = {
     pageLength: 10,
     createdRow: (row: HTMLElement, data: any) => {
         setTimeout(() => {
-            row.querySelector('.view-btn')?.addEventListener('click', () => openOrderView(data));
+            row.querySelector('.view-btn')?.addEventListener('click', () => openView(data));
+            row.querySelector('.btn-order-status')?.addEventListener('click', () => openStatus(data));
         }, 0);
     },
+};
+
+const form = useForm({
+    id: null,
+    status: '',
+    _method: 'PUT',
+});
+
+const openStatus = (data: any) => {
+    form.id = data.id;
+    order.value = data;
+    status.value = data.status;
+    isStatusModal.value = true;
+};
+
+const updateStatus = () => {
+    isLoading.value = true;
+    form.status = status.value;
+    form.post(route('admin.order.status.update', { id: form.id }), {
+        preserveScroll: true,
+        onSuccess: () => {
+            isStatusModal.value = false;
+        },
+        onFinish: () => {
+            isLoading.value = false;
+        },
+    });
 };
 </script>
 
 <template>
-    <div v-if="isLoading" class="loading-overlay">
-        <a-spin size="large" />
-    </div>
     <AdminLayout>
         <Head :title="translations.order_list || 'Order List'" />
         <a-row>
@@ -146,9 +212,47 @@ const options = {
         <!-- Order View Modal -->
         <a-modal
             width="700px"
-            v-model:open="isOrderViewModalVisible"
+            v-model:open="isStatusModal"
+            title="Change Order Status"
+            @cancel="isStatusModal = false"
+            :footer="null"
+        >
+            <form @submit.prevent="updateStatus">
+                <a-row>
+                    <a-col :xs="24">
+                        <div class="mb-4">
+                            <h3 class="text-lg font-semibold mb-3">Order #{{ order?.order_id }}</h3>
+                            <div class="mb-4">
+                                <label class="block">{{ translations.status || 'Status' }}</label>
+                                <a-select
+                                    v-model:value="status"
+                                    style="width: 200px"
+                                >
+                                    <a-select-option v-for="status in statuses" :key="status.value" :value="status.value">
+                                        <i :class="['fa', status.icon, 'mr-2']"></i>
+                                        {{ status.label }}
+                                    </a-select-option>
+                                </a-select>
+                                <div v-if="form.errors.status" class="text-red-500">
+                                    {{ form.errors.status }}
+                                </div>
+                            </div>
+                            <div class="text-right">
+
+                                <a-button type="primary" html-type="submit" :loading="isLoading" class="ml-2">
+                                    {{ translations.update_status || 'Update Status' }}
+                                </a-button>
+                            </div>
+                        </div>
+                    </a-col>
+                </a-row>
+            </form>
+        </a-modal>
+        <a-modal
+            width="700px"
+            v-model:open="isViewModal"
             :title="translations.order_preview || 'Order Preview'"
-            @cancel="isOrderViewModalVisible = false"
+            @cancel="isViewModal = false"
             :footer="null"
         >
             <a-row>
@@ -157,20 +261,20 @@ const options = {
                         <h3 class="text-lg font-semibold mb-3">{{ translations.shiping_details || 'Shipping Details' }}</h3>
                         <a-row :gutter="16">
                             <a-col :xs="24" :sm="12">
-                                <p class="mb-2"><span class="font-semibold">{{ translations.name || 'Name' }}:</span> {{ selectedOrder?.name }}</p>
-                                <p class="mb-2"><span class="font-semibold">{{ translations.phone_number || 'Phone' }}:</span> {{ selectedOrder?.phone_number }}</p>
-                                <p class="mb-2"><span class="font-semibold">{{ translations.email || 'Email' }}:</span> {{ selectedOrder?.email }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.name || 'Name' }}:</span> {{ order?.name }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.phone_number || 'Phone' }}:</span> {{ order?.phone_number }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.email || 'Email' }}:</span> {{ order?.email }}</p>
                             </a-col>
                             <a-col :xs="24" :sm="12">
-                                <p class="mb-2"><span class="font-semibold">{{ translations.address || 'Address' }}:</span> {{ selectedOrder?.address }}</p>
-                                <p class="mb-2"><span class="font-semibold">{{ translations.city || 'City' }}:</span> {{ selectedOrder?.city }}</p>
-                                <p class="mb-2"><span class="font-semibold">{{ translations.state || 'State' }}:</span> {{ selectedOrder?.state }}</p>
-                                <p class="mb-2"><span class="font-semibold">{{ translations.postal_code || 'Postal Code' }}:</span> {{ selectedOrder?.postal_code }}</p>
-                                <p class="mb-2"><span class="font-semibold">{{ translations.country || 'Country' }}:</span> {{ selectedOrder?.country }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.address || 'Address' }}:</span> {{ order?.address }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.city || 'City' }}:</span> {{ order?.city }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.state || 'State' }}:</span> {{ order?.state }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.postal_code || 'Postal Code' }}:</span> {{ order?.postal_code }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.country || 'Country' }}:</span> {{ order?.country }}</p>
                             </a-col>
                         </a-row>
-                        <div v-if="selectedOrder?.order_notes" class="mt-2">
-                            <p class="mb-2"><span class="font-semibold">{{ translations.order_notes || 'Order Notes' }}:</span> {{ selectedOrder.order_notes }}</p>
+                        <div v-if="order?.order_notes" class="mt-2">
+                            <p class="mb-2"><span class="font-semibold">{{ translations.order_notes || 'Order Notes' }}:</span> {{ order.order_notes }}</p>
                         </div>
                     </div>
                 </a-col>
@@ -189,7 +293,7 @@ const options = {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(sale, index) in selectedOrder?.sale_products" :key="sale.id" class="border-b py-3">
+                                <tr v-for="(sale, index) in order?.sale_products" :key="sale.id" class="border-b py-3">
                                     <td class="py-2">{{ index + 1 }}</td>
                                     <td class="py-2">
                                         <img
@@ -210,9 +314,9 @@ const options = {
                 <a-col :xs="24">
                     <div class="border-gray-500 border my-4"></div>
                     <div class="my-3">
-                        <h4 class="mb-2">{{ translations.subtotal || 'Subtotal' }}: <span class="font-bold text-primary">{{ selectedOrder?.subtotal_price }}</span></h4>
+                        <h4 class="mb-2">{{ translations.subtotal || 'Subtotal' }}: <span class="font-bold text-primary">{{ order?.subtotal_price }}</span></h4>
                         <h4 class="mb-2">{{ translations.shipping_charge || 'Shipping Charges' }}: <span class="font-bold text-primary">{{ translations.free_delivery || 'Free Delivery' }}</span></h4>
-                        <h4 class="mb-2">{{ translations.total_price || 'Total Price' }}: <span class="font-bold text-primary">{{ selectedOrder?.total_price }}</span></h4>
+                        <h4 class="mb-2">{{ translations.total_price || 'Total Price' }}: <span class="font-bold text-primary">{{ order?.total_price }}</span></h4>
                     </div>
                 </a-col>
             </a-row>
@@ -221,17 +325,4 @@ const options = {
 </template>
 
 <style scoped>
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
 </style>

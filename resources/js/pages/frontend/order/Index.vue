@@ -53,8 +53,6 @@ const getStatusColor = (status: string) => {
             return 'default';
     }
 };
-
-
 </script>
 
 <template>
@@ -67,7 +65,7 @@ const getStatusColor = (status: string) => {
     status="success"
     :title="page.props.flash.success"
   ></a-result>
-      
+
             </a-col>
 
             <a-col :span="24">

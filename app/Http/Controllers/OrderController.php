@@ -20,17 +20,34 @@ class OrderController extends Controller
 public function orderGenerate(Request $request)
 {
     $validatedData = $request->validate([
-        'name' => 'required|string',
-        'phone_number' => 'required|numeric',
-        'email' => 'required|email',
-        'address' => 'required|string',
-        'country' => 'required|string',
-        'state' => 'required|string',
-        'city' => 'required|string',
-        'postal_code' => 'required|numeric',
         'payment_method' => 'required|string',
-        'order_notes' => 'nullable|string',
     ]);
+
+    // Retrieve billing details from session
+    $billingDetail = session('billingDetail', []);
+
+    // Check if billing details exist in session
+    if (empty($billingDetail)) {
+        return back()->with('error', 'Billing details are missing. Please provide billing information.');
+    }
+
+    // Validate that all required billing details are present
+    $requiredFields = [
+        'name' => 'string',
+        'phone_number' => 'numeric',
+        'email' => 'email',
+        'address' => 'string',
+        'country' => 'string',
+        'state' => 'string',
+        'city' => 'string',
+        'postal_code' => 'numeric',
+    ];
+
+    foreach ($requiredFields as $field => $type) {
+        if (!isset($billingDetail[$field]) || empty($billingDetail[$field])) {
+            return back()->with('error', "Billing detail '$field' is missing or invalid.");
+        }
+    }
 
     $cart = session('cart', []);
 
@@ -50,16 +67,16 @@ public function orderGenerate(Request $request)
         $randomOrderId = 'ORD-' . rand(100000, 999999);
 
         $order = Order::create([
-            'name' => $validatedData['name'],
-            'phone_number' => $validatedData['phone_number'],
-            'email' => $validatedData['email'],
-            'address' => $validatedData['address'],
-            'country' => $validatedData['country'],
-            'state' => $validatedData['state'],
-            'city' => $validatedData['city'],
-            'postal_code' => $validatedData['postal_code'],
+            'name' => $billingDetail['name'],
+            'phone_number' => $billingDetail['phone_number'],
+            'email' => $billingDetail['email'],
+            'address' => $billingDetail['address'],
+            'country' => $billingDetail['country'],
+            'state' => $billingDetail['state'],
+            'city' => $billingDetail['city'],
+            'postal_code' => $billingDetail['postal_code'],
             'payment_method' => $validatedData['payment_method'],
-            'order_notes' => $validatedData['order_notes'] ?? null,
+            'order_notes' => $billingDetail['order_notes'] ?? null,
             'user_id' => Auth::id(),
             'subtotal_price' => $subTotal,
             'discount' => $discount,
@@ -85,7 +102,8 @@ public function orderGenerate(Request $request)
         OrderTranslationJob::dispatch($order);
 
         DB::commit();
-        session()->forget('cart'); // Clear cart
+        // Clear both cart and billingDetail sessions
+        session()->forget(['cart', 'billingDetail']);
         return redirect()->route('user.order.list')->with('success', 'Your order has been placed successfully! Order ID: ' . $randomOrderId);
     } catch (\Exception $e) {
         DB::rollBack();
@@ -175,5 +193,38 @@ public function orderGenerate(Request $request)
             return redirect()->back()->with('error', 'Something went wrong while loading your orders.');
         }
     }
+
+    public function billingDetail(Request $request)
+{
+    $validatedData = $request->validate([
+        'name' => 'required|string',
+        'phone_number' => 'required|numeric',
+        'email' => 'required|email',
+        'address' => 'required|string',
+        'country' => 'required|string',
+        'state' => 'required|string',
+        'city' => 'required|string',
+        'postal_code' => 'required|numeric',
+        'order_notes' => 'nullable|string',
+    ]);
+    try {
+
+          // Check if billingDetail session exists
+            if (session()->has('billingDetail')) {
+                // Update existing session data
+                session()->put('billingDetail', $validatedData);
+                Log::info('Billing details updated in session', ['billingDetail' => $validatedData]);
+            } else {
+                // Store new session data
+                session(['billingDetail' => $validatedData]);
+                Log::info('Billing details stored in session', ['billingDetail' => $validatedData]);
+            }
+             return redirect()->route('cart.payment')->with('success', 'Billing details stored successfully! ');
+
+    } catch (\Exception $e) {
+        Log::error('Failed to store billing details: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Something went wrong while storing billing details. Please try again.');
+    }
+}
 
 }

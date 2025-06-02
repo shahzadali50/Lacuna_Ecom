@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { usePage, router } from '@inertiajs/vue3';
-import LoginModal from "@/components/frontend/LoginModal.vue";
 import CartItems from './CartItems.vue';
 
 const page = usePage();
@@ -34,15 +33,9 @@ const formatPrice = (price: number) => {
     }).format(price);
 };
 
-const isLoginModalVisible = ref(false);
-const user = computed(() => (page.props.auth as any)?.user);
-
 const goToCheckout = () => {
-    if (user.value) {
-        router.visit(route("cart.checkout"));
-    } else {
-        isLoginModalVisible.value = true;
-    }
+    router.visit(route("cart.checkout"));
+  
 };
 
 const closeDrawer = () => {
@@ -81,7 +74,6 @@ onUnmounted(() => {
             </div>
         </div>
     </a-drawer>
-    <LoginModal v-model:open="isLoginModalVisible" :canResetPassword="false" />
 </template>
 
 <style scoped>

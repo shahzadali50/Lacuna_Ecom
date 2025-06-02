@@ -15,8 +15,10 @@ Route::get('lang/{locale}', [MainController::class, 'switchLanguage'])->name('la
 Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::post('cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
 Route::get('cart/checkout', [CartController::class, 'cartCheckout'])->name('cart.checkout');
+Route::get('cart/payment', [CartController::class, 'cartPayment'])->name('cart.payment');
 Route::post('login-modal', [MainController::class, 'loginModal'])->name('loginModal');
 Route::post('order/generate', [OrderController::class, 'orderGenerate'])->name('order.generate');
+Route::post('billing/detail', [OrderController::class, 'billingDetail'])->name('billing.details');
 Route::get('products/list', [MainController::class, 'allProducts'])->name('all.products');
 
 Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function () {

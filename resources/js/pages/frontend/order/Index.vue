@@ -63,14 +63,11 @@ const getStatusColor = (status: string) => {
         <Head title="Order List" />
         <a-row>
             <a-col :span="24">
-                <a-alert
-          v-if="page.props.flash?.success"
-          message="Success"
-          :description="page.props.flash.success"
-          type="success"
-          show-icon
-          class="mb-4"
-        />
+                        <a-result  v-if="page.props.flash?.success"
+    status="success"
+    :title="page.props.flash.success"
+  ></a-result>
+      
             </a-col>
 
             <a-col :span="24">

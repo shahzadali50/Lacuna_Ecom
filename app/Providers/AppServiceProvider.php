@@ -31,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
             },
             // Cart session shared globally
             'cart' => fn () => Session::get('cart', []),
+            'billingDetail' => fn () => Session::get('billingDetail', []),
         ]);
 
     }

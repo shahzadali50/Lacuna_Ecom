@@ -13,6 +13,7 @@ const props = defineProps<{
     canResetPassword: boolean;
 }>();
 
+
 const emit = defineEmits(["update:open"]);
 
 const page = usePage();
@@ -50,11 +51,11 @@ const submit = () => {
             <div class="mb-4">
                 <div class="flex items-center justify-between">
                     <Label for="password">{{ translations.password || 'Password' }}</Label>
-                    <TextLink :href="route('password.request')" class="text-sm" tabindex="5">
+                    <TextLink :href="route('password.request')" class="text-sm">
                         {{ translations.forgot_password }}
                     </TextLink>
                 </div>
-                <a-input v-model:value="form.password" class="mt-2 w-full"
+                <a-input type="password" v-model:value="form.password" class="mt-2 w-full"
                          :placeholder="translations.password_placeholder || 'Enter Your Password'" />
                 <InputError :message="form.errors.password" />
             </div>

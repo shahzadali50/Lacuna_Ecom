@@ -15,7 +15,6 @@ const translations = computed(() => {
 const productCountText = computed(() => {
   const products = page.props.products as any;
   if (!products || !products.data) return 'Showing 0 of 0 Products';
-  const perPage = products.per_page || 9; // Use per_page from paginator
   const total = products.total || 0; // Total products from database
   const from = products.from || 1; // Starting product number
   const to = products.to || products.data.length; // Ending product number

@@ -3,9 +3,8 @@ import UserLayout from "@/layouts/UserLayout.vue";
 import { computed } from "vue";
 import { Head, usePage } from "@inertiajs/vue3";
 import { Row, Col } from "ant-design-vue";
-import CartItems from "@/components/frontend/CartItems.vue";
 import { Button } from "@/components/ui/button";
-import { ShoppingCartOutlined, ShoppingOutlined, ArrowLeftOutlined} from "@ant-design/icons-vue";
+import { ShoppingCartOutlined, ShoppingOutlined, ArrowLeftOutlined } from "@ant-design/icons-vue";
 import { Link } from "@inertiajs/vue3";
 import { useForm } from "@inertiajs/vue3";
 import { LoaderCircle } from "lucide-vue-next";
@@ -57,9 +56,10 @@ const orderGenerate = () => {
         <Head title="Payment" />
         <section class="py-14">
             <div class="container mx-auto px-2 sm:px-4">
-                <Link :href="route('cart.checkout')" class="flex items-center mb-2"><ArrowLeftOutlined />Back</Link>
-             <a-alert class="my-1" v-if="page.props.flash?.success":message="page.props.flash.success" type="success" show-icon />
-
+                <Link :href="route('cart.checkout')" class="flex items-center mb-2">
+                <ArrowLeftOutlined />Back</Link>
+                <a-alert class="my-1" v-if="page.props.flash?.success" :message="page.props.flash.success"
+                    type="success" show-icon />
                 <Row v-if="!cart || cart.length === 0" class="py-10">
                     <Col span="24">
                     <div class="text-center">
@@ -70,7 +70,7 @@ const orderGenerate = () => {
                         <Link :href="route('home')" class="inline-block mt-4">
                         <Button>{{
                             translations.continue_shopping || "Continue Shopping"
-                            }}</Button>
+                        }}</Button>
                         </Link>
                     </div>
                     </Col>
@@ -86,7 +86,7 @@ const orderGenerate = () => {
                         </ul>
                     </div>
                     <Row class="justify-between px-6">
-                         <Col :xs="24" :md="10" class="mb-5 order-2 md:order-1">
+                        <Col :xs="24" :md="10" class="mb-5 order-2 md:order-1">
                         <div>
                             <h1 class="text-5xl font-bold text-green-800 mb-6 flex items-center gap-2">
                                 2.
@@ -102,7 +102,7 @@ const orderGenerate = () => {
                                     <a-radio-group v-model:value="form.payment_method" class="ml-2">
                                         <a-radio value="Cash On Delivery">{{
                                             translations.cash_on_delivery || "Cash On Delivery"
-                                            }}</a-radio>
+                                        }}</a-radio>
                                     </a-radio-group>
                                 </div>
                                 <p class="text-gray-500 text-sm ml-6">
@@ -125,7 +125,8 @@ const orderGenerate = () => {
                             </div>
                         </div>
                         </Col>
-                        <Col :xs="24" :md="10" class="mb-5 order-1 md:order-2  p-4" style="box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;">
+                        <Col :xs="24" :md="10" class="mb-5 order-1 md:order-2  p-4"
+                            style="box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;">
                         <div>
                             <!-- <h1 class="text-5xl font-bold text-transparent mb-6 flex items-center gap-2">
                             ..
@@ -142,10 +143,10 @@ const orderGenerate = () => {
                         <div class="flex justify-between mb-4 border-b py-4">
                             <span class="font-bold">{{
                                 translations.shipping_charge || "Shipping"
-                                }}</span>
+                            }}</span>
                             <span class="font-bold text-slate-500">{{
                                 translations.free_delivery || "Free Delivery"
-                                }}</span>
+                            }}</span>
                         </div>
                         <div class="flex justify-between mb-4">
                             <span class="font-bold">{{ translations.total || "Total" }}:</span>

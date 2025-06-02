@@ -3,7 +3,7 @@ import { defineProps } from 'vue';
 import { router, Link } from '@inertiajs/vue3';
 import { Button, Collapse, CollapsePanel, Checkbox } from 'ant-design-vue';
 import { ClearOutlined, FilterOutlined } from '@ant-design/icons-vue';
-import { computed, ref, onMounted, onUnmounted } from 'vue';
+import {  ref, onMounted, onUnmounted } from 'vue';
 
 interface Category {
     id: number;
@@ -86,7 +86,7 @@ onUnmounted(() => {
         <div class="flex item-center">
 
             <Button type="text" class="flex items-center" size="large" @click="openFilterDrawer">
-                <FilterOutlined />Filter 
+                <FilterOutlined />Filter
             </Button>
             <Button size="large" type="text">
                 <Link :href="route('all.products')" class="flex items-center">
@@ -97,7 +97,7 @@ onUnmounted(() => {
         <a-drawer title="Filter Products" placement="left" :open="isFilterDrawerVisible" @close="closeFilterDrawer"
             :width="drawerWidth">
             <div>
-            
+
                 <div>
                     <div class="flex items-end gap-2 my-4">
                         <div class="">

@@ -7,7 +7,6 @@ import { Link } from '@inertiajs/vue3';
 import {
     ShoppingCartOutlined,
     HeartOutlined,
-    ShareAltOutlined,
     CheckCircleOutlined,
     CarOutlined,
     SafetyCertificateOutlined,
@@ -16,11 +15,40 @@ import {
     MinusOutlined,
     PlusOutlined
 } from '@ant-design/icons-vue';
+import LoginModal from "@/components/frontend/LoginModal.vue";
 const page = usePage();
 const translations = computed(() => {
     return (page.props.translations as any)?.products || {};
 });
 
+const user = computed(() => (page.props.auth as any)?.user);
+const isLoginModalVisible = ref(false);
+const isAddingToWishlist = ref(false);
+const wishlist = computed<number[]>(() => (page.props.wishlist as number[]) || []);
+
+const isInWishlist = (productId: number) => {
+    return wishlist.value.includes(productId);
+};
+
+const addToWhishlist = (productId: number) => {
+    if (user.value) {
+        isAddingToWishlist.value = true;
+        router.post(route('wishlist.add'),
+            { product_id: productId },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    isAddingToWishlist.value = false;
+                },
+                onError: () => {
+                    isAddingToWishlist.value = false;
+                }
+            }
+        );
+    } else {
+        isLoginModalVisible.value = true;
+    }
+};
 
 interface Product {
     id: number;
@@ -242,28 +270,18 @@ const addToCart = () => {
                             </button>
                             </Col>
                             <Col :xs="24" :sm="12">
-                            <button :disabled="product.stock === 0"
-                                class="w-full bg-gray-900 text-white py-3 px-6 rounded-md font-medium hover:bg-gray-800 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:bg-gray-900">
-                                {{ product.stock === 0 ? translations.out_of_stock || 'Out of Stock' :
-                                translations.buy_now || 'Buy Now' }}
-                            </button>
-                            </Col>
-                        </Row>
-
-                        <!-- Extra -->
-                        <Row :gutter="[16, 16]" class="mb-6">
-                            <Col :xs="24" :sm="12">
-                            <button
-                                class="w-full border border-gray-300 py-3 px-6 rounded-md font-medium hover:bg-gray-50 transition-all duration-200 flex items-center justify-center transform hover:scale-[1.02]">
-                                <HeartOutlined class="mr-2" />
-                                {{ translations.add_to_wishlist || 'Add to Wishlist' }}
-                            </button>
-                            </Col>
-                            <Col :xs="24" :sm="12">
-                            <button
-                                class="w-full border border-gray-300 py-3 px-6 rounded-md font-medium hover:bg-gray-50 transition-all duration-200 flex items-center justify-center transform hover:scale-[1.02]">
-                                <ShareAltOutlined class="mr-2" />
-                                {{ translations.share || 'Share' }}
+                            <button @click="addToWhishlist(product.id)" :disabled="isAddingToWishlist" :class="[
+                                'w-full border py-3 px-6 rounded-md font-medium transition-all duration-200 flex items-center justify-center transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed',
+                                isInWishlist(product.id) ? 'border-red-500 bg-red-500 text-white hover:bg-red-600' : 'border-gray-300 hover:bg-gray-50']">
+                                <div v-if="isAddingToWishlist"
+                                    class="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin mr-2">
+                                </div>
+                                <HeartOutlined v-else :class="isInWishlist(product.id) ? 'text-white' : 'text-gray-600'"
+                                    class="mr-2" />
+                                {{ isInWishlist(product.id)
+                                    ? (translations.remove_from_wishlist || 'Remove from Wishlist')
+                                    : (translations.add_to_wishlist || 'Add to Wishlist')
+                                }}
                             </button>
                             </Col>
                         </Row>
@@ -287,6 +305,7 @@ const addToCart = () => {
                 </div>
             </div>
         </section>
+        <LoginModal v-model:open="isLoginModalVisible" :canResetPassword="false" />
     </UserLayout>
 </template>
 

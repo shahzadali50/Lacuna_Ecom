@@ -93,7 +93,13 @@ class MainController extends Controller
             if (!$product) {
                 return redirect()->back()->with('error', 'Product detail not found.');
             }
-            // dd($product->gallary_img);
+
+            // Get wishlist product IDs if user is logged in
+            $wishlist = [];
+            if (Auth::check()) {
+                $wishlist = Auth::user()->wishlist()->pluck('product_id')->toArray();
+            }
+
             return Inertia::render('frontend/products/ProductDetail', [
                 'product' => [
                     'id' => $product->id,
@@ -115,6 +121,7 @@ class MainController extends Controller
                     )->map(fn($img) => asset("storage/" . trim($img)))->toArray(),
                     'category_name' => $product->category?->category_translations->first()?->name ?? $product->category?->name ?? 'N/A',
                 ],
+                'wishlist' => $wishlist,
                 'translations' => __('messages'),
                 'locale' => $locale,
             ]);

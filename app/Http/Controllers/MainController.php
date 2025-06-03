@@ -60,10 +60,15 @@ class MainController extends Controller
                     'category_name' => $product->category?->category_translations->first()?->name ?? $product->category?->name ?? 'N/A',
                 ];
             });
-            // dd($products->sale_price);
+              // ✅ Get wishlist product IDs if user is logged in
+                $wishlist = [];
+                if (Auth::check()) {
+                    $wishlist = Auth::user()->wishlist()->pluck('product_id')->toArray();
+                }
             return Inertia::render('frontend/Index', [
                 'categories' => $categories,
                 'products' => $products,
+                  'wishlist' => $wishlist,
                 'translations' => __('messages'),
                 'locale' => $locale,
             ]);

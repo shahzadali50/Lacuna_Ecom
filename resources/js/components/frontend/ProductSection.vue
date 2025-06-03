@@ -6,6 +6,7 @@ import { Row, Col, Card, Button } from 'ant-design-vue';
 import { router, Link } from '@inertiajs/vue3';
 import PaginationComponent from '@/components/frontend/PaginationComponent.vue';
 import FilterProduct from './FilterProduct.vue';
+import LoginModal from "@/components/frontend/LoginModal.vue";
 
 interface Product {
     id: number;
@@ -83,19 +84,35 @@ const addToCart = (product: Product) => {
         }
     );
 };
+const isLoginModalVisible = ref(false);
+const user = computed(() => (page.props.auth as any)?.user);
+
+
+const loadingWishlist = ref(new Set<number>());
+
 const addToWhishlist = (productId: number) => {
-    router.post(route('wishlist.add'),
-        { product_id: productId },
-        {
-            preserveScroll: true,
-            onSuccess: () => {
-                console.log('Product added to wishlist');
-            },
-            onError: (errors) => {
-                console.error('Failed to add to wishlist', errors);
-            },
-        }
-    );
+    if (user.value) {
+        loadingWishlist.value.add(productId);
+        router.post(route('wishlist.add'),
+            { product_id: productId },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    loadingWishlist.value.delete(productId);
+                },
+                onError: () => {
+                    loadingWishlist.value.delete(productId);
+                },
+            }
+        );
+    } else {
+        isLoginModalVisible.value = true;
+    }
+};
+const wishlist = computed<number[]>(() => (page.props.wishlist as number[]) || []);
+
+const isInWishlist = (productId: number) => {
+    return wishlist.value.includes(productId);
 };
 </script>
 
@@ -131,17 +148,22 @@ const addToWhishlist = (productId: number) => {
                                     class="absolute top-1 right-1 bg-white rounded-full px-1.5 py-0.5 text-[10px] sm:text-xs font-medium text-gray-800">
                                     {{ product.category_name }}
                                 </div>
-                                   <Button
+                              <Button
                                 @click.stop="addToWhishlist(product.id)"
-                                type="primary"
                                 shape="circle"
                                 size="small"
-                                class="flex items-center justify-center bg-danger hover:!bg-pink-700 !w-6 !h-6 absolute top-7 right-1 bg-white"
-                                aria-label="Add to favorites">
+                                :loading="loadingWishlist.has(product.id)"
+                                :class="[
+                                    'flex items-center justify-center !w-7 !h-7 absolute top-7 right-1',
+                                    isInWishlist(product.id) ? '!bg-red-500 !text-white !border-red-500 hover:!bg-red-600' : '!bg-white !text-black !border-gray-300 hover:!bg-red-500 hover:!text-white hover:!border-red-500'
+                                ]"
+                                aria-label="Toggle favorite"
+                            >
                                 <template #icon>
                                     <HeartOutlined />
                                 </template>
                             </Button>
+
                             </div>
                         </template>
                         <div>
@@ -199,6 +221,7 @@ const addToWhishlist = (productId: number) => {
             </div>
         </div>
     </section>
+      <LoginModal v-model:open="isLoginModalVisible" :canResetPassword="false" />
 </template>
 
 <style scoped></style>

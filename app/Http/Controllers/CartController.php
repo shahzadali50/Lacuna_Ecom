@@ -193,4 +193,11 @@ public function addToWhishlist(Request $request)
             // 'flash' => session()->only(['success']),
         ]);
     }
+    public function wishlist()
+    {
+        return Inertia::render('frontend/WishlistProduct', [
+            'translations' => __('messages'),
+            'locale' => App::getLocale(),
+        ]);
+    }
 }

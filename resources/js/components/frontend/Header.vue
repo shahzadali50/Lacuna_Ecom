@@ -44,6 +44,9 @@ const handleSearch = () => {
 const handleLogout = () => {
     router.post(route('logout'));
 };
+const goToWishlist = () => {
+    router.visit(route('wishlist'));
+};
 </script>
 <template>
     <header class="bg-white shadow fixed top-0 left-0 right-0 z-50">
@@ -139,7 +142,7 @@ const handleLogout = () => {
 
                     <!-- User Actions - Only visible on desktop -->
                     <div class="hidden lg:flex items-center space-x-2">
-                        <a-button type="text" shape="circle">
+                        <a-button type="text" shape="circle" @click="goToWishlist">
                             <template #icon>
                                 <HeartOutlined />
                             </template>

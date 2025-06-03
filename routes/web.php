@@ -43,6 +43,15 @@ Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function
     Route::post('product/update/{id}', [ProductController::class, 'update'])->name('product.update');
     Route::get('product/logs', [ProductController::class, 'product_log'])->name('product-log');
     Route::get('order/list', [OrderController::class, 'orderList'])->name('order.list');
+    Route::get('today/order/list', [OrderController::class, 'todayOrderList'])->name('today.order.list');
+    Route::get('orders/last-3-days', [OrderController::class, 'lastThreeDaysOrderList'])->name('orders.last3days');
+    Route::get('orders/last-7-days', [OrderController::class, 'lastSevenDaysOrderList'])->name('orders.last7days');
+    Route::get('orders/last-30-days', [OrderController::class, 'lastThirtyDaysOrderList'])->name('orders.last30days');
+
+    Route::get('orders/this-month', [OrderController::class, 'thisMonthOrderList'])->name('orders.thisMonth');
+
+
+
     Route::get('pending/order/list', [OrderController::class, 'pendingOrderList'])->name('pending.orders');
     Route::get('processing/order/list', [OrderController::class, 'processingOrderList'])->name('processing.orders');
     Route::get('dispatched/order/list', [OrderController::class, 'dispatchedOrderList'])->name('dispatched.orders');

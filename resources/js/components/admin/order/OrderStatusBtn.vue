@@ -7,14 +7,53 @@ const currentPath = computed(() => page.url);
 </script>
 
 <template>
-  <div>
-    <Link
+    <div>
+       <Link
       class="btn m-1"
       :class="currentPath.startsWith(route('admin.order.list', {}, false)) ? 'btn-primary' : 'btn-outline-dark'"
       :href="route('admin.order.list')"
     >
-      <i class="fa fa-cart-plus" aria-hidden="true"></i> All Order
+      <i class="fa fa-cart-plus" aria-hidden="true"></i> All Orders
     </Link>
+    <Link
+      class="btn m-1"
+      :class="currentPath.startsWith(route('admin.today.order.list', {}, false)) ? 'btn-primary' : 'btn-outline-dark'"
+      :href="route('admin.today.order.list')"
+    >
+      <i class="fa fa-cart-plus" aria-hidden="true"></i> Today Orders
+    </Link>
+    <Link
+      class="btn m-1"
+      :class="currentPath.startsWith(route('admin.orders.last3days', {}, false)) ? 'btn-primary' : 'btn-outline-dark'"
+      :href="route('admin.orders.last3days')"
+    >
+      <i class="fa fa-cart-plus" aria-hidden="true"></i> Last 3 Days Orders
+    </Link>
+    <Link
+      class="btn m-1"
+      :class="currentPath.startsWith(route('admin.orders.last7days', {}, false)) ? 'btn-primary' : 'btn-outline-dark'"
+      :href="route('admin.orders.last7days')"
+    >
+      <i class="fa fa-cart-plus" aria-hidden="true"></i> Last 7 Days Orders
+    </Link>
+    <Link
+      class="btn m-1"
+      :class="currentPath.startsWith(route('admin.orders.last30days', {}, false)) ? 'btn-primary' : 'btn-outline-dark'"
+      :href="route('admin.orders.last30days')"
+    >
+      <i class="fa fa-cart-plus" aria-hidden="true"></i> Last 30 Days Orders
+    </Link>
+    <Link
+      class="btn m-1"
+      :class="currentPath.startsWith(route('admin.orders.thisMonth', {}, false)) ? 'btn-primary' : 'btn-outline-dark'"
+      :href="route('admin.orders.thisMonth')"
+    >
+      <i class="fa fa-cart-plus" aria-hidden="true"></i> Current Month Orders
+    </Link>
+
+    </div>
+  <div>
+
     <Link
       class="btn m-1"
       :class="currentPath.startsWith(route('admin.pending.orders', {}, false)) ? 'btn-warning' : 'btn-outline-dark'"

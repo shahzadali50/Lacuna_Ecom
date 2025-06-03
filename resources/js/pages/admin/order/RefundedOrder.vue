@@ -258,8 +258,7 @@ const updateStatus = () => {
             v-model:open="isViewModal"
             :title="translations.order_preview || 'Order Preview'"
             @cancel="isViewModal = false"
-            :footer="null"
-        >
+            :footer="null">
             <a-row>
                 <a-col :xs="24">
                     <div class="mb-4">

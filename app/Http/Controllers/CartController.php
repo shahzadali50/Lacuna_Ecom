@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\Product;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
@@ -130,10 +131,47 @@ class CartController extends Controller
             return back()->with('error', 'Failed to remove item from cart.');
         }
     }
+public function addToWhishlist(Request $request)
+{
+    try {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+        ]);
+
+       $user = auth()->user();
+        if (!$user) {
+            return back()->with('error', 'Please log in to manage your wishlist.');
+        }
+
+        $productId = (int) $request->input('product_id');
+
+        // Check if already in wishlist
+        $existing = Wishlist::where('user_id', $user->id)
+                            ->where('product_id', $productId)
+                            ->first();
+
+        if ($existing) {
+            $existing->delete();
+            return back()->with('success', 'Product removed from wishlist.');
+        } else {
+            // Add to wishlist
+            Wishlist::create([
+                'user_id' => $user->id,
+                'product_id' => $productId,
+            ]);
+
+            return back()->with('success', 'Product added to wishlist.');
+        }
+    } catch (\Exception $e) {
+        \Log::error('Wishlist toggle failed: ' . $e->getMessage());
+        return back()->with('error', 'Something went wrong. Try again.');
+    }
+}
+
 
     public function cartCheckout()
     {
-    
+
         // session()->flash('success', 'Welcome to checkout page');
 
         return Inertia::render('frontend/cart/CartCheckout', [

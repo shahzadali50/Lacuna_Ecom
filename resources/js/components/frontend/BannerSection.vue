@@ -22,6 +22,7 @@ const translations = computed(() => {
 
                 <!-- Text Column -->
                 <a-col :xs="24" :md="12" class="order-2 md:order-1">
+
                     <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold  text-primary">
                         {{ translations.title || 'Welcome to LaCuna Marketplace' }}
                     </h1>

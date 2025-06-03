@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Wishlist;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -60,5 +61,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Brand::class);
     }
+    public function wishlists()
+{
+    return $this->hasMany(Wishlist::class);
+}
 
 }

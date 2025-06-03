@@ -118,7 +118,7 @@ const addToCart = () => {
                 </div>
             </div>
         </section>
-        
+
 
 
 

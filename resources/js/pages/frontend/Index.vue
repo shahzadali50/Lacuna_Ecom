@@ -10,13 +10,14 @@ import ProductSection from '@/components/frontend/ProductSection.vue';
 
 <template>
   <UserLayout>
-    <Head title="Welcome" />
+    <Head title="Home" />
     <BannerSection />
     <ProductSection
     :showAllProductsButton="true"
     :showTitle="true"
-    :showSubTitle="true" 
+    :showSubTitle="true"
     sectionClass="py-14" />
     <ShopByCategory />
   </UserLayout>
 </template>
+<style scoped></style>

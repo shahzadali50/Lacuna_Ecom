@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Wishlist;
 use App\Models\PurchaseProduct;
 use App\Models\ProductTranslation;
 use Illuminate\Database\Eloquent\Model;
@@ -52,6 +53,10 @@ class Product extends Model
     {
         return $this->hasMany(ProductTranslation::class, 'product_id');
     }
+    public function wishlists()
+{
+    return $this->hasMany(Wishlist::class);
+}
 
 
 }

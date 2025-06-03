@@ -83,6 +83,20 @@ const addToCart = (product: Product) => {
         }
     );
 };
+const addToWhishlist = (productId: number) => {
+    router.post(route('wishlist.add'),
+        { product_id: productId },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                console.log('Product added to wishlist');
+            },
+            onError: (errors) => {
+                console.error('Failed to add to wishlist', errors);
+            },
+        }
+    );
+};
 </script>
 
 <template>
@@ -117,13 +131,17 @@ const addToCart = (product: Product) => {
                                     class="absolute top-1 right-1 bg-white rounded-full px-1.5 py-0.5 text-[10px] sm:text-xs font-medium text-gray-800">
                                     {{ product.category_name }}
                                 </div>
-                                <Button type="primary" shape="circle" size="small"
-                                    class="flex items-center justify-center bg-danger hover:!bg-pink-700 !w-6 !h-6 absolute top-7 right-1 bg-white"
-                                    aria-label="Add to favorites">
-                                    <template #icon>
-                                        <HeartOutlined />
-                                    </template>
-                                </Button>
+                                   <Button
+                                @click.stop="addToWhishlist(product.id)"
+                                type="primary"
+                                shape="circle"
+                                size="small"
+                                class="flex items-center justify-center bg-danger hover:!bg-pink-700 !w-6 !h-6 absolute top-7 right-1 bg-white"
+                                aria-label="Add to favorites">
+                                <template #icon>
+                                    <HeartOutlined />
+                                </template>
+                            </Button>
                             </div>
                         </template>
                         <div>
@@ -167,7 +185,7 @@ const addToCart = (product: Product) => {
                     </Button>
                 </div>
             </div>
-            
+
             <div v-else>
                 <a-result status="404" title="404" sub-title="We couldn’t find any products matching your search.">
                     <template #extra>

@@ -14,6 +14,7 @@ Route::get('product/{slug}', [MainController::class, 'productDetail'])->name('pr
 Route::get('lang/{locale}', [MainController::class, 'switchLanguage'])->name('language.switch');
 Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::post('cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+Route::post('add-to-whishlist', [CartController::class, 'addToWhishlist'])->name('wishlist.add');
 Route::get('cart/checkout', [CartController::class, 'cartCheckout'])->name('cart.checkout');
 Route::get('cart/payment', [CartController::class, 'cartPayment'])->name('cart.payment');
 Route::post('login-modal', [MainController::class, 'loginModal'])->name('loginModal');

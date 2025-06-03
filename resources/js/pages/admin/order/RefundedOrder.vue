@@ -184,7 +184,7 @@ const updateStatus = () => {
 
                 <div class="bg-white rounded-lg responsive-table p-4 shadow-md">
                     <div class="mb-4 flex items-center justify-between">
-                        <h2 class="text-lg font-semibold mb-4">Refumded Order List</h2>
+                        <h2 class="text-lg font-semibold mb-4">Refunded Order List</h2>
                     </div>
                     <DataTable
                         v-if="orders?.data"

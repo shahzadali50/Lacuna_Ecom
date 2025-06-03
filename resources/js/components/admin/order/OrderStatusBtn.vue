@@ -10,7 +10,7 @@ const currentPath = computed(() => page.url);
     <div>
        <Link
       class="btn m-1"
-      :class="currentPath.startsWith(route('admin.order.list', {}, false)) ? 'btn-primary' : 'btn-outline-dark'"
+      :class="currentPath.startsWith(route('admin.order.list', {}, false)) ? 'btn-primary' : ' btn-outline-dark'"
       :href="route('admin.order.list')"
     >
       <i class="fa fa-cart-plus" aria-hidden="true"></i> All Orders

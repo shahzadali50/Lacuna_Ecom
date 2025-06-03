@@ -3,12 +3,11 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head, usePage, useForm } from '@inertiajs/vue3';
 import dayjs from "dayjs";
 import { ref, computed } from "vue";
-import { Link } from '@inertiajs/vue3';
-import { Button } from "@/components/ui/button";
+import OrderStatusBtn from '@/components/admin/order/OrderStatusBtn.vue';
+
 import DataTable from 'datatables.net-vue3';
 import DataTablesCore from 'datatables.net-dt';
 import 'datatables.net-dt/css/dataTables.dataTables.css';
-import OrderStatusBtn from '@/components/admin/order/OrderStatusBtn.vue';
 
 DataTable.use(DataTablesCore);
 
@@ -64,7 +63,7 @@ const dataTableColumns = [
         data: 'status',
         render: (data: any, type: any, row: any) => {
             let btnClass = 'btn-secondary';
-            switch (data.toLowerCase()) {
+            switch(data.toLowerCase()) {
                 case 'pending':
                     btnClass = 'btn-warning';
                     break;
@@ -84,7 +83,7 @@ const dataTableColumns = [
                     btnClass = 'btn-secondary';
                     break;
                 case 'refunded':
-                  btnClass = 'btn-dark';
+                     btnClass = 'btn-dark';
                     break;
             }
             return `
@@ -174,24 +173,26 @@ const updateStatus = () => {
 
 <template>
     <AdminLayout>
-
         <Head :title="translations.order_list || 'Order List'" />
-        <a-row>
-
+          <a-row>
             <a-col :span="24" class="mb-2">
                 <OrderStatusBtn />
             </a-col>
-
         </a-row>
         <a-row>
             <a-col :xs="24">
 
                 <div class="bg-white rounded-lg responsive-table p-4 shadow-md">
                     <div class="mb-4 flex items-center justify-between">
-                        <h2 class="text-lg font-semibold mb-4">{{ translations.order_list || 'Order List' }}</h2>
+                        <h2 class="text-lg font-semibold mb-4">Cancelled Order List</h2>
                     </div>
-                    <DataTable v-if="orders?.data" :data="orders.data" :columns="dataTableColumns" :options="options"
-                        class="display">
+                    <DataTable
+                        v-if="orders?.data"
+                        :data="orders.data"
+                        :columns="dataTableColumns"
+                        :options="options"
+                        class="display"
+                    >
                         <thead>
                             <tr>
                                 <th>{{ translations.sr || 'Sr.' }}</th>
@@ -214,8 +215,13 @@ const updateStatus = () => {
         </a-row>
 
         <!-- Order View Modal -->
-        <a-modal width="700px" v-model:open="isStatusModal" title="Change Order Status" @cancel="isStatusModal = false"
-            :footer="null">
+        <a-modal
+            width="700px"
+            v-model:open="isStatusModal"
+            title="Change Order Status"
+            @cancel="isStatusModal = false"
+            :footer="null"
+        >
             <form @submit.prevent="updateStatus">
                 <a-row>
                     <a-col :xs="24">
@@ -223,9 +229,11 @@ const updateStatus = () => {
                             <h3 class="text-lg font-semibold mb-3">Order #{{ order?.order_id }}</h3>
                             <div class="mb-4">
                                 <label class="block">{{ translations.status || 'Status' }}</label>
-                                <a-select v-model:value="status" style="width: 200px">
-                                    <a-select-option v-for="status in statuses" :key="status.value"
-                                        :value="status.value">
+                                <a-select
+                                    v-model:value="status"
+                                    style="width: 200px"
+                                >
+                                    <a-select-option v-for="status in statuses" :key="status.value" :value="status.value">
                                         <i :class="['fa', status.icon, 'mr-2']"></i>
                                         {{ status.label }}
                                     </a-select-option>
@@ -245,38 +253,33 @@ const updateStatus = () => {
                 </a-row>
             </form>
         </a-modal>
-        <a-modal width="700px" v-model:open="isViewModal" :title="translations.order_preview || 'Order Preview'"
-            @cancel="isViewModal = false" :footer="null">
+        <a-modal
+            width="700px"
+            v-model:open="isViewModal"
+            :title="translations.order_preview || 'Order Preview'"
+            @cancel="isViewModal = false"
+            :footer="null"
+        >
             <a-row>
                 <a-col :xs="24">
                     <div class="mb-4">
-                        <h3 class="text-lg font-semibold mb-3">{{ translations.shiping_details || 'Shipping Details' }}
-                        </h3>
+                        <h3 class="text-lg font-semibold mb-3">{{ translations.shiping_details || 'Shipping Details' }}</h3>
                         <a-row :gutter="16">
                             <a-col :xs="24" :sm="12">
-                                <p class="mb-2"><span class="font-semibold">{{ translations.name || 'Name' }}:</span> {{
-                                    order?.name }}</p>
-                                <p class="mb-2"><span class="font-semibold">{{ translations.phone_number || 'Phone'
-                                }}:</span> {{ order?.phone_number }}</p>
-                                <p class="mb-2"><span class="font-semibold">{{ translations.email || 'Email' }}:</span>
-                                    {{ order?.email }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.name || 'Name' }}:</span> {{ order?.name }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.phone_number || 'Phone' }}:</span> {{ order?.phone_number }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.email || 'Email' }}:</span> {{ order?.email }}</p>
                             </a-col>
                             <a-col :xs="24" :sm="12">
-                                <p class="mb-2"><span class="font-semibold">{{ translations.address || 'Address'
-                                }}:</span> {{ order?.address }}</p>
-                                <p class="mb-2"><span class="font-semibold">{{ translations.city || 'City' }}:</span> {{
-                                    order?.city }}</p>
-                                <p class="mb-2"><span class="font-semibold">{{ translations.state || 'State' }}:</span>
-                                    {{ order?.state }}</p>
-                                <p class="mb-2"><span class="font-semibold">{{ translations.postal_code || 'Postal Code'
-                                }}:</span> {{ order?.postal_code }}</p>
-                                <p class="mb-2"><span class="font-semibold">{{ translations.country || 'Country'
-                                }}:</span> {{ order?.country }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.address || 'Address' }}:</span> {{ order?.address }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.city || 'City' }}:</span> {{ order?.city }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.state || 'State' }}:</span> {{ order?.state }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.postal_code || 'Postal Code' }}:</span> {{ order?.postal_code }}</p>
+                                <p class="mb-2"><span class="font-semibold">{{ translations.country || 'Country' }}:</span> {{ order?.country }}</p>
                             </a-col>
                         </a-row>
                         <div v-if="order?.order_notes" class="mt-2">
-                            <p class="mb-2"><span class="font-semibold">{{ translations.order_notes || 'Order Notes'
-                            }}:</span> {{ order.order_notes }}</p>
+                            <p class="mb-2"><span class="font-semibold">{{ translations.order_notes || 'Order Notes' }}:</span> {{ order.order_notes }}</p>
                         </div>
                     </div>
                 </a-col>
@@ -298,8 +301,11 @@ const updateStatus = () => {
                                 <tr v-for="(sale, index) in order?.sale_products" :key="sale.id" class="border-b py-3">
                                     <td class="py-2">{{ index + 1 }}</td>
                                     <td class="py-2">
-                                        <img :src="'/storage/' + sale.product.thumnail_img" :alt="sale.product.name"
-                                            class="w-16 h-16 object-cover rounded" />
+                                        <img
+                                            :src="'/storage/' + sale.product.thumnail_img"
+                                            :alt="sale.product.name"
+                                            class="w-16 h-16 object-cover rounded"
+                                        />
                                     </td>
                                     <td class="py-2">{{ sale.product.name }}</td>
                                     <td class="py-2">{{ sale.sale_price }}</td>
@@ -313,13 +319,9 @@ const updateStatus = () => {
                 <a-col :xs="24">
                     <div class="border-gray-500 border my-4"></div>
                     <div class="my-3">
-                        <h4 class="mb-2">{{ translations.subtotal || 'Subtotal' }}: <span
-                                class="font-bold text-primary">{{ order?.subtotal_price }}</span></h4>
-                        <h4 class="mb-2">{{ translations.shipping_charge || 'Shipping Charges' }}: <span
-                                class="font-bold text-primary">{{ translations.free_delivery || 'Free Delivery'
-                                }}</span></h4>
-                        <h4 class="mb-2">{{ translations.total_price || 'Total Price' }}: <span
-                                class="font-bold text-primary">{{ order?.total_price }}</span></h4>
+                        <h4 class="mb-2">{{ translations.subtotal || 'Subtotal' }}: <span class="font-bold text-primary">{{ order?.subtotal_price }}</span></h4>
+                        <h4 class="mb-2">{{ translations.shipping_charge || 'Shipping Charges' }}: <span class="font-bold text-primary">{{ translations.free_delivery || 'Free Delivery' }}</span></h4>
+                        <h4 class="mb-2">{{ translations.total_price || 'Total Price' }}: <span class="font-bold text-primary">{{ order?.total_price }}</span></h4>
                     </div>
                 </a-col>
             </a-row>
@@ -327,4 +329,5 @@ const updateStatus = () => {
     </AdminLayout>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>

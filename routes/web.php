@@ -43,6 +43,13 @@ Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function
     Route::post('product/update/{id}', [ProductController::class, 'update'])->name('product.update');
     Route::get('product/logs', [ProductController::class, 'product_log'])->name('product-log');
     Route::get('order/list', [OrderController::class, 'orderList'])->name('order.list');
+    Route::get('pending/order/list', [OrderController::class, 'pendingOrderList'])->name('pending.orders');
+    Route::get('processing/order/list', [OrderController::class, 'processingOrderList'])->name('processing.orders');
+    Route::get('dispatched/order/list', [OrderController::class, 'dispatchedOrderList'])->name('dispatched.orders');
+    Route::get('delivered/order/list', [OrderController::class, 'deliveredOrderList'])->name('delivered.orders');
+    Route::get('cancelled/order/list', [OrderController::class, 'cancelledOrderList'])->name('cancelled.orders');
+    Route::get('returned/order/list', [OrderController::class, 'returnedOrderList'])->name('returned.orders');
+    Route::get('refunded/order/list', [OrderController::class, 'refundedOrderList'])->name('refunded.orders');
     Route::put('order/status/update/{id}', [OrderController::class, 'updateOrderStatus'])->name('order.status.update');
     Route::get('admin/get-brands-by-category/{category}', [ProductController::class, 'getBrandsByCategory'])->name('admin.get.brands.by.category');
     Route::get('user', [MainController::class, 'getUser'])->name('login.user');

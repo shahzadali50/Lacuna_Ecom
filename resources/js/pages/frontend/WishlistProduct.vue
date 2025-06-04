@@ -1,51 +1,64 @@
 <script setup lang="ts">
+import { Head, usePage, Link } from '@inertiajs/vue3';
 import UserLayout from '@/layouts/UserLayout.vue';
 import ProductSection from '@/components/frontend/ProductSection.vue';
-import { Head } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { usePage } from '@inertiajs/vue3';
 import { Row, Col } from 'ant-design-vue';
+import { HeartOutlined } from '@ant-design/icons-vue';
 
 const page = usePage();
-const translations = computed(() => {
-  return (page.props.translations as any)?.products || {};
-});
-const products = computed(() => page.props.products || { data: [] });
+
+const products = computed(() => (page.props.products as { data: any[] })?.data || []);
 </script>
 
 <template>
-  <UserLayout>
-    <Head :title="translations.wishlist || 'Wishlist'" />
-    <section
-      class="bg-cover bg-center py-16 sm:py-24"
-      style="background-image: url('/assets/images/page-header-bg.jpg');">
-      <div class="container mx-auto">
-        <Row>
-          <Col :span="24" class="text-center">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-0">
-              Wishlist Products
-            </h1>
-          </Col>
-        </Row>
-      </div>
-    </section>
-    <section>
-      <div class="container mx-auto">
-        <Row class="items-center m-5">
-          <Col :span="12">
-            <a-breadcrumb>
-              <a-breadcrumb-item>Home</a-breadcrumb-item>
-              <a-breadcrumb-item>Wishlist</a-breadcrumb-item>
-            </a-breadcrumb>
-          </Col>
-        </Row>
-      </div>
-    </section>
+    <UserLayout>
 
-    <ProductSection
-      :showPagination="true"
-      :showFilter="false"
-      sectionClass="py-4"
-    />
-  </UserLayout>
+        <Head title="Wishlist" />
+
+        <!-- Page Header -->
+        <section class="bg-cover bg-center py-16 sm:py-24"
+            style="background-image: url('/assets/images/page-header-bg.jpg');">
+            <div class="container mx-auto">
+                <Row>
+                    <Col :span="24" class="text-center">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-0">Wishlist Products</h1>
+                    </Col>
+                </Row>
+            </div>
+        </section>
+
+        <!-- Breadcrumb -->
+        <section>
+            <div class="container mx-auto">
+                <Row class="items-center m-5">
+                    <Col :span="12">
+                    <a-breadcrumb>
+                        <a-breadcrumb-item>Home</a-breadcrumb-item>
+                        <a-breadcrumb-item>Wishlist</a-breadcrumb-item>
+                    </a-breadcrumb>
+                    </Col>
+                </Row>
+            </div>
+        </section>
+
+        <!-- Products or Empty -->
+        <div v-if="products.length > 0">
+            <ProductSection :showPagination="true" :showFilter="false" sectionClass="py-4" :title="'Your Wishlist'"
+                :subtitle="'Products you saved for later.'" />
+        </div>
+        <div v-else>
+            <a-result title="This wishlist is empty."
+                sub-title="You don't have any products in the wishlist yet. You will find a lot of interesting products on our Products page.">
+                <template #icon>
+                    <HeartOutlined style="color: #999999;" />
+                </template>
+                <template #extra>
+                    <Button class="btn btn-primary" size="large" type="primary">
+                        <Link :href="route('all.products')" class="hover:text-white">Return to Products</Link>
+                    </Button>
+                </template>
+            </a-result>
+        </div>
+    </UserLayout>
 </template>

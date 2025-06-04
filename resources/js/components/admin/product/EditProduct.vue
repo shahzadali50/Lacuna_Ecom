@@ -495,7 +495,7 @@ const updateProduct = () => {
         <a-button type="default" @click="$emit('update:isVisible', false)">
           {{ translations.cancel || 'Cancel' }}
         </a-button>
-        <Button type="submit" class="\btn-primary ml-2" :disabled="editForm.processing">
+        <Button type="submit" class="btn-primary ml-2" :disabled="editForm.processing">
                     <LoaderCircle v-if="editForm.processing" class="h-4 w-4 animate-spin" />
                     {{ translations.update || 'Update' }}
                 </Button>

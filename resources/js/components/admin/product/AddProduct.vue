@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 import { ref, computed, watch } from 'vue';
+import { Button } from "@/components/ui/button";
+import { LoaderCircle } from "lucide-vue-next";
 
 const props = defineProps<{
     isVisible: boolean;
@@ -100,7 +102,6 @@ watch([() => addProductForm.sale_price, () => addProductForm.discount], () => {
 });
 
 const saveProduct = () => {
-    isLoading.value = true;
     addProductForm.post(route("admin.product.store"), {
         preserveState: true,
         preserveScroll: true,
@@ -112,7 +113,7 @@ const saveProduct = () => {
             gallaryPreviews.value = [];
         },
         onFinish: () => {
-            isLoading.value = false;
+
         },
     });
 };
@@ -120,8 +121,8 @@ const saveProduct = () => {
 
 <template>
     <div v-if="isLoading" class="loading-overlay">
-        <a-spin size="large" />
-    </div>
+    <a-spin size="large" />
+  </div>
     <a-modal
         width="1000px"
         :open="isVisible"
@@ -202,7 +203,7 @@ const saveProduct = () => {
                             v-model:value="addProductForm.purchase_price"
                             class="mt-2 w-full"
                             :min="0"
-                            :step="0.01"
+                            type="number"
                             :placeholder="translations.enter_purchase_price || 'Enter Purchase Price'"
                         />
                         <div v-if="addProductForm.errors.purchase_price" class="text-red-500">
@@ -217,7 +218,7 @@ const saveProduct = () => {
                             v-model:value="addProductForm.sale_price"
                             class="mt-2 w-full"
                             :min="0"
-                            :step="0.01"
+                            type="number"
                             :placeholder="translations.enter_sale_price || 'Enter Sale Price'"
                         />
                         <div v-if="addProductForm.errors.sale_price" class="text-red-500">
@@ -348,6 +349,7 @@ const saveProduct = () => {
                             :min="0"
                             :max="100"
                             :step="1"
+                            type="number"
                         />
                         <div v-if="addProductForm.errors.discount" class="text-red-500">
                             {{ addProductForm.errors.discount }}
@@ -359,9 +361,9 @@ const saveProduct = () => {
                         <label class="block">{{ translations.final_price || 'Final Price' }}</label>
                         <a-input-number
                             v-model:value="addProductForm.final_price"
-                            class="mt-2 w-full"
+                            class="mt-2 w-full text-2xl p-3"
                             :min="0"
-                            :step="0.01"
+                            type="number"
                             disabled
                         />
                     </div>
@@ -371,9 +373,10 @@ const saveProduct = () => {
                 <a-button type="default" @click="$emit('update:isVisible', false)">
                     {{ translations.cancel || 'Cancel' }}
                 </a-button>
-                <a-button type="primary" html-type="submit" class="ml-2">
-                    {{ translations.save || 'Save' }}
-                </a-button>
+                  <Button type="submit"  class="btn-primary ml-2" :disabled="addProductForm.processing">
+                    <LoaderCircle v-if="addProductForm.processing" class="h-4 w-4 animate-spin" />
+                     {{ translations.save || 'Save' }}
+                </Button>
             </div>
         </form>
     </a-modal>

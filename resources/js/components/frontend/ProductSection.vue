@@ -155,7 +155,7 @@ const isInWishlist = (productId: number) => {
                                 :loading="loadingWishlist.has(product.id)"
                                 :class="[
                                     'flex items-center justify-center !w-7 !h-7 absolute top-7 right-1',
-                                    isInWishlist(product.id) ? '!bg-red-500 !text-white !border-red-500 hover:!bg-red-600' : '!bg-white !text-black !border-gray-300 hover:!bg-red-500 hover:!text-white hover:!border-red-500'
+                                    isInWishlist(product.id) ? '!bg-red-500 !text-white !border-red-500 hover:!bg-red-600' : '!bg-white !text-black !border-gray-300 '
                                 ]"
                                 aria-label="Toggle favorite"
                             >
@@ -195,7 +195,7 @@ const isInWishlist = (productId: number) => {
 
                 <!-- Pagination -->
                 <PaginationComponent v-if="props.showPagination !== false" :pagination-data="page.props.products"
-                    route-name="all.products" />
+                   />
 
                 <!-- All Products Button -->
                 <div v-if="props.showAllProductsButton === true" class="text-center mt-8 sm:mt-12">

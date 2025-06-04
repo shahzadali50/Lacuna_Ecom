@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { router } from '@inertiajs/vue3';
+import { usePage, router } from '@inertiajs/vue3';
 import { Pagination } from 'ant-design-vue';
 
 interface PaginationData {
@@ -14,7 +14,6 @@ interface PaginationData {
 
 interface Props {
     paginationData: any; // Contains current_page, total, per_page, etc.
-    routeName: string; // Route name for pagination (e.g., 'all.products')
 }
 
 const props = defineProps<Props>();
@@ -32,7 +31,10 @@ const pagination = computed<PaginationData>(() => ({
 // Handle page change
 const handlePageChange = (newPage: number) => {
     console.log('Navigating to page:', newPage); // Debug log
-    router.visit(route(props.routeName, { page: newPage }), {
+    const currentUrl = usePage().url; // Get the current URL
+    const url = new URL(currentUrl, window.location.origin); // Create URL object
+    url.searchParams.set('page', newPage.toString()); // Update page query param
+    router.visit(url.pathname + url.search, {
         preserveState: false, // Ensure full prop refresh
         preserveScroll: true,
     });
@@ -41,9 +43,14 @@ const handlePageChange = (newPage: number) => {
 
 <template>
     <div class="text-center mt-8 sm:mt-12">
-        <Pagination :current="pagination.current_page" :total="pagination.total" :page-size="pagination.per_page"
-            :show-total="(total, range) => `${range[0]}-${range[1]} of ${total} items`" @change="handlePageChange"
-            class="inline-block" />
+        <Pagination
+            :current="pagination.current_page"
+            :total="pagination.total"
+            :page-size="pagination.per_page"
+            :show-total="(total, range) => `${range[0]}-${range[1]} of ${total} items`"
+            @change="handlePageChange"
+            class="inline-block"
+        />
     </div>
 </template>
 

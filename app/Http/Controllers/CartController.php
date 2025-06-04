@@ -209,7 +209,7 @@ public function wishlist(Request $request)
                     ]),
                 ]);
 
-            $wishlistProducts = $query->paginate(10, ['*'], 'page', $page);
+            $wishlistProducts = $query->paginate(2, ['*'], 'page', $page);
 
             // Transform products to include translated fields
             $wishlistProducts->getCollection()->transform(function ($wishlistItem) use ($locale) {

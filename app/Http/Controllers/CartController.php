@@ -195,27 +195,36 @@ public function addToWhishlist(Request $request)
         ]);
     }
 public function wishlist(Request $request)
-    {
-        try {
-            $locale = session('locale', App::getLocale());
-            $page = $request->query('page', 1);
+{
+    try {
+        $locale = session('locale', App::getLocale());
+        $page = $request->query('page', 1);
 
-            // Fetch wishlist products for the authenticated user
+        if (Auth::check()) {
+            // User logged in — eager load wishlist products with translations and category
             $query = Auth::user()->wishlist()
                 ->with([
-                    'product' => fn($q) => $q->where('status', 1)->with([
-                        'category' => fn($q) => $q->with(['category_translations' => fn($q) => $q->where('lang', $locale)]),
-                        'product_translations' => fn($q) => $q->where('lang', $locale),
-                    ]),
+                    'product' => function ($q) use ($locale) {
+                        $q->where('status', 1)->with([
+                            'category' => function ($q) use ($locale) {
+                                $q->with(['category_translations' => function ($q) use ($locale) {
+                                    $q->where('lang', $locale);
+                                }]);
+                            },
+                            'product_translations' => function ($q) use ($locale) {
+                                $q->where('lang', $locale);
+                            },
+                        ]);
+                    }
                 ]);
 
             $wishlistProducts = $query->paginate(10, ['*'], 'page', $page);
 
-            // Transform products to include translated fields
+            // Transform for frontend
             $wishlistProducts->getCollection()->transform(function ($wishlistItem) use ($locale) {
                 $product = $wishlistItem->product;
                 if (!$product) {
-                    return null; // Skip if product is null (e.g., deleted)
+                    return null;
                 }
                 return [
                     'id' => $product->id,
@@ -226,22 +235,28 @@ public function wishlist(Request $request)
                     'final_price' => (float) $product->final_price,
                     'category_name' => $product->category?->category_translations->first()?->name ?? $product->category?->name ?? 'N/A',
                 ];
-            })->filter()->values(); // Remove null entries and reset keys
+            })->filter()->values();
 
-              // ✅ Get wishlist product IDs if user is logged in
-                $wishlist = [];
-                if (Auth::check()) {
-                    $wishlist = Auth::user()->wishlist()->pluck('product_id')->toArray();
-                }
-            return Inertia::render('frontend/WishlistProduct', [
-                'products' => $wishlistProducts,
-                  'wishlist' => $wishlist,
-                'translations' => __('messages'),
-                'locale' => $locale,
-            ]);
-        } catch (\Throwable $e) {
-            \Log::error('Failed to load wishlist products in wishlist(): ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Something went wrong while loading wishlist products.');
+            $wishlist = Auth::user()->wishlist()->pluck('product_id')->toArray();
+
+        } else {
+            // Guest user — empty paginated data
+            $wishlistProducts = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
+            $wishlist = [];
         }
+        
+
+        return Inertia::render('frontend/WishlistProduct', [
+            'products' => $wishlistProducts,
+            'wishlist' => $wishlist,
+            'translations' => __('messages'),
+            'locale' => $locale,
+        ]);
+    } catch (\Throwable $e) {
+        \Log::error('Failed to load wishlist products in wishlist(): ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Something went wrong while loading wishlist products.');
     }
+}
+
+
 }

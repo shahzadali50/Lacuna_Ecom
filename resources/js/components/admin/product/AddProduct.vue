@@ -358,25 +358,22 @@ const saveProduct = () => {
                 </a-col>
                 <a-col :xs="24" :md="12">
                     <div class="mb-4">
-                        <label class="block">{{ translations.final_price || 'Final Price' }}</label>
+                        <label class="block font-bold " >{{ translations.final_price || 'Final Price' }}</label>
                         <a-input-number
                             v-model:value="addProductForm.final_price"
-                            class="mt-2 w-full text-2xl p-3"
+                            class="mt-2 w-full text-2xl font-bold p-2 text-red-600"
                             :min="0"
-                            type="number"
                             disabled
                         />
                     </div>
                 </a-col>
             </a-row>
             <div class="text-right">
-                <a-button type="default" @click="$emit('update:isVisible', false)">
-                    {{ translations.cancel || 'Cancel' }}
-                </a-button>
-                  <Button type="submit"  class="btn-primary ml-2" :disabled="addProductForm.processing">
+
+                  <button type="submit"  class=" btn  btn-primary ml-2 w-full h-16 flex items-center justify-center text-lg" :disabled="addProductForm.processing">
                     <LoaderCircle v-if="addProductForm.processing" class="h-4 w-4 animate-spin" />
                      {{ translations.save || 'Save' }}
-                </Button>
+                </button>
             </div>
         </form>
     </a-modal>

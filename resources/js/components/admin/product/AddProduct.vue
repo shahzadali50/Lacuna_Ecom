@@ -369,7 +369,6 @@ const saveProduct = () => {
                 </a-col>
             </a-row>
             <div class="text-right">
-
                   <button type="submit"  class=" btn  btn-primary ml-2 w-full h-16 flex items-center justify-center text-lg" :disabled="addProductForm.processing">
                     <LoaderCircle v-if="addProductForm.processing" class="h-4 w-4 animate-spin" />
                      {{ translations.save || 'Save' }}

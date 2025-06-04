@@ -10,7 +10,7 @@ const page = usePage();
 const translations = computed(() => {
   return (page.props.translations as any)?.products || {};
 });
-
+const products = computed(() => page.props.products || { data: [] });
 </script>
 
 <template>
@@ -18,8 +18,7 @@ const translations = computed(() => {
     <Head :title="translations.wishlist || 'Wishlist'" />
     <section
       class="bg-cover bg-center py-16 sm:py-24"
-      style="background-image: url('/assets/images/page-header-bg.jpg');"
-    >
+      style="background-image: url('/assets/images/page-header-bg.jpg');">
       <div class="container mx-auto">
         <Row>
           <Col :span="24" class="text-center">
@@ -34,7 +33,7 @@ const translations = computed(() => {
       <div class="container mx-auto">
         <Row class="items-center m-5">
           <Col :span="12">
-            <a-breadcrumb class="">
+            <a-breadcrumb>
               <a-breadcrumb-item>Home</a-breadcrumb-item>
               <a-breadcrumb-item>Wishlist</a-breadcrumb-item>
             </a-breadcrumb>
@@ -44,10 +43,8 @@ const translations = computed(() => {
     </section>
 
     <ProductSection
-      :showPagination="false"
+      :showPagination="true"
       :showFilter="false"
-      :categories="[]"
-      :selectedCategory="null"
       sectionClass="py-4"
     />
   </UserLayout>

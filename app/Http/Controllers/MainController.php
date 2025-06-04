@@ -290,10 +290,15 @@ public function allProducts(Request $request)
                 'category_name' => $product->category?->category_translations->first()?->name ?? $product->category?->name ?? 'N/A',
             ];
         });
+          $wishlist = [];
+                if (Auth::check()) {
+                    $wishlist = Auth::user()->wishlist()->pluck('product_id')->toArray();
+                }
 
         return Inertia::render('frontend/products/AllProducts', [
             'products' => $products,
             'categories' => $categories,
+            'wishlist' => $wishlist,
             'translations' => __('messages'),
             'locale' => $locale,
             'selectedCategory' => $categorySlug,

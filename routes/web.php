@@ -23,6 +23,7 @@ Route::post('order/generate', [OrderController::class, 'orderGenerate'])->name('
 Route::post('billing/detail', [OrderController::class, 'billingDetail'])->name('billing.details');
 Route::get('products/list', [MainController::class, 'allProducts'])->name('all.products');
 
+
 Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function () {
     Route::get('cache-clear', [MainController::class, 'cacheClear'])->name('cache.clear');
     Route::get('admin/dashboard', [MainController::class, 'dashboard'])->name('dashboard');

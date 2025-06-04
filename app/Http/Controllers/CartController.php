@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\Product;
+use App\Models\Category;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -193,11 +194,55 @@ public function addToWhishlist(Request $request)
             // 'flash' => session()->only(['success']),
         ]);
     }
-    public function wishlist()
+public function wishlist(Request $request)
     {
-        return Inertia::render('frontend/WishlistProduct', [
-            'translations' => __('messages'),
-            'locale' => App::getLocale(),
-        ]);
+        try {
+            $locale = session('locale', App::getLocale());
+            $page = $request->query('page', 1);
+
+            // Fetch wishlist products for the authenticated user
+            $query = Auth::user()->wishlist()
+                ->with([
+                    'product' => fn($q) => $q->where('status', 1)->with([
+                        'category' => fn($q) => $q->with(['category_translations' => fn($q) => $q->where('lang', $locale)]),
+                        'product_translations' => fn($q) => $q->where('lang', $locale),
+                    ]),
+                ]);
+
+            $wishlistProducts = $query->paginate(10, ['*'], 'page', $page);
+
+            // Transform products to include translated fields
+            $wishlistProducts->getCollection()->transform(function ($wishlistItem) use ($locale) {
+                $product = $wishlistItem->product;
+                if (!$product) {
+                    return null; // Skip if product is null (e.g., deleted)
+                }
+                return [
+                    'id' => $product->id,
+                    'name' => $product->product_translations->first()?->name ?? $product->name,
+                    'slug' => $product->slug,
+                    'thumnail_img' => $product->thumnail_img,
+                    'sale_price' => (float) $product->sale_price,
+                    'final_price' => (float) $product->final_price,
+                    'category_name' => $product->category?->category_translations->first()?->name ?? $product->category?->name ?? 'N/A',
+                ];
+            })->filter()->values(); // Remove null entries and reset keys
+
+              // ✅ Get wishlist product IDs if user is logged in
+                $wishlist = [];
+                if (Auth::check()) {
+                    $wishlist = Auth::user()->wishlist()->pluck('product_id')->toArray();
+                }
+
+            return Inertia::render('frontend/WishlistProduct', [
+                'products' => $wishlistProducts,
+                  'wishlist' => $wishlist,
+                'translations' => __('messages'),
+                'locale' => $locale,
+            ]);
+        } catch (\Throwable $e) {
+            \Log::error('Failed to load wishlist products in wishlist(): ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong while loading wishlist products.');
+        }
     }
 }

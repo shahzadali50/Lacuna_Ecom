@@ -201,7 +201,7 @@ const toggleSearch = () => {
                             </a-dropdown>
                         </div>
                     </div>
-                    <div class="lg:hidden">
+                    <div class="md:hidden ">
                         <a-button type="text" shape="circle" @click="toggleSearch">
                             <template #icon>
                                 <SearchOutlined />

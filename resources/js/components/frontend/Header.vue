@@ -14,6 +14,7 @@ import {
     HeartOutlined,
     ShoppingCartOutlined,
     UserOutlined,
+    SearchOutlined,
 } from '@ant-design/icons-vue';
 
 const page = usePage();
@@ -35,17 +36,16 @@ const toggleCart = () => {
     cartDrawerVisible.value = !cartDrawerVisible.value;
 };
 
-const handleSearch = () => {
-    if (searchQuery.value.trim()) {
-        router.visit(route('search', { query: searchQuery.value }));
-    }
-};
-
 const handleLogout = () => {
     router.post(route('logout'));
 };
 const goToWishlist = () => {
     router.visit(route('wishlist'));
+};
+const mobileSearchVisible = ref(false);
+
+const toggleSearch = () => {
+    mobileSearchVisible.value = !mobileSearchVisible.value;
 };
 </script>
 <template>
@@ -56,7 +56,7 @@ const goToWishlist = () => {
                 <div class="flex items-center">
                     <Link :href="route('home')" class="flex items-center">
 
-                        <img src="\assets\images\Logo-LaCuna-JP-azul.fw.png" alt="Logo" class="h-8 w-auto" />
+                    <img src="\assets\images\Logo-LaCuna-JP-azul.fw.png" alt="Logo" class="h-8 w-auto" />
                     </Link>
                 </div>
 
@@ -67,7 +67,7 @@ const goToWishlist = () => {
                     {{ translations.home || 'Home' }}
                     </Link>
                     <Link :href="route('all.products')" class="text-gray-600 hover:text-gray-900">
-                    {{ translations.products || 'Products' }}
+                    {{ translations.shop || 'Shop' }}
                     </Link>
                     <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
                     {{ translations.categories || 'Categories' }}
@@ -82,7 +82,7 @@ const goToWishlist = () => {
                 <div class="flex items-center space-x-0">
                     <!-- Search -->
                     <div class="hidden md:block">
-                        <a-input-search placeholder="Search products..." class="w-64" @search="handleSearch" />
+                        <a-input-search placeholder="Search products..." class="w-64" />
                     </div>
 
                     <!-- Language Switcher - Visible on both mobile and desktop -->
@@ -108,7 +108,8 @@ const goToWishlist = () => {
                                     <a-menu-divider />
                                     <a-menu-item key="logout">
 
-                                        <a href="#" @click.prevent="handleLogout">{{ translations.logout || 'Logout' }}</a>
+                                        <a href="#" @click.prevent="handleLogout">{{ translations.logout || 'Logout'
+                                        }}</a>
                                     </a-menu-item>
                                 </a-menu>
                             </template>
@@ -170,7 +171,8 @@ const goToWishlist = () => {
                                     <a-menu-divider />
                                     <a-menu-item key="logout">
 
-                                        <a href="#" @click.prevent="handleLogout">{{ translations.logout || 'Logout' }}</a>
+                                        <a href="#" @click.prevent="handleLogout">{{ translations.logout || 'Logout'
+                                        }}</a>
                                     </a-menu-item>
                                 </a-menu>
                             </template>
@@ -199,6 +201,13 @@ const goToWishlist = () => {
                             </a-dropdown>
                         </div>
                     </div>
+                    <div class="lg:hidden">
+                        <a-button type="text" shape="circle" @click="toggleSearch">
+                            <template #icon>
+                                <SearchOutlined />
+                            </template>
+                        </a-button>
+                    </div>
 
                     <!-- Mobile Menu Button -->
                     <div class="lg:hidden">
@@ -209,13 +218,17 @@ const goToWishlist = () => {
                             </template>
                         </a-button>
                     </div>
+
                 </div>
             </div>
 
-            <!-- Mobile Search -->
-            <div class="md:hidden mt-4">
-                <a-input-search placeholder="Search products..." class="w-full" @search="handleSearch" />
-            </div>
+            <Transition name="fade-slide">
+                <div v-if="mobileSearchVisible" class="md:hidden mt-4">
+                    <a-input-search placeholder="Search products..." class="w-full" />
+                </div>
+            </Transition>
+
+
         </div>
     </header>
 
@@ -223,9 +236,7 @@ const goToWishlist = () => {
     <MobileSidebar v-model:visible="mobileMenuOpen" />
 
     <!-- Mobile Bottom Navigation -->
-    <MobileBottomNav
-        @toggle-cart="toggleCart"
-    />
+    <MobileBottomNav @toggle-cart="toggleCart" />
 
     <!-- Cart Sidebar -->
     <CartSidebar v-model:visible="cartDrawerVisible" />
@@ -236,5 +247,28 @@ const goToWishlist = () => {
 
 
 <style scoped>
-/* Remove the mobile sidebar styles since they're now in the MobileSidebar component */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+    transition: all 0.3s ease;
+}
+
+.fade-slide-enter-from {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.fade-slide-enter-to {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.fade-slide-leave-from {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.fade-slide-leave-to {
+    opacity: 0;
+    transform: translateY(-10px);
+}
 </style>

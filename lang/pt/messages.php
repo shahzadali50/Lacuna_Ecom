@@ -84,6 +84,7 @@ return [
         'quantity' => 'Quantidade',
         'share' => 'Compartilhar',
         'shop_by_category' => 'Shop By Category',
+           'shop'=> 'Loja',
     ],
     'cart_checkout' => [
     'checkout' => 'Finalizar Compra',
@@ -132,6 +133,8 @@ return [
         'favorites' => 'Favoritos',
         'cart' => 'Carrinho',
         'account' => 'Conta',
+        'shop'=> 'Loja',
+        'whishlist' => 'Lista de Desejos ',
     ],
 
     'footer' => [

@@ -85,6 +85,7 @@ return [
         'quantity' => '数量',
         'share' => '共有',
         'shop_by_category' => 'カテゴリーで探す',
+           'shop'=> 'ショップ',
     ],
     'cart_checkout' => [
     'checkout' => 'チェックアウト',
@@ -133,6 +134,8 @@ return [
         'favorites' => 'お気に入り',
         'cart' => 'カート',
         'account' => 'アカウント',
+        'shop'=> 'ショップ',
+        'whishlist' => 'ウィッシュリスト',
     ],
 
     'footer' => [

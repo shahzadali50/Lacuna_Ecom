@@ -24,7 +24,7 @@ const productCountText = computed(() => {
 
 <template>
   <UserLayout>
-    <Head :title="translations.products || 'Products'" />
+    <Head :title="translations.shop || 'Shop'" />
     <section
       class="bg-cover bg-center py-16 sm:py-24"
       style="background-image: url('/assets/images/page-header-bg.jpg');"
@@ -45,7 +45,7 @@ const productCountText = computed(() => {
           <Col :span="12">
             <a-breadcrumb class="">
               <a-breadcrumb-item>Home</a-breadcrumb-item>
-              <a-breadcrumb-item>Products</a-breadcrumb-item>
+              <a-breadcrumb-item>Shop</a-breadcrumb-item>
             </a-breadcrumb>
           </Col>
           <Col :span="12" class=" text-right">

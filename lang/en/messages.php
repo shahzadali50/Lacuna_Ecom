@@ -85,6 +85,7 @@ return [
         'quantity' => 'Quantity',
         'share' => 'Share',
         'shop_by_category' => 'Shop By Category',
+         'shop'=> 'Shop',
     ],
     'cart_checkout' => [
         'checkout'=>'checkout',
@@ -131,6 +132,8 @@ return [
        'favorites' => 'Favorites',
        'cart' => 'Cart',
        'account' => 'Account',
+       'shop'=> 'Shop',
+       'whishlist' => 'Wishlist',
     ],
 
     'footer' => [

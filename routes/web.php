@@ -21,7 +21,7 @@ Route::get('cart/payment', [CartController::class, 'cartPayment'])->name('cart.p
 Route::post('login-modal', [MainController::class, 'loginModal'])->name('loginModal');
 Route::post('order/generate', [OrderController::class, 'orderGenerate'])->name('order.generate');
 Route::post('billing/detail', [OrderController::class, 'billingDetail'])->name('billing.details');
-Route::get('products/list', [MainController::class, 'allProducts'])->name('all.products');
+Route::get('shop', [MainController::class, 'allProducts'])->name('all.products');
 
 
 Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function () {

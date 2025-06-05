@@ -42,8 +42,8 @@ const closeDrawer = () => {
             </Link>
           </a-menu-item>
           <a-menu-item key="products">
-            <Link :href="route('home')" class="text-gray-600 hover:text-gray-900">
-              {{ translations.products || 'Products' }}
+            <Link :href="route('all.products')" class="text-gray-600 hover:text-gray-900">
+              {{ translations.shop || 'Shop' }}
             </Link>
           </a-menu-item>
           <a-menu-item key="categories">

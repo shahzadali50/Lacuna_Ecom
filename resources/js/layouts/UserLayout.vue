@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { defineAsyncComponent } from 'vue';
 import { useFlashMessages } from '@/composables/useFlashMessages';
 import Header from '@/components/frontend/Header.vue';
-import Footer from '@/components/frontend/Footer.vue';
+const Footer = defineAsyncComponent(() => import('@/components/frontend/Footer.vue'));
 useFlashMessages();
 </script>
 <template>

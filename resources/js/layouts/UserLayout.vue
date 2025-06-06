@@ -12,5 +12,4 @@ useFlashMessages();
         </main>
         <Footer />
 </template>
-
 <style scoped></style>

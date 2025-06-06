@@ -82,7 +82,7 @@ const subscribe = () => {
         <div class="flex flex-col">
           <div class="mb-4">
             <Link :href="route('home')" class="flex items-center">
-              <img src="\assets\images\Logo-LaCuna-JP-azul.fw.png" alt="Logo" class="h-8 w-auto" />
+              <img src="\assets\images\Logo-LaCuna-JP-azul.fw.webp" alt="Logo" class="h-8 w-auto" />
             </Link>
           </div>
           <p class="text-gray-600 mb-4">

@@ -25,7 +25,6 @@ const translations = computed(() => {
 const { props } = usePage();
 const mobileMenuOpen = ref(false);
 const cartDrawerVisible = ref(false);
-const searchQuery = ref('');
 const isAuthenticated = computed(() => props.auth?.user);
 
 const toggleMobileMenu = () => {
@@ -56,7 +55,7 @@ const toggleSearch = () => {
                 <div class="flex items-center">
                     <Link :href="route('home')" class="flex items-center">
 
-                    <img src="\assets\images\Logo-LaCuna-JP-azul.fw.png" alt="Logo" class="h-8 w-auto" />
+                    <img src="\assets\images\Logo-LaCuna-JP-azul.fw.webp" alt="Logo" class="h-8 w-auto" />
                     </Link>
                 </div>
 

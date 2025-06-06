@@ -6,14 +6,13 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
             <!-- ✅ Favicon -->
-        <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon.png') }}" />
+        <link rel="icon" type="image/webp" href="{{ asset('assets/images/favicon.webp') }}" />
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="{{ asset('admin/assets/css/custom.css') }}">
+        <link rel="stylesheet" href="{{ asset('admin/assets/css/customAdmin.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/color.css') }}">
-        {{-- <link rel="stylesheet" href="{{ asset('resources/css/datatable.min.css') }}"> --}}
         <link rel="stylesheet" href="{{ asset('assets/css/customFrontend.css') }}">
         @routes
         @vite(['resources/js/app.ts'])

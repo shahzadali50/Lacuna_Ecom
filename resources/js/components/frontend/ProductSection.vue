@@ -2,7 +2,7 @@
 import { ref, computed, defineProps } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { ShoppingCartOutlined, HeartOutlined } from '@ant-design/icons-vue';
-import { Row, Col, Card, Button } from 'ant-design-vue';
+import { Row, Col, Card, Button, Skeleton } from 'ant-design-vue';
 import { router, Link } from '@inertiajs/vue3';
 import PaginationComponent from '@/components/frontend/PaginationComponent.vue';
 import FilterProduct from './FilterProduct.vue';
@@ -142,8 +142,13 @@ const isInWishlist = (productId: number) => {
                     <Card hoverable class="h-full product-card cursor-pointer" @click="goToProductDetail(product.slug)">
                         <template #cover>
                             <div class="relative h-28 sm:h-32 md:h-40 lg:h-48 overflow-hidden">
-                                <img :src="'/storage/' + product.thumnail_img" :alt="product.name"
-                                    class="w-full h-full object-cover" />
+                                <template v-if="product.thumnail_img">
+                                    <img :src="'/storage/' + product.thumnail_img" :alt="product.name"
+                                        class="w-full h-full object-cover" />
+                                </template>
+                                <template v-else>
+                                    <Skeleton.Image class="w-full h-full" />
+                                </template>
                                 <div
                                     class="absolute top-1 right-1 bg-white rounded-full px-1.5 py-0.5 text-[10px] sm:text-xs font-medium text-gray-800">
                                     {{ product.category_name }}
@@ -155,7 +160,7 @@ const isInWishlist = (productId: number) => {
                                 :loading="loadingWishlist.has(product.id)"
                                 :class="[
                                     'flex items-center justify-center !w-7 !h-7 absolute top-7 right-1',
-                                    isInWishlist(product.id) ? '!bg-red-500 !text-white !border-red-500 hover:!bg-red-600' : '!bg-white !text-black !border-gray-300 '
+                                    isInWishlist(product.id) ? '!bg-red-500 !text-white !border-red-500 hover:!bg-red-600' : '!bg-white !text-black !border-gray-300 hover:!bg-red-500 hover:!text-white hover:!border-red-500'
                                 ]"
                                 aria-label="Toggle favorite"
                             >
@@ -195,7 +200,7 @@ const isInWishlist = (productId: number) => {
 
                 <!-- Pagination -->
                 <PaginationComponent v-if="props.showPagination !== false" :pagination-data="page.props.products"
-                   />
+                    route-name="all.products" />
 
                 <!-- All Products Button -->
                 <div v-if="props.showAllProductsButton === true" class="text-center mt-8 sm:mt-12">
@@ -224,4 +229,5 @@ const isInWishlist = (productId: number) => {
       <LoginModal v-model:open="isLoginModalVisible" :canResetPassword="false" />
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>

@@ -9,6 +9,21 @@ img {
 body{
     background-color: rgb(249, 250, 251) !important;
 }
+
+.ant-skeleton.ant-skeleton-element .ant-skeleton-image .ant-skeleton-image-svg {
+    width: 150px;
+    height: 150px;
+
+}
+.ant-skeleton.ant-skeleton-element .ant-skeleton-image {
+    width: 100%;
+    height: inherit;
+}
+
+.ant-skeleton.ant-skeleton-element {
+  width: 100%;
+}
+
 /* Responsive Fix */
 @media only screen and (max-width: 576px) {
     /* section {

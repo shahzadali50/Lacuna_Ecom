@@ -17,7 +17,7 @@ const translations = computed(() => {
             <a-row :gutter="[16, 16]" class="flex items-center">
                 <!-- Image Column -->
                 <a-col :xs="24" :md="12" class="order-1 md:order-2">
-                    <img src="/assets/images/banner.jpg" alt="LaCuna Logo" class="max-w-[500px] h-auto" />
+                    <img src="\assets\images\banner.webp" alt="LaCuna Logo" class="max-w-[500px] h-auto" loading="lazy" />
                 </a-col>
 
                 <!-- Text Column -->

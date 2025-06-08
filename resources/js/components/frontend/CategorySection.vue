@@ -2,6 +2,8 @@
 import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { Row, Col } from 'ant-design-vue';
+import { Link } from "@inertiajs/vue3";
+
 
 const page = usePage();
 
@@ -25,11 +27,13 @@ const categories = computed(() => {
         <Col :xs="12" :sm="8" :md="6" :lg="4" :xl="4" v-for="category in categories" :key="category.id">
           <div class="text-center">
             <div class="mb-4 image-container">
-              <img
-                :src="category.image ? '/storage/' + category.image : '/assets/images/default-category.png'"
-                :alt="category.name"
-                class="category-image"
-              />
+                <Link :href="route('all.products', { category: category.slug })">
+                    <img
+                      :src="category.image ? '/storage/' + category.image : '/assets/images/default-category.png'"
+                      :alt="category.name"
+                      class="category-image"
+                    />
+                </Link>
             </div>
             <h5 class="text-lg font-semibold my-1">{{ category.name }}</h5>
             <p class="text-sm text-gray-500">{{ category.product_count }} {{ translations.products || 'Products' }}</p>

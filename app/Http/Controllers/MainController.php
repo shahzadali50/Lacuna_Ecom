@@ -34,6 +34,7 @@ class MainController extends Controller
                         'id' => $category->id,
                         'name' => $category->category_translations->first()?->name ?? $category->name,
                         'image' => $category->image,
+                        'slug' => $category->slug,
                         'product_count' => $category->products_count,
                     ];
                 });

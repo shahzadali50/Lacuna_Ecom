@@ -14,7 +14,7 @@ defineProps<Props>();
 
 <template>
 
-<img class="w-[220px]" src="/assets/images/Logo-LaCuna-JP-azul.fw.png" alt="Logo LaCuna" />
+<img class="w-[220px]" src="\assets\images\Logo-LaCuna-JP-azul.fw.webp" alt="Logo LaCuna" />
     <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 42" :class="className" v-bind="$attrs">
         <path
             fill="currentColor"

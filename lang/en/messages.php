@@ -116,7 +116,9 @@ return [
         'cash_on_delivery'=>'Cash On Delivery',
         'pay_cash_on_delivery'=>'Pay with cash upon delivery.',
         'continue_shopping'=>'Continue Shopping',
-        'cart_empty'=>'Your cart is empty'
+        'cart_empty'=>'Your cart is empty',
+        'stripe_payment' => 'Credit Card (Stripe)',
+        'pay_with_stripe' => 'Pay securely with your credit card.',
     ],
     'header' => [
        'home' => 'Home',

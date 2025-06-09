@@ -14,6 +14,7 @@
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "stichoza/google-translate-php": "^5.2",
+        "stripe/stripe-php": "*",
         "tightenco/ziggy": "^2.5"
     },
     "require-dev": {

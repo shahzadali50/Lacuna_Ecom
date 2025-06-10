@@ -191,6 +191,7 @@ public function addToWhishlist(Request $request)
         return Inertia::render('frontend/cart/CartPayment', [
             'translations' => __('messages'),
             'locale' => App::getLocale(),
+            'stripe_key' => config('services.stripe.key'),
             // 'flash' => session()->only(['success']),
         ]);
     }
@@ -244,7 +245,7 @@ public function wishlist(Request $request)
             $wishlistProducts = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
             $wishlist = [];
         }
-        
+
 
         return Inertia::render('frontend/WishlistProduct', [
             'products' => $wishlistProducts,

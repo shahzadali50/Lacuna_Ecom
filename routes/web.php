@@ -20,6 +20,7 @@ Route::get('cart/checkout', [CartController::class, 'cartCheckout'])->name('cart
 Route::get('cart/payment', [CartController::class, 'cartPayment'])->name('cart.payment');
 Route::post('login-modal', [MainController::class, 'loginModal'])->name('loginModal');
 Route::post('order/generate', [OrderController::class, 'orderGenerate'])->name('order.generate');
+Route::post('payment-intent', [OrderController::class, 'PayWithCard'])->name('payment.intent');
 Route::post('billing/detail', [OrderController::class, 'billingDetail'])->name('billing.details');
 Route::get('shop', [MainController::class, 'allProducts'])->name('all.products');
 

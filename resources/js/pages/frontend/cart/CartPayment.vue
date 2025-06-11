@@ -49,6 +49,29 @@ const orderGenerate = () => {
         },
     });
 };
+import { loadStripe } from '@stripe/stripe-js'
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY)
+const handleStripeCheckout = async () => {
+    const stripe = await stripePromise
+
+    const response = await fetch('/create-checkout-session', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+        },
+    })
+
+    const data = await response.json()
+
+    const result = await stripe?.redirectToCheckout({
+        sessionId: data.id,
+    })
+
+    if (result?.error) {
+        alert(result.error.message)
+    }
+}
 </script>
 <template>
     <UserLayout>
@@ -70,7 +93,7 @@ const orderGenerate = () => {
                         <Link :href="route('home')" class="inline-block mt-4">
                         <Button>{{
                             translations.continue_shopping || "Continue Shopping"
-                        }}</Button>
+                            }}</Button>
                         </Link>
                     </div>
                     </Col>
@@ -102,7 +125,7 @@ const orderGenerate = () => {
                                     <a-radio-group v-model:value="form.payment_method" class="ml-2">
                                         <a-radio value="Cash On Delivery">{{
                                             translations.cash_on_delivery || "Cash On Delivery"
-                                        }}</a-radio>
+                                            }}</a-radio>
                                     </a-radio-group>
                                 </div>
                                 <p class="text-gray-500 text-sm ml-6">
@@ -122,35 +145,35 @@ const orderGenerate = () => {
                                     </template>
 
                                 </a-button>
+                                <a-button type="primary" class="w-full mt-4" @click="handleStripeCheckout">
+                                    Pay with Card (Stripe)
+                                </a-button>
                             </div>
                         </div>
                         </Col>
                         <Col :xs="24" :md="10" class="mb-5 order-1 md:order-2  p-4"
                             style="box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;">
                         <div>
-                            <!-- <h1 class="text-5xl font-bold text-transparent mb-6 flex items-center gap-2">
-                            ..
-                            </h1> -->
-                            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
+                            <h1 class="text-2xl font-bold text-gray-900 mb-6">
                                 Order Summary
                             </h1>
                         </div>
                         <!-- <CartItems /> -->
                         <div class="flex justify-between mb-4 border-b py-4">
-                            <span class="font-bold">{{ translations.subtotal || "Subtotal" }}</span>
-                            <span class="font-bold text-slate-500">{{ formatPrice(total) }}</span>
+                            <span class="">{{ translations.subtotal || "Subtotal" }}</span>
+                            <span class=" text-slate-500">{{ formatPrice(total) }}</span>
                         </div>
                         <div class="flex justify-between mb-4 border-b py-4">
-                            <span class="font-bold">{{
+                            <span class="">{{
                                 translations.shipping_charge || "Shipping"
-                            }}</span>
-                            <span class="font-bold text-slate-500">{{
+                                }}</span>
+                            <span class=" text-slate-500">{{
                                 translations.free_delivery || "Free Delivery"
-                            }}</span>
+                                }}</span>
                         </div>
                         <div class="flex justify-between mb-4">
-                            <span class="font-bold">{{ translations.total || "Total" }}:</span>
-                            <span class="font-bold text-slate-500">{{ formatPrice(total) }}</span>
+                            <span class="">{{ translations.total || "Total" }}:</span>
+                            <span class=" text-slate-500">{{ formatPrice(total) }}</span>
                         </div>
                         </Col>
 

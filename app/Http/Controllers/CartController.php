@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use session;
 use Inertia\Inertia;
 use App\Models\Product;
-use App\Models\Category;
+use Inertia\Controller;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -191,6 +192,7 @@ public function addToWhishlist(Request $request)
         return Inertia::render('frontend/cart/CartPayment', [
             'translations' => __('messages'),
             'locale' => App::getLocale(),
+            'stripe_key' => config('services.stripe.key'),
             // 'flash' => session()->only(['success']),
         ]);
     }
@@ -244,7 +246,7 @@ public function wishlist(Request $request)
             $wishlistProducts = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
             $wishlist = [];
         }
-        
+
 
         return Inertia::render('frontend/WishlistProduct', [
             'products' => $wishlistProducts,

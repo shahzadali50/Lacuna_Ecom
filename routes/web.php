@@ -6,6 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 
@@ -21,7 +22,11 @@ Route::get('cart/payment', [CartController::class, 'cartPayment'])->name('cart.p
 Route::post('login-modal', [MainController::class, 'loginModal'])->name('loginModal');
 Route::post('order/generate', [OrderController::class, 'orderGenerate'])->name('order.generate');
 Route::post('billing/detail', [OrderController::class, 'billingDetail'])->name('billing.details');
+Route::post('payment-intent', [OrderController::class, 'PayWithCard'])->name('payment.intent');
 Route::get('shop', [MainController::class, 'allProducts'])->name('all.products');
+Route::post('/create-checkout-session', [StripeController::class, 'createCheckoutSession'])->name('stripe.checkout');
+Route::get('/payment/cancel', [StripeController::class, 'paymentCancel'])->name('stripe.cancel');
+Route::get('/payment/success', [StripeController::class, 'paymentSuccess'])->name('stripe.success');
 
 
 Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function () {

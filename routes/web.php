@@ -8,6 +8,10 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use Illuminate\Http\Request;
+use Stripe\Stripe;
+use Stripe\Checkout\Session;
+
 
 Route::get('/', [MainController::class, 'index'])->name('home');
 Route::get('product/{slug}', [MainController::class, 'productDetail'])->name('product.detail');
@@ -20,9 +24,32 @@ Route::get('cart/checkout', [CartController::class, 'cartCheckout'])->name('cart
 Route::get('cart/payment', [CartController::class, 'cartPayment'])->name('cart.payment');
 Route::post('login-modal', [MainController::class, 'loginModal'])->name('loginModal');
 Route::post('order/generate', [OrderController::class, 'orderGenerate'])->name('order.generate');
-Route::post('payment-intent', [OrderController::class, 'PayWithCard'])->name('payment.intent');
 Route::post('billing/detail', [OrderController::class, 'billingDetail'])->name('billing.details');
+Route::post('payment-intent', [OrderController::class, 'PayWithCard'])->name('payment.intent');
 Route::get('shop', [MainController::class, 'allProducts'])->name('all.products');
+
+Route::post('/create-checkout-session', function (Request $request) {
+    Stripe::setApiKey(config('services.stripe.secret'));
+
+    $session = Session::create([
+        'payment_method_types' => ['card'],
+        'line_items' => [[
+            'price_data' => [
+                'currency' => 'pkr', // or 'usd'
+                'unit_amount' => 50000, // e.g. PKR 500.00
+                'product_data' => [
+                    'name' => 'Order from MyStore',
+                ],
+            ],
+            'quantity' => 1,
+        ]],
+        'mode' => 'payment',
+        'success_url' => url('/payment/success'),
+        'cancel_url' => url('/payment/cancel'),
+    ]);
+
+    return response()->json(['id' => $session->id]);
+});
 
 
 Route::middleware(['auth', 'admin', 'verified'])->name('admin.')->group(function () {

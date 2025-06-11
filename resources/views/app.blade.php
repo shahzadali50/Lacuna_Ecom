@@ -15,6 +15,7 @@
         <link rel="stylesheet" href="{{ asset('admin/assets/css/customAdmin.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/color.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/customFrontend.css') }}">
+        <script src="https://js.stripe.com/v3"></script>
         @routes
         @vite(['resources/js/app.ts'])
         @inertiaHead

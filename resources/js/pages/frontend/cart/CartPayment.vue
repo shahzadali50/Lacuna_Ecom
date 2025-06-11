@@ -49,6 +49,37 @@ const orderGenerate = () => {
         },
     });
 };
+const stripeKey = computed(() => page.props.stripe_key);
+const handleStripeCheckout = async () => {
+  if (!window.Stripe) {
+    alert("Stripe.js failed to load");
+    return;
+  }
+
+  const stripe = Stripe(stripeKey.value);
+
+  try {
+    const response = await fetch('/create-checkout-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+      },
+    });
+
+    const data = await response.json();
+    const result = await stripe.redirectToCheckout({
+      sessionId: data.id,
+    });
+
+    if (result.error) {
+      alert(result.error.message);
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Something went wrong. Please try again.');
+  }
+};
 </script>
 <template>
     <UserLayout>
@@ -122,6 +153,9 @@ const orderGenerate = () => {
                                     </template>
 
                                 </a-button>
+                                <a-button type="primary" class="w-full mt-4" @click="handleStripeCheckout">
+                                Pay with Card (Stripe)
+                                </a-button>
                             </div>
                         </div>
                         </Col>
@@ -131,26 +165,26 @@ const orderGenerate = () => {
                             <!-- <h1 class="text-5xl font-bold text-transparent mb-6 flex items-center gap-2">
                             ..
                             </h1> -->
-                            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
+                            <h1 class="text-2xl font-bold text-gray-900 mb-6">
                                 Order Summary
                             </h1>
                         </div>
                         <!-- <CartItems /> -->
                         <div class="flex justify-between mb-4 border-b py-4">
-                            <span class="font-bold">{{ translations.subtotal || "Subtotal" }}</span>
-                            <span class="font-bold text-slate-500">{{ formatPrice(total) }}</span>
+                            <span class="">{{ translations.subtotal || "Subtotal" }}</span>
+                            <span class=" text-slate-500">{{ formatPrice(total) }}</span>
                         </div>
                         <div class="flex justify-between mb-4 border-b py-4">
-                            <span class="font-bold">{{
+                            <span class="">{{
                                 translations.shipping_charge || "Shipping"
                             }}</span>
-                            <span class="font-bold text-slate-500">{{
+                            <span class=" text-slate-500">{{
                                 translations.free_delivery || "Free Delivery"
                             }}</span>
                         </div>
                         <div class="flex justify-between mb-4">
-                            <span class="font-bold">{{ translations.total || "Total" }}:</span>
-                            <span class="font-bold text-slate-500">{{ formatPrice(total) }}</span>
+                            <span class="">{{ translations.total || "Total" }}:</span>
+                            <span class=" text-slate-500">{{ formatPrice(total) }}</span>
                         </div>
                         </Col>
 
